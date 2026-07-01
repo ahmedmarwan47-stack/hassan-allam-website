@@ -1,26 +1,40 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  Hassan Allam Properties — design tokens (from Figma variables).
+  Brand fonts in the Figma file are Cormorant Garamond (display serif),
+  Avenir Next & Aeonik (sans). Cormorant is loaded exactly via next/font;
+  Manrope stands in for the licensed Avenir/Aeonik until the real .woff2
+  files are dropped into src/app/fonts and wired up in layout.tsx.
+*/
+@theme {
+  --color-brand-black: #000000;
+  --color-brand-white: #ffffff;
+  --color-warm-50: #f8f7f4;
+  --color-warm-100: #ece8e2;
+  --color-grey-100: #f2f2f2;
+  --color-grey-300: #d9d9d9;
+  --color-grey-500: #808080;
+  --color-success-soft: #66bb6a;
+  --color-success-dark: #004622;
+  --color-info: #4a87f8;
+  --color-error: #ff0000;
+  --color-field-success: #9fc235;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-warm-50);
+  color: var(--color-brand-black);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }

@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hassan Allam Properties — Corporate Website
 
-## Getting Started
+Marketing site for Hassan Allam Properties, built from the
+[Figma design](https://www.figma.com/design/yTAVRd2RdVoxrax0rySAE1/Hassan-Allam-Corporate-Website).
 
-First, run the development server:
+**Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev      # dev server on http://localhost:3000
+npm run build    # production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/
+  app/
+    layout.tsx          # fonts + <Navbar/> mounted once, page-agnostic
+    page.tsx            # home page: composes the sections in order
+    globals.css         # design tokens (@theme) — brand colours + fonts
+  components/
+    Navbar.tsx          # fixed navbar that swaps light/dark per section
+    Footer.tsx
+    sections/
+      Hero.tsx            (data-nav-theme="light")
+      PortfolioIntro.tsx  (data-nav-theme="dark")
+      AssetClasses.tsx    (data-nav-theme="light")  <- scroll-scale animation
+      FactsFigures.tsx    (data-nav-theme="light")
+      AppCta.tsx          (data-nav-theme="dark")
+  hooks/
+    useSectionTheme.ts  # decides which section sits under the navbar
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## The two animation behaviours
 
-## Learn More
+### 1. Theme-swapping navbar
 
-To learn more about Next.js, take a look at the following resources:
+Every full-width section declares `data-nav-theme="dark"` or `"light"`.
+`useSectionTheme` watches which section is currently under the navbar line
+(~40px from the top) and returns its theme. `Navbar` cross-fades the two logo
+variants, transitions the link/CTA colours, and swaps a legibility scrim — all
+with a 500ms ease. To add a section, just tag it with `data-nav-theme`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Asset Classes scale-on-scroll
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`AssetClasses` is a 200vh section with a pinned (sticky) stage. Framer Motion's
+`useScroll` drives `useTransform` values so that, as you scroll in, the heading
+settles from oversized to its resting size and the gallery scales up from a
+compact preview (~0.46) to full size — the "collapsed → expanded" states in the
+Figma file. Tune the feel via the `[input] -> [output]` ranges at the top of the
+component.
 
-## Deploy on Vercel
+## Known follow-ups (placeholders to replace before launch)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Fonts:** Cormorant Garamond (display serif) is loaded exactly. The licensed
+  brand sans (Avenir Next / Aeonik) are substituted with **Manrope** for now —
+  drop the real `.woff2` files into `src/app/fonts` and switch to
+  `next/font/local`, then point `--font-sans` at it in `globals.css`.
+- **Imagery:** `public/images/*` were pulled from Figma at full resolution
+  (`residential.jpg` ~9.6MB, `retail.jpg` ~12MB). Compress/resize before launch.
+- **Content & links:** section copy and nav links are representative placeholders.
+- **Mobile nav:** links are hidden under `md`; a hamburger menu still needs building.

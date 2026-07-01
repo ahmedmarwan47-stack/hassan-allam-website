@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "deploy": "DEPLOY_TARGET=gh-pages next build && cd out && git init -q -b gh-pages && git add -A && git commit -qm 'Deploy to GitHub Pages' && git push -f git@github.com:ahmedmarwan47-stack/hassan-allam-website.git gh-pages && cd .. && rm -rf out/.git"
   },
   "dependencies": {
+    "framer-motion": "^12.42.0",
     "next": "16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4"
