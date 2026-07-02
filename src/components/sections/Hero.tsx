@@ -49,7 +49,7 @@ export default function Hero() {
         loop
         playsInline
         preload="auto"
-        poster={withBasePath("/images/residential.jpg")}
+        poster={withBasePath("/images/residential.webp")}
         onCanPlay={() => setCanPlay(true)}
         aria-hidden
       >
@@ -58,7 +58,7 @@ export default function Hero() {
 
       {/* Poster fallback — shown until the video starts (or if it's missing). */}
       <Image
-        src="/images/residential.jpg"
+        src="/images/residential.webp"
         alt=""
         aria-hidden
         fill

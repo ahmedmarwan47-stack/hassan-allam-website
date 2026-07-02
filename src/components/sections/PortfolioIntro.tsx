@@ -8,7 +8,7 @@ export default function PortfolioIntro() {
       className="relative overflow-hidden bg-black text-white"
     >
       <Image
-        src="/images/retail.jpg"
+        src="/images/retail.webp"
         alt=""
         aria-hidden
         fill

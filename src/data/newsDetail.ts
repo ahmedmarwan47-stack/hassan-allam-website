@@ -24,7 +24,7 @@ export const NEWS_DETAILS: Record<string, NewsDetail> = {
       "Eden Facility Management, part of the Hassan Allam Group, has been selected to deliver full facility management services for the Embassy of Denmark in Egypt. The contract covers day-to-day operations across the Embassy's Cairo premises.",
       "The award reinforces Eden's growing portfolio of high-profile diplomatic and corporate clients across the region, and reflects the group's continued investment in specialised facility management capabilities.",
     ],
-    heroImage: "/images/office.jpg",
+    heroImage: "/images/office.webp",
     bigIntroParagraph:
       "Spanning day-to-day operations across the Embassy's Cairo premises, Eden Facility Management's scope covers technical, soft services, and sustainability-led maintenance — consistent with the standards the Danish mission upholds at home and abroad.",
     body: [
@@ -32,8 +32,8 @@ export const NEWS_DETAILS: Record<string, NewsDetail> = {
       "The team on the ground will be led out of Eden's Cairo hub and will draw on the broader group's engineering, MEP and sustainability expertise to deliver a service tailored to the Embassy's operational needs.",
     ],
     bodyImages: [
-      "/images/commercial-real-estate.jpg",
-      "/images/image 388.png",
+      "/images/commercial-real-estate.webp",
+      "/images/image 388.webp",
     ],
   },
 
@@ -45,14 +45,14 @@ export const NEWS_DETAILS: Record<string, NewsDetail> = {
       "Hassan Allam Properties has unveiled a new fully-integrated mixed-use community in the heart of New Cairo. The 240-feddan destination brings together premium residential neighbourhoods, curated retail and grade-A office space in a single walkable master plan.",
       "Designed for long-term liveability, the community continues HAP's approach to placemaking: gated privacy, generous landscaping, and destinations that draw both residents and neighbours.",
     ],
-    heroImage: "/images/image 385.png",
+    heroImage: "/images/image 385.webp",
     bigIntroParagraph:
       "Spanning 240 feddans at the heart of New Cairo, the new destination brings together premium residential, curated retail and grade-A office space in a single walkable master plan — centred on a landscaped public realm.",
     body: [
       "The scheme is anchored by a central park and a retail spine that connects residents to daily-life essentials — from grocery to fitness, culture and dining — without leaving the community.",
       "Handover of the first residential phase is planned for 2027, with retail and office components opening in staged waves alongside it. Full delivery is set for 2029.",
     ],
-    bodyImages: ["/images/image 391.png", "/images/map/slg.jpg"],
+    bodyImages: ["/images/image 391.webp", "/images/map/slg.webp"],
   },
 };
 

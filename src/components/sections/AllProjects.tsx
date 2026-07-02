@@ -23,17 +23,17 @@ interface ProjectCard {
 
 const PROJECTS: ProjectCard[] = [
   // In The City — 6 projects (3 thirds + 2 halves + 1 full)
-  { id: "swanlake-west", name: "Swanlake West", category: "Residential", image: "/images/map/slw.jpg", span: "third", group: "city" },
-  { id: "parkview", name: "Parkview", category: "Residential", image: "/images/map/slo19.jpg", span: "third", group: "city" },
-  { id: "swanlake-katameya", name: "Swanlake Katameya", category: "Residential", image: "/images/map/slk10.jpg", span: "third", group: "city" },
-  { id: "seasons-city", name: "Seasons Residences", category: "Residential", image: "/images/map/seasons.jpg", span: "half", group: "city" },
-  { id: "swanlake-residences", name: "Swanlake Residences", category: "Residential", image: "/images/map/slg.jpg", span: "half", group: "city" },
-  { id: "swanlake-october", name: "Swanlake October", category: "Office Space", image: "/images/residential.jpg", span: "full", group: "city" },
+  { id: "swanlake-west", name: "Swanlake West", category: "Residential", image: "/images/map/slw.webp", span: "third", group: "city" },
+  { id: "parkview", name: "Parkview", category: "Residential", image: "/images/map/slo19.webp", span: "third", group: "city" },
+  { id: "swanlake-katameya", name: "Swanlake Katameya", category: "Residential", image: "/images/map/slk10.webp", span: "third", group: "city" },
+  { id: "seasons-city", name: "Seasons Residences", category: "Residential", image: "/images/map/seasons.webp", span: "half", group: "city" },
+  { id: "swanlake-residences", name: "Swanlake Residences", category: "Residential", image: "/images/map/slg.webp", span: "half", group: "city" },
+  { id: "swanlake-october", name: "Swanlake October", category: "Office Space", image: "/images/residential.webp", span: "full", group: "city" },
 
   // By The Sea — 3 projects (2 halves + 1 full)
-  { id: "seasons-sea", name: "Seasons Residences", category: "Hospitality & Leisure", image: "/images/hospitality.jpg", span: "half", group: "sea" },
-  { id: "swanlake-residences-sea", name: "Swanlake Residences", category: "Hospitality & Leisure", image: "/images/map/slg.jpg", span: "half", group: "sea" },
-  { id: "swanlake-october-sea", name: "Swanlake October", category: "Sports & Wellness", image: "/images/sports.jpg", span: "full", group: "sea" },
+  { id: "seasons-sea", name: "Seasons Residences", category: "Hospitality & Leisure", image: "/images/hospitality.webp", span: "half", group: "sea" },
+  { id: "swanlake-residences-sea", name: "Swanlake Residences", category: "Hospitality & Leisure", image: "/images/map/slg.webp", span: "half", group: "sea" },
+  { id: "swanlake-october-sea", name: "Swanlake October", category: "Sports & Wellness", image: "/images/sports.webp", span: "full", group: "sea" },
 ];
 
 type View = "grid" | "list";
@@ -246,19 +246,21 @@ function GridView({
   return (
     <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-6 md:gap-x-5 md:gap-y-12">
       {projects.map((p, i) => {
+        // Mobile always shows 2 cards per row — "full" cards only span the
+        // whole grid from md: up, so no standalone full-width card on phones.
         const colSpan =
           p.span === "third"
             ? "md:col-span-2"
             : p.span === "half"
               ? "md:col-span-3"
-              : "col-span-2 md:col-span-6";
+              : "md:col-span-6";
         // Slightly shorter than before so the cards stop overshooting the viewport.
         const aspect =
           p.span === "third"
             ? "aspect-[3/4] md:aspect-[424/500]"
             : p.span === "half"
               ? "aspect-[3/4] md:aspect-[646/740]"
-              : "aspect-[4/3] md:aspect-[1312/720]";
+              : "aspect-[3/4] md:aspect-[1312/720]";
         const sizes =
           p.span === "third"
             ? "(min-width: 768px) 33vw, 50vw"

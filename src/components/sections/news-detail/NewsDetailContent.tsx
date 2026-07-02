@@ -7,7 +7,7 @@ export default function NewsDetailContent({ detail }: { detail: NewsDetail }) {
   return (
     <section
       data-nav-theme="dark"
-      className="flex flex-col gap-10 bg-brand-black px-6 py-12 text-brand-white md:gap-20 md:px-16 md:py-20"
+      className="flex flex-col gap-10 bg-brand-black px-6 py-16 text-brand-white md:gap-20 md:px-16 md:py-20"
     >
       {/* ── Full-width hero image ────────────────────────────────────────── */}
       <GrowReveal

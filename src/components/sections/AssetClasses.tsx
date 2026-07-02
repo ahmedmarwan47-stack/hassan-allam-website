@@ -26,11 +26,11 @@ import { withBasePath } from "@/lib/basePath";
  */
 
 const CARDS = [
-  { label: "Residential", src: "/images/residential.jpg", filter: "Residential" },
-  { label: "Office Spaces", src: "/images/office.jpg", filter: "Office Space" },
-  { label: "Hospitality & Leisure", src: "/images/hospitality.jpg", filter: "Hospitality & Leisure" },
-  { label: "Sports & Wellness", src: "/images/sports.jpg", filter: "Sports & Wellness" },
-  { label: "Retail", src: "/images/retail.jpg", filter: "Retail" },
+  { label: "Residential", src: "/images/residential.webp", filter: "Residential" },
+  { label: "Office Spaces", src: "/images/office.webp", filter: "Office Space" },
+  { label: "Hospitality & Leisure", src: "/images/hospitality.webp", filter: "Hospitality & Leisure" },
+  { label: "Sports & Wellness", src: "/images/sports.webp", filter: "Sports & Wellness" },
+  { label: "Retail", src: "/images/retail.webp", filter: "Retail" },
 ];
 
 const projectsHref = (filter: string) =>
@@ -85,9 +85,9 @@ export default function AssetClasses() {
   return (
     <section ref={ref} id="asset-classes" data-nav-theme="light" className="relative md:h-[220vh]">
       {/* ── Mobile layout: fixed-height carousel with arrows ── */}
-      <div className="relative flex flex-col overflow-hidden px-6 py-24 md:hidden">
+      <div className="relative flex flex-col overflow-hidden px-6 py-16 md:hidden">
         <Image
-          src={withBasePath("/images/section-bg.png")}
+          src={withBasePath("/images/section-bg.webp")}
           alt=""
           aria-hidden
           fill
@@ -166,7 +166,7 @@ export default function AssetClasses() {
       {/* ── Desktop layout: scroll-driven expanding carousel ── */}
       <div className="sticky top-0 hidden h-screen flex-col overflow-hidden px-6 py-14 md:flex md:px-12 md:py-20 lg:px-16">
         <Image
-          src={withBasePath("/images/section-bg.png")}
+          src={withBasePath("/images/section-bg.webp")}
           alt=""
           aria-hidden
           fill

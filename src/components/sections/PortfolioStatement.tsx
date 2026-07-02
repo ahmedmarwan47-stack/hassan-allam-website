@@ -5,7 +5,7 @@ export default function PortfolioStatement() {
     <section
       id="portfolio-statement"
       data-nav-theme="dark"
-      className="flex min-h-screen items-center justify-center bg-brand-black px-6 py-24 text-brand-white md:py-16"
+      className="flex items-center justify-center bg-brand-black px-6 py-16 text-brand-white md:min-h-screen"
     >
       <div className="flex flex-col items-center gap-16 text-center md:gap-28 lg:gap-32">
         <Reveal>

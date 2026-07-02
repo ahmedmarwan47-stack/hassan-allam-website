@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useInView } from "framer-motion";
+import { useEffect, useState } from "react";
 import { useDiscoverCursor } from "@/components/DiscoverCursor";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
@@ -12,17 +11,17 @@ const FACTS = [
   {
     label: "Developments &\nSub-Developments",
     value: "25",
-    image: "/images/commercial-real-estate.jpg",
+    image: "/images/commercial-real-estate.webp",
   },
   {
     label: "Employees",
     value: "320",
-    image: "/images/story-hands.jpg",
+    image: "/images/story-hands.webp",
   },
   {
     label: "Commercial\nReal Estate",
     value: "19,521",
-    image: "/images/commercial-real-estate.jpg",
+    image: "/images/commercial-real-estate.webp",
   },
 ];
 
@@ -38,7 +37,7 @@ function StoryCta() {
     >
       <GrowReveal axis="height" className="absolute inset-0">
         <Image
-          src="/images/story-hands.jpg"
+          src="/images/story-hands.webp"
           alt="Hands joining together"
           fill
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
@@ -67,12 +66,10 @@ export function FactRow({
   value: string;
   image: string;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
-  // `compact` = mobile. On mobile there's no hover, so the expanded state is
-  // triggered by the row scrolling into the centre of the viewport.
+  // `compact` = mobile. Mobile rows are static (no scroll-triggered photo /
+  // expansion) — only the desktop hover invert treatment remains.
   const [compact, setCompact] = useState(false);
-  const inView = useInView(ref, { margin: "-45% 0px -45% 0px" });
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -82,26 +79,19 @@ export function FactRow({
     return () => mq.removeEventListener("change", apply);
   }, []);
 
-  const active = compact ? inView : hovered;
-  // Desktop keeps the inverted-black slide-in treatment; mobile stays on the
-  // default (white) variant and just reveals a centred photo overlay.
-  const invert = active && !compact;
+  // Desktop keeps the inverted-black slide-in treatment on hover.
+  const invert = hovered && !compact;
 
   return (
     <div
-      ref={ref}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="group relative w-full cursor-pointer overflow-hidden transition-colors duration-500 md:cursor-default"
+      className="group relative w-full overflow-hidden transition-colors duration-500 md:cursor-default"
       style={{ backgroundColor: invert ? "#000" : "#fff" }}
     >
       <div className="h-px w-full bg-grey-300" />
 
-      <div
-        className={`flex w-full items-center justify-between transition-[padding] duration-500 md:py-0 ${
-          compact && active ? "py-10" : "py-5"
-        }`}
-      >
+      <div className="flex w-full items-center justify-between py-5 transition-[padding] duration-500 md:py-0">
         {/* Left side: desktop image (slides in) + label */}
         <div className="flex items-center">
           {/* Desktop image — slides in from the left */}
@@ -140,24 +130,6 @@ export function FactRow({
         </div>
       </div>
 
-      {/* Mobile: photo appears as a centred overlay (same idea as the Projects
-          list-view rows) — the row keeps its default look underneath. */}
-      <AnimatePresence>
-        {compact && active && (
-          <motion.div
-            key="fact-photo"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-            className="pointer-events-none absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 md:hidden"
-          >
-            <div className="relative h-[210px] w-[165px] overflow-hidden shadow-2xl">
-              <Image src={image} alt={label} fill sizes="165px" className="object-cover" />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
@@ -169,9 +141,9 @@ export default function FactsFigures() {
       data-nav-theme="light"
       className="bg-brand-white text-brand-black"
     >
-      <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-28 px-6 py-24 md:gap-[200px] md:px-16 md:py-[180px]">
+      <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-16 px-6 py-16 md:gap-[200px] md:px-16 md:py-[180px]">
         {/* ── CEO Quote ── */}
-        <div className="flex max-w-[1110px] flex-col items-center gap-[58px] text-center">
+        <div className="flex max-w-[1110px] flex-col items-center gap-10 text-center md:gap-[58px]">
           <Reveal>
             <p className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] [font-size:clamp(2rem,4.3vw,3.875rem)]">
               &ldquo;There is no greater pleasure than crafting{" "}

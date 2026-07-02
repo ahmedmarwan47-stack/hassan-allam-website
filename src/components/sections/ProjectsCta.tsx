@@ -12,7 +12,7 @@ export default function ProjectsCta() {
     >
       <GrowReveal axis="width" className="absolute inset-0 -z-10">
         <Image
-          src="/images/section-bg.png"
+          src="/images/section-bg.webp"
           alt=""
           fill
           priority={false}

@@ -6,23 +6,23 @@ const FACTS = [
   {
     label: "Developments &\nSub-Developments",
     value: "25",
-    image: "/images/commercial-real-estate.jpg",
+    image: "/images/commercial-real-estate.webp",
   },
   {
     label: "Land Plots Under\nDevelopment",
     value: "23",
-    image: "/images/map/slw.jpg",
+    image: "/images/map/slw.webp",
   },
-  { label: "Employees", value: "320", image: "/images/story-hands.jpg" },
+  { label: "Employees", value: "320", image: "/images/story-hands.webp" },
   {
     label: "Residential Units\nDelivered",
     value: "8,240",
-    image: "/images/map/slg.jpg",
+    image: "/images/map/slg.webp",
   },
   {
     label: "Governorates",
     value: "10",
-    image: "/images/hospitality.jpg",
+    image: "/images/hospitality.webp",
   },
 ];
 
@@ -30,7 +30,7 @@ export default function FactsList() {
   return (
     <section
       data-nav-theme="light"
-      className="flex flex-col items-start gap-10 bg-brand-white px-6 py-20 text-brand-black md:items-center md:gap-[70px] md:px-16 md:py-24"
+      className="flex flex-col items-start gap-10 bg-brand-white px-6 py-16 text-brand-black md:items-center md:gap-[70px] md:px-16 md:py-24"
     >
       <Reveal className="w-full">
         <h2 className="w-full text-left font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(4rem,9.2vw,8.25rem)] md:text-center">

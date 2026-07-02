@@ -6,7 +6,7 @@ export default function VisionSection() {
   return (
     <section
       data-nav-theme="dark"
-      className="flex flex-col items-center gap-16 bg-brand-black px-6 py-20 text-brand-white md:gap-20 md:px-16 md:py-[180px]"
+      className="flex flex-col items-center gap-16 bg-brand-black px-6 py-16 text-brand-white md:gap-20 md:px-16 md:py-[180px]"
     >
       <Reveal className="flex max-w-[1144px] flex-col items-center gap-8 text-center md:gap-10">
         <p className="font-serif text-3xl leading-[1.1] tracking-[-0.02em] text-brand-white md:text-[3.875rem]">
@@ -27,7 +27,7 @@ export default function VisionSection() {
             className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-auto md:h-[30vw] md:max-h-[520px]"
           >
             <Image
-              src="/images/story-vision-1.jpg"
+              src="/images/story-vision-1.webp"
               alt=""
               fill
               sizes="(min-width: 768px) 32vw, 100vw"
@@ -47,7 +47,7 @@ export default function VisionSection() {
             className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-auto md:h-[30vw] md:max-h-[520px]"
           >
             <Image
-              src="/images/story-vision-2.jpg"
+              src="/images/story-vision-2.webp"
               alt=""
               fill
               sizes="(min-width: 768px) 60vw, 100vw"

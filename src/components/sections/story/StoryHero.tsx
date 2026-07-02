@@ -6,13 +6,13 @@ export default function StoryHero() {
   return (
     <section
       data-nav-theme="light"
-      className="relative flex min-h-[720px] items-center justify-center overflow-hidden bg-brand-white px-6 py-32 md:min-h-screen md:px-16"
+      className="relative flex min-h-[520px] items-center justify-center overflow-hidden bg-brand-white px-6 py-24 md:min-h-screen md:px-16 md:py-32"
     >
       {/* Light window-light backdrop whose white bottom fades into the white
           intro section below (desktop + mobile). */}
       <GrowReveal axis="width" className="pointer-events-none absolute inset-0">
         <Image
-          src="/images/bg-light.png"
+          src="/images/bg-light.webp"
           alt=""
           aria-hidden
           fill

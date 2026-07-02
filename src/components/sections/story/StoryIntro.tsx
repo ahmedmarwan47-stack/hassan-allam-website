@@ -36,7 +36,7 @@ export default function StoryIntro() {
           className="relative aspect-square w-full shrink-0 overflow-hidden rounded-[2px] md:w-[313px]"
         >
           <Image
-            src="/images/story-intro-square.jpg"
+            src="/images/story-intro-square.webp"
             alt=""
             fill
             sizes="(min-width: 768px) 313px, 100vw"

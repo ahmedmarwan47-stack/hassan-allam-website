@@ -60,7 +60,7 @@ export default function DiscoverProjects() {
           <div className="relative h-full w-[711px]">
             <GrowReveal axis="width" className="absolute inset-0">
               <Image
-                src="/images/map/egypt-map.png"
+                src="/images/map/egypt-map.webp"
                 alt="Aerial map of Egypt showing Hassan Allam project locations"
                 fill
                 className="object-cover"
@@ -134,7 +134,7 @@ export default function DiscoverProjects() {
         {/* Map */}
         <GrowReveal axis="width" className="absolute inset-0">
           <Image
-            src="/images/map/egypt-map.png"
+            src="/images/map/egypt-map.webp"
             alt="Aerial map of Egypt showing Hassan Allam project locations"
             fill
             className="object-cover"

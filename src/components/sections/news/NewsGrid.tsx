@@ -15,7 +15,7 @@ export default function NewsGrid() {
           HAP News
         </h1>
       </Reveal>
-      <div className="mt-[60px] grid grid-cols-1 gap-x-5 gap-y-10 md:grid-cols-3 md:gap-y-16">
+      <div className="mt-10 grid grid-cols-1 gap-x-5 gap-y-10 md:mt-[60px] md:grid-cols-3 md:gap-y-16">
         {NEWS.map((article) => (
           <NewsCard key={article.id} article={article} />
         ))}

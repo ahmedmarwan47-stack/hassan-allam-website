@@ -17,7 +17,7 @@ const TEAM: TeamMember[] = [
   {
     name: "Mohamed Allam",
     role: "CEO",
-    image: "/images/team-mohamed-allam.jpg",
+    image: "/images/team-mohamed-allam.webp",
     bio: "As CEO, Mohamed Allam leads Hassan Allam Properties with a family-first philosophy carried across three generations. He has steered the group's evolution into one of Egypt's most trusted boutique developers, championing intimate communities where design, quality and hospitality come together.",
   },
   {
@@ -59,9 +59,9 @@ export default function OurTeam() {
   return (
     <section
       data-nav-theme="light"
-      className="flex flex-col gap-14 bg-brand-white px-6 py-20 text-brand-black md:gap-16 md:px-16 md:py-24"
+      className="flex flex-col gap-14 bg-brand-white px-6 py-16 text-brand-black md:gap-16 md:px-16 md:py-24"
     >
-      <div className="flex flex-col gap-16 md:gap-20">
+      <div className="flex flex-col gap-10 md:gap-20">
         {/* Title matches the Facts & Figures heading above it. */}
         <Reveal className="w-full">
           <h2 className="w-full text-left font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(4rem,9.2vw,8.25rem)] md:text-center">

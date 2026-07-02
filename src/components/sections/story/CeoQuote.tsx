@@ -4,7 +4,7 @@ export default function CeoQuote() {
   return (
     <section
       data-nav-theme="light"
-      className="flex justify-center bg-brand-white px-6 py-20 text-brand-black md:px-16 md:py-28"
+      className="flex justify-center bg-brand-white px-6 py-16 text-brand-black md:px-16 md:py-28"
     >
       <Reveal className="flex max-w-[1144px] flex-col gap-16 text-center md:gap-20">
         <p className="font-serif text-2xl leading-[1.2] tracking-[-0.02em] text-brand-black md:text-[3.875rem]">

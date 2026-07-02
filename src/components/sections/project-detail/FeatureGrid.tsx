@@ -10,7 +10,10 @@ export default function FeatureGrid({
   items: FeatureItem[];
 }) {
   return (
-    <div className="flex w-full flex-col items-start gap-10 md:ml-auto md:max-w-[867px] md:gap-10">
+    // Width mirrors the WIDE image column of the pairs above (100% − 32.24%
+    // narrow column − 20px gutter), so the heading + grid start exactly on the
+    // bigger photo's left edge at every viewport width — not just at 1440px.
+    <div className="flex w-full flex-col items-start gap-10 md:ml-auto md:w-[calc(67.76%-20px)] md:gap-10">
       <Reveal>
         <h2 className="max-w-[606px] font-sans font-medium leading-none text-brand-black [font-size:clamp(1.75rem,4vw,3rem)]">
           {heading.map((line, i) => (

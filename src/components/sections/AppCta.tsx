@@ -69,7 +69,7 @@ export default function AppCta() {
            never sits under the copy. The photo's white drapery blends into the
            warm-50 background above it. ── */}
       <div className="md:hidden">
-        <div className="flex flex-col gap-8 px-6 pb-10 pt-28">
+        <div className="flex flex-col gap-8 px-6 pb-10 pt-16">
           <Reveal>
             <h2 className="font-serif text-[2.5rem] font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black">
               Manage your home anytime with HAP Family App
@@ -89,7 +89,7 @@ export default function AppCta() {
         </div>
         <GrowReveal axis="height" className="relative h-[600px] w-full overflow-hidden">
           <Image
-            src="/images/app-bg.png"
+            src="/images/app-bg.webp"
             alt="Hand holding phone with the HAP Family App"
             fill
             className="object-cover"
@@ -104,7 +104,7 @@ export default function AppCta() {
         {/* Background image */}
         <GrowReveal axis="width" className="absolute inset-0">
           <Image
-            src="/images/app-bg.png"
+            src="/images/app-bg.webp"
             alt="Hand holding phone with HAP Family App"
             fill
             className="object-cover"

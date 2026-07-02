@@ -131,7 +131,7 @@ function NewsletterField() {
   return (
     <form onSubmit={handleSubmit} noValidate>
       <div
-        className={`flex flex-wrap items-center gap-3 border py-2 pl-4 pr-2 transition-colors duration-200 ${borderState}`}
+        className={`flex items-center gap-3 border py-2 pl-4 pr-2 transition-colors duration-200 ${borderState}`}
       >
         <input
           type="email"
@@ -146,7 +146,7 @@ function NewsletterField() {
         />
         <button
           type="submit"
-          className="w-full shrink-0 bg-white/80 px-5 py-3 font-serif text-sm font-medium uppercase leading-[1.4] text-black transition-colors duration-300 hover:bg-white sm:w-auto"
+          className="shrink-0 bg-white/80 px-5 py-3 font-serif text-sm font-medium uppercase leading-[1.4] text-black transition-colors duration-300 hover:bg-white"
         >
           Subscribe now
         </button>
@@ -229,7 +229,7 @@ export default function Footer() {
       data-nav-theme="dark"
       className="bg-black text-white"
     >
-      <div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-16 p-6 md:min-h-[912px] md:gap-0 md:p-16">
+      <div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-16 px-6 py-12 md:min-h-[912px] md:gap-0 md:p-16">
         {/* ── Top section ── */}
         <div className="flex flex-col gap-12 md:flex-row md:items-start md:justify-between">
           {/* Left column: Nav + Newsletter */}

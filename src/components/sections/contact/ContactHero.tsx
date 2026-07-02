@@ -12,7 +12,7 @@ export default function ContactHero() {
           kept short so the contact details are visible in the first viewport. */}
       <GrowReveal axis="width" className="pointer-events-none absolute inset-0">
         <Image
-          src="/images/bg-light.png"
+          src="/images/bg-light.webp"
           alt=""
           aria-hidden
           fill

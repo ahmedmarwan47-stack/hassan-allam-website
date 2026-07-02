@@ -14,14 +14,14 @@ export default function NewsDetailHero({
   return (
     <section
       data-nav-theme="dark"
-      className="relative flex min-h-[720px] flex-col justify-between overflow-hidden bg-brand-black px-6 pb-10 pt-32 text-brand-white md:min-h-screen md:px-16 md:pb-16 md:pt-40"
+      className="relative flex min-h-[640px] flex-col justify-between overflow-hidden bg-brand-black px-6 pb-10 pt-28 text-brand-white md:min-h-screen md:px-16 md:pb-16 md:pt-40"
     >
       {/* Dark window-light backdrop (dark variant, from the project folder).
           Rendered at full strength so the light streaks actually read; only
           the bottom fades into the black content section below. */}
       <GrowReveal axis="width" className="pointer-events-none absolute inset-0">
         <Image
-          src="/images/bg-dark.png"
+          src="/images/bg-dark.webp"
           alt=""
           aria-hidden
           fill
@@ -46,7 +46,7 @@ export default function NewsDetailHero({
           breathing room on mobile between the serif headline and this block. */}
       <Reveal
         delay={0.1}
-        className="relative z-10 mt-28 flex flex-col items-start gap-8 md:mt-0 md:flex-row md:items-start md:justify-between"
+        className="relative z-10 mt-16 flex flex-col items-start gap-8 md:mt-0 md:flex-row md:items-start md:justify-between"
       >
         <div className="flex shrink-0 items-center gap-3">
           <span className="size-3 shrink-0 rounded-full border border-brand-white/40" />

@@ -18,16 +18,16 @@ type GalleryProject = { id: string; name: string; src: string };
 // convention of dead links until their pages are built.
 const GROUPS: Record<(typeof FILTERS)[number], GalleryProject[]> = {
   "In The City": [
-    { id: "swanlake-residences", name: "Swanlake Residences", src: "/images/map/slg.jpg" },
-    { id: "swanlake-west", name: "Swanlake West", src: "/images/image 398.png" },
-    { id: "parkview", name: "Parkview", src: "/images/image 399.png" },
-    { id: "swanlake-katameya", name: "Swanlake Katameya", src: "/images/image 400.png" },
-    { id: "seasons-city", name: "Seasons Residences", src: "/images/image 401.png" },
+    { id: "swanlake-residences", name: "Swanlake Residences", src: "/images/map/slg.webp" },
+    { id: "swanlake-west", name: "Swanlake West", src: "/images/image 398.webp" },
+    { id: "parkview", name: "Parkview", src: "/images/image 399.webp" },
+    { id: "swanlake-katameya", name: "Swanlake Katameya", src: "/images/image 400.webp" },
+    { id: "seasons-city", name: "Seasons Residences", src: "/images/image 401.webp" },
   ],
   "By The Sea": [
-    { id: "swanlake-residences-sea", name: "Swanlake Residences El Gouna", src: "/images/map/slg.jpg" },
-    { id: "seasons-sea", name: "Seasons Residences", src: "/images/image 402.png" },
-    { id: "swanlake-october-sea", name: "Swanlake October", src: "/images/hospitality.jpg" },
+    { id: "swanlake-residences-sea", name: "Swanlake Residences El Gouna", src: "/images/map/slg.webp" },
+    { id: "seasons-sea", name: "Seasons Residences", src: "/images/image 402.webp" },
+    { id: "swanlake-october-sea", name: "Swanlake October", src: "/images/hospitality.webp" },
   ],
 };
 
@@ -73,7 +73,7 @@ export default function ProjectGallery() {
       data-nav-theme="dark"
       className="flex flex-col bg-brand-black text-brand-white md:h-screen"
     >
-      <div className="flex min-h-0 flex-1 flex-col gap-8 px-6 py-20 md:gap-10 md:px-12 md:py-20 lg:px-16">
+      <div className="flex min-h-0 flex-1 flex-col gap-8 px-6 py-16 md:gap-10 md:px-12 md:py-20 lg:px-16">
         {/* Filter bar — single line on every breakpoint */}
         <div className="flex items-center justify-between gap-3 border-b border-white/20">
           <p className="whitespace-nowrap font-sans text-sm font-medium md:text-2xl">

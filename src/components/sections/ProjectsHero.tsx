@@ -61,7 +61,7 @@ export default function ProjectsHero({
           <div className="relative h-full w-[711px]">
             <GrowReveal axis="width" className="absolute inset-0">
               <Image
-                src="/images/map/egypt-map.png"
+                src="/images/map/egypt-map.webp"
                 alt="Aerial map of Egypt showing Hassan Allam project locations"
                 fill
                 className="object-cover"
@@ -118,7 +118,7 @@ export default function ProjectsHero({
       <div className="relative hidden h-screen w-full overflow-hidden md:block">
         <GrowReveal axis="width" className="absolute inset-0">
           <Image
-            src="/images/map/egypt-map.png"
+            src="/images/map/egypt-map.webp"
             alt="Aerial map of Egypt showing Hassan Allam project locations"
             fill
             className="object-cover"

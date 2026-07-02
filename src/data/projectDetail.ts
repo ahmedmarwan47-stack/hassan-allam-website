@@ -97,7 +97,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       "Situated in Cairo's prestigious East side, SwanLake Residences New Cairo (SLR) evokes an ultra-premium lifestyle in close proximity to the capital's prime destinations. Far from the city's noise and crowds, SLR features niche",
       "settings that spread across lush landscapes and select luxuries. Sprawling over 454 feddans, SLR is home to 12 exclusively gated projects which come together in a high-end centerpoint to ultimately revive Cairo's East side.",
     ],
-    introImages: ["/images/image 384.png", "/images/image 383.png"],
+    introImages: ["/images/image 384.webp", "/images/image 383.webp"],
 
     tag: "SLR",
     tagline: "Step into the exclusivity of our 12 residential neighborhoods, designed for an ultra-refined lifestyle.",
@@ -116,7 +116,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     brochureLabel: "Download our brochure",
 
     masterPlan: {
-      mapImage: "/images/masterplan-slr-clean.png",
+      mapImage: "/images/masterplan-slr-clean.webp",
       items: [
         { number: 1, name: "The Selina" },
         { number: 2, name: "The Giselle" },
@@ -136,15 +136,15 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     },
 
     showcase: {
-      full: "/images/image 385.png",
-      half: "/images/image 386.png",
-      wide: "/images/image 387.png",
+      full: "/images/image 385.webp",
+      half: "/images/image 386.webp",
+      wide: "/images/image 387.webp",
     },
 
     amenitiesHeading: ["Exceptional Amenities for", "a Unique Living Experience"],
     amenities: SLR_AMENITIES,
 
-    storyImages: ["/images/image 388.png", "/images/image 390.png"],
+    storyImages: ["/images/image 388.webp", "/images/image 390.webp"],
     storyHeading: "A Dream-like Reality Of Infinite Blue Horizons",
     storyParagraphs: [
       "SwanLake El Gouna 30-acres boast 314 finished Nero waterfront condos are not only admired from up close but also from afar. With beautiful stone facades blending perfectly with a white contemporary feel, sleek wooden linings and roof-tops; a Modern Greek paradise nestles in the heart of the Red Sea, stimulating impeccable finishing quality and furnishing sophistication.",
@@ -152,8 +152,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     ],
 
     productsImages: {
-      half: "/images/image 392.png",
-      wide: "/images/image 391.png",
+      half: "/images/image 392.webp",
+      wide: "/images/image 391.webp",
     },
     productsHeading: "Types of Products Offered In Our Project",
     products: SLR_PRODUCTS,
@@ -175,7 +175,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       "Nestled on the Red Sea's shoreline, SwanLake Residences El Gouna evokes a laid-back waterfront lifestyle, moments from the marina and the lagoon's turquoise water. Far from the noise and crowds, it features niche",
       "settings that spread across sun-soaked landscapes and select luxuries. Set across the coastline, it brings together a handful of exclusively gated neighborhoods around a high-end centerpoint overlooking the sea.",
     ],
-    introImages: ["/images/image 384.png", "/images/image 383.png"],
+    introImages: ["/images/image 384.webp", "/images/image 383.webp"],
 
     tag: "SLG",
     tagline: "Step into the exclusivity of our coastal neighborhoods, designed for an ultra-refined lifestyle.",
@@ -194,15 +194,15 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     // No `masterPlan` — this template omits the section entirely.
 
     showcase: {
-      full: "/images/image 385.png",
-      half: "/images/image 386.png",
-      wide: "/images/image 387.png",
+      full: "/images/image 385.webp",
+      half: "/images/image 386.webp",
+      wide: "/images/image 387.webp",
     },
 
     amenitiesHeading: ["Exceptional Amenities for", "a Unique Coastal Experience"],
     amenities: SLR_AMENITIES,
 
-    storyImages: ["/images/image 388.png", "/images/image 390.png"],
+    storyImages: ["/images/image 388.webp", "/images/image 390.webp"],
     storyHeading: "A Dream-like Reality Of Infinite Blue Horizons",
     storyParagraphs: [
       "SwanLake El Gouna's 30 acres boast 314 finished Nero waterfront condos, admired from up close and from afar. With beautiful stone facades blending perfectly with a white contemporary feel, sleek wooden linings and roof-tops, a Modern Greek paradise nestles in the heart of the Red Sea, stimulating impeccable finishing quality and furnishing sophistication.",
@@ -210,8 +210,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     ],
 
     productsImages: {
-      half: "/images/image 392.png",
-      wide: "/images/image 391.png",
+      half: "/images/image 392.webp",
+      wide: "/images/image 391.webp",
     },
     productsHeading: "Types of Products Offered In Our Project",
     products: SLR_PRODUCTS,

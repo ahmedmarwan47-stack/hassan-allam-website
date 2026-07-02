@@ -7,14 +7,14 @@ export default function ProjectHero({ data }: { data: ProjectDetailData }) {
   return (
     <section
       data-nav-theme="light"
-      className="relative flex min-h-[760px] items-center justify-center overflow-hidden bg-brand-white px-6 py-32 md:min-h-screen md:px-16"
+      className="relative flex min-h-[520px] items-center justify-center overflow-hidden bg-brand-white px-6 py-24 md:min-h-screen md:px-16 md:py-32"
     >
       {/* Soft window-light backdrop (light variant, from the project folder).
           Its bottom is plain white, so it fades seamlessly into the white
           ProjectIntro section below — on both desktop and mobile. */}
       <GrowReveal axis="width" className="pointer-events-none absolute inset-0">
         <Image
-          src="/images/bg-light.png"
+          src="/images/bg-light.webp"
           alt=""
           aria-hidden
           fill

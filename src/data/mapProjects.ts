@@ -4,11 +4,11 @@
 // content and the filter list stay in sync across both maps.
 
 // Tooltip / sidebar preview images.
-const SLW = "/images/map/slw.jpg";
-const SLG = "/images/map/slg.jpg";
-const SEASONS = "/images/map/seasons.jpg";
-const SLK10 = "/images/map/slk10.jpg";
-const SLO19 = "/images/map/slo19.jpg";
+const SLW = "/images/map/slw.webp";
+const SLG = "/images/map/slg.webp";
+const SEASONS = "/images/map/seasons.webp";
+const SLK10 = "/images/map/slk10.webp";
+const SLO19 = "/images/map/slo19.webp";
 
 export type Category =
   | "Residential"

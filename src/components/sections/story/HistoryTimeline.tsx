@@ -12,42 +12,42 @@ const MILESTONES = [
     title: "The Founding of Hassan Allam",
     description:
       "Hassan Allam Group is founded in Cairo, laying the first stone of a family legacy that would grow across three generations.",
-    image: "/images/image 383.png",
+    image: "/images/image 383.webp",
   },
   {
     year: "1990s",
     title: "A Dedicated Real Estate Arm",
     description:
       "Hassan Allam Properties emerges as the group's boutique real estate developer, focused on intimate, family-first communities.",
-    image: "/images/image 384.png",
+    image: "/images/image 384.webp",
   },
   {
     year: "2006",
     title: "The First Gated Community",
     description:
       "HAP delivers its first fully gated neighborhood in New Cairo, setting the standard for the exclusive communities that would follow.",
-    image: "/images/image 385.png",
+    image: "/images/image 385.webp",
   },
   {
     year: "2015",
     title: "A Move Toward the Coast",
     description:
       "The portfolio expands beyond the capital to the Red Sea and North Coast, bringing HAP's family-first ethos to seaside living.",
-    image: "/images/image 386.png",
+    image: "/images/image 386.webp",
   },
   {
     year: "2020",
     title: "A Nationwide Portfolio",
     description:
       "With 30+ active developments across 10 governorates, HAP solidifies its place among Egypt's most trusted developers.",
-    image: "/images/image 387.png",
+    image: "/images/image 387.webp",
   },
   {
     year: "Today",
     title: "Building for the Next Generation",
     description:
       "Three generations in, Hassan Allam Properties keeps crafting communities where families come first — now and for decades to come.",
-    image: "/images/image 388.png",
+    image: "/images/image 388.webp",
   },
 ];
 
@@ -123,9 +123,11 @@ function Panel({ milestone }: { milestone: (typeof MILESTONES)[number] }) {
       style={{ width: `${100 / N}%` }}
     >
       <div className="flex w-full flex-col items-center gap-6 md:flex-row md:gap-14">
+        {/* Desktop height is viewport-capped so the photo never overlaps the
+            progress bar at the bottom of the pinned stage. */}
         <GrowReveal
           axis="height"
-          className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-[535/620] md:w-[42%]"
+          className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-auto md:h-[min(calc(100vh-260px),620px)] md:w-[42%]"
         >
           <Image
             src={milestone.image}
