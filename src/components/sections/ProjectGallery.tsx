@@ -6,6 +6,8 @@ import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { PROJECT_DETAILS } from "@/data/projectDetail";
 import { useDiscoverCursor } from "@/components/DiscoverCursor";
+import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 
 const FILTERS = ["In The City", "By The Sea"] as const;
 
@@ -100,9 +102,11 @@ export default function ProjectGallery() {
         <div className="flex min-h-0 flex-1 flex-col gap-8 md:gap-10">
           {/* Heading + arrows */}
           <div className="flex items-end justify-between gap-4">
-            <h2 className="max-w-[467px] font-serif text-[2rem] font-light uppercase leading-none tracking-[-0.02em] md:text-[2.625rem]">
-              Explore our {FILTERS[activeFilter]} projects
-            </h2>
+            <Reveal>
+              <h2 className="max-w-[467px] font-serif text-[2rem] font-light uppercase leading-none tracking-[-0.02em] md:text-[2.625rem]">
+                Explore our {FILTERS[activeFilter]} projects
+              </h2>
+            </Reveal>
             <div className="flex shrink-0 gap-3">
               <button
                 type="button"
@@ -134,7 +138,7 @@ export default function ProjectGallery() {
               className="flex gap-5 md:h-full"
               style={{ width: `${(projects.length / visible) * 100}%` }}
             >
-              {projects.map((project) => {
+              {projects.map((project, i) => {
                 const href = PROJECT_DETAILS[project.id]
                   ? `/projects/${project.id}`
                   : "#";
@@ -146,7 +150,11 @@ export default function ProjectGallery() {
                     className={`group flex flex-col gap-5 md:h-full ${hoverClass}`}
                     style={{ width: `${100 / projects.length}%` }}
                   >
-                    <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2px] bg-grey-300 md:aspect-auto md:min-h-0 md:flex-1">
+                    <GrowReveal
+                      axis="height"
+                      delay={(i % visible) * 0.1}
+                      className="relative aspect-[4/5] w-full overflow-hidden rounded-[2px] bg-grey-300 md:aspect-auto md:min-h-0 md:flex-1"
+                    >
                       <Image
                         src={project.src}
                         alt={project.name}
@@ -154,10 +162,12 @@ export default function ProjectGallery() {
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                         sizes="(max-width: 768px) 90vw, 33vw"
                       />
-                    </div>
-                    <p className="shrink-0 font-sans text-base leading-[1.4] text-brand-white">
-                      {project.name}
-                    </p>
+                    </GrowReveal>
+                    <Reveal delay={(i % visible) * 0.1} className="shrink-0">
+                      <p className="font-sans text-base leading-[1.4] text-brand-white">
+                        {project.name}
+                      </p>
+                    </Reveal>
                   </Link>
                 );
               })}

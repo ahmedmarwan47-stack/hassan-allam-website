@@ -1,5 +1,6 @@
 import Image from "next/image";
 import GrowReveal from "@/components/GrowReveal";
+import { Reveal } from "@/components/Reveal";
 
 export default function ProjectStory({
   images,
@@ -48,14 +49,19 @@ export default function ProjectStory({
       {/* Text row — body column starts at the half-grid point (x=666 of 1312,
           Figma Frame 1131). */}
       <div className="flex flex-col gap-8 md:flex-row">
-        <p className="font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1.75rem,4.3vw,3.875rem)] md:w-[50.76%] md:max-w-none">
-          <span className="block max-w-[400px]">{heading}</span>
-        </p>
-        <div className="flex max-w-[445px] flex-1 flex-col gap-4 font-sans text-base leading-[1.4] text-brand-black">
+        <Reveal className="md:w-[50.76%]">
+          <p className="font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1.75rem,4.3vw,3.875rem)]">
+            <span className="block max-w-[400px]">{heading}</span>
+          </p>
+        </Reveal>
+        <Reveal
+          delay={0.1}
+          className="flex max-w-[445px] flex-1 flex-col gap-4 font-sans text-base leading-[1.4] text-brand-black"
+        >
           {paragraphs.map((p, i) => (
             <p key={i}>{p}</p>
           ))}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

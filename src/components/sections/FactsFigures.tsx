@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import { useDiscoverCursor } from "@/components/DiscoverCursor";
+import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 
 const FACTS = [
   {
@@ -34,14 +36,16 @@ function StoryCta() {
       {...bind}
       className={`group relative block aspect-square w-full max-w-[454px] overflow-hidden ${hoverClass}`}
     >
-      <Image
-        src="/images/story-hands.jpg"
-        alt="Hands joining together"
-        fill
-        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-        sizes="(max-width: 768px) 90vw, 454px"
-      />
-      <div className="absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/30" />
+      <GrowReveal axis="height" className="absolute inset-0">
+        <Image
+          src="/images/story-hands.jpg"
+          alt="Hands joining together"
+          fill
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+          sizes="(max-width: 768px) 90vw, 454px"
+        />
+        <div className="absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/30" />
+      </GrowReveal>
       {/* Static label for touch / mobile — no cursor to follow there. */}
       <span className="pointer-events-none absolute inset-0 flex items-center justify-center gap-2 font-sans text-lg font-medium text-white md:hidden">
         Discover the story
@@ -168,40 +172,50 @@ export default function FactsFigures() {
       <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-28 px-6 py-24 md:gap-[200px] md:px-16 md:py-[180px]">
         {/* ── CEO Quote ── */}
         <div className="flex max-w-[1110px] flex-col items-center gap-[58px] text-center">
-          <p className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] [font-size:clamp(2rem,4.3vw,3.875rem)]">
-            &ldquo;There is no greater pleasure than crafting{" "}
-            <em className="italic">family-centric</em> communities where
-            harmony and <em className="italic">exclusivity</em> translate into
-            everyday life.&rdquo;
-          </p>
-          <p className="font-sans text-base font-medium leading-[1.4]">
-            Mohamed Allam — CEO
-          </p>
+          <Reveal>
+            <p className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] [font-size:clamp(2rem,4.3vw,3.875rem)]">
+              &ldquo;There is no greater pleasure than crafting{" "}
+              <em className="italic">family-centric</em> communities where
+              harmony and <em className="italic">exclusivity</em> translate into
+              everyday life.&rdquo;
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="font-sans text-base font-medium leading-[1.4]">
+              Mohamed Allam — CEO
+            </p>
+          </Reveal>
         </div>
 
         {/* ── The Story ── */}
         <div className="flex max-w-[1211px] flex-col items-center gap-14">
           <div className="flex flex-col items-center gap-5">
-            <h2 className="font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(5rem,14vw,12.625rem)]">
-              The Story
-            </h2>
+            <Reveal>
+              <h2 className="font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(5rem,14vw,12.625rem)]">
+                The Story
+              </h2>
+            </Reveal>
 
             <StoryCta />
           </div>
 
-          <p className="max-w-[543px] text-center font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(0.875rem,1.5vw,1.375rem)]">
-            Since its inception in the 1990&apos;s, Hassan Allam Properties has
-            carved an enviable niche for itself as an exclusive boutique
-            developer, building intimate communities where families always come
-            first.
-          </p>
+          <Reveal delay={0.1}>
+            <p className="max-w-[543px] text-center font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(0.875rem,1.5vw,1.375rem)]">
+              Since its inception in the 1990&apos;s, Hassan Allam Properties has
+              carved an enviable niche for itself as an exclusive boutique
+              developer, building intimate communities where families always come
+              first.
+            </p>
+          </Reveal>
         </div>
 
         {/* ── Facts and Figures ── */}
         <div className="flex w-full flex-col items-start gap-10 md:items-center md:gap-[70px]">
-          <h2 className="w-full text-left font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(4rem,9.2vw,8.25rem)] md:text-center">
-            Facts and Figures
-          </h2>
+          <Reveal className="w-full">
+            <h2 className="w-full text-left font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(4rem,9.2vw,8.25rem)] md:text-center">
+              Facts and Figures
+            </h2>
+          </Reveal>
 
           <div className="flex w-full flex-col">
             {FACTS.map((fact, i) => (

@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 
 const MILESTONES = [
   {
@@ -73,9 +75,11 @@ export default function HistoryTimeline() {
       <div className="sticky top-0 flex h-screen flex-col overflow-hidden pt-24 md:pt-28">
         {/* Header */}
         <div className="shrink-0 px-6 md:px-16">
-          <p className="font-sans text-sm font-medium uppercase tracking-[0.08em] text-grey-500">
-            Our Journey
-          </p>
+          <Reveal>
+            <p className="font-sans text-sm font-medium uppercase tracking-[0.08em] text-grey-500">
+              Our Journey
+            </p>
+          </Reveal>
         </div>
 
         {/* Horizontal track */}
@@ -119,7 +123,10 @@ function Panel({ milestone }: { milestone: (typeof MILESTONES)[number] }) {
       style={{ width: `${100 / N}%` }}
     >
       <div className="flex w-full flex-col items-center gap-6 md:flex-row md:gap-14">
-        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-[535/620] md:w-[42%]">
+        <GrowReveal
+          axis="height"
+          className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-[535/620] md:w-[42%]"
+        >
           <Image
             src={milestone.image}
             alt={milestone.title}
@@ -128,11 +135,11 @@ function Panel({ milestone }: { milestone: (typeof MILESTONES)[number] }) {
             quality={90}
             className="object-cover"
           />
-        </div>
+        </GrowReveal>
 
         {/* Content slides in horizontally with the panel as the pinned stage
             pans — that horizontal motion is the timeline's animation. */}
-        <div className="flex flex-1 flex-col gap-6 md:gap-10">
+        <Reveal delay={0.1} className="flex flex-1 flex-col gap-6 md:gap-10">
           <p className="font-serif font-light leading-[0.9] tracking-[-0.02em] text-brand-black [font-size:clamp(3.5rem,8vw,7rem)]">
             {milestone.year}
           </p>
@@ -144,7 +151,7 @@ function Panel({ milestone }: { milestone: (typeof MILESTONES)[number] }) {
               {milestone.description}
             </p>
           </div>
-        </div>
+        </Reveal>
       </div>
     </div>
   );

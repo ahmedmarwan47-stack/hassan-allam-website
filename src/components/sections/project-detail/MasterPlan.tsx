@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 import type { MasterPlanItem } from "@/data/projectDetail";
 
 // Circle geometry measured from Figma frame 17043-49871: the map renders at
@@ -34,7 +36,8 @@ export default function MasterPlan({
       data-nav-theme="light"
       className="flex flex-col-reverse gap-8 bg-brand-white px-6 py-16 text-brand-black md:min-h-screen md:flex-row md:items-center md:justify-between md:gap-10 md:px-16 md:py-16"
     >
-      <ul className="flex w-full flex-col md:w-[333px] md:shrink-0">
+      <Reveal className="w-full md:w-[333px] md:shrink-0">
+      <ul className="flex w-full flex-col">
         {items.map((item) => {
           const isActive = active === item.number;
           return (
@@ -74,12 +77,13 @@ export default function MasterPlan({
           );
         })}
       </ul>
+      </Reveal>
 
       {/* Map — Figma renders it at 866/1312 of the content width (right
           anchored). Width takes the Figma share, capped via min() so the
           aspect-locked height still fits the viewport. */}
       <div className="relative aspect-[866/824] w-full overflow-hidden rounded-[2px] md:ml-auto md:w-[min(66%,calc((100vh-176px)*0.9199))]">
-        <div className="absolute inset-0">
+        <GrowReveal axis="width" className="absolute inset-0">
           <Image
             src={mapImage}
             alt="SwanLake Residences New Cairo master plan"
@@ -121,7 +125,7 @@ export default function MasterPlan({
               </motion.button>
             );
           })}
-        </div>
+        </GrowReveal>
       </div>
     </section>
   );

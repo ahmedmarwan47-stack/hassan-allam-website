@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 import type { NewsArticle } from "@/data/news";
 import type { NewsDetail } from "@/data/newsDetail";
 
@@ -18,15 +19,17 @@ export default function NewsDetailHero({
       {/* Dark window-light backdrop (dark variant, from the project folder).
           Rendered at full strength so the light streaks actually read; only
           the bottom fades into the black content section below. */}
-      <Image
-        src="/images/bg-dark.png"
-        alt=""
-        aria-hidden
-        fill
-        priority
-        sizes="100vw"
-        className="pointer-events-none select-none object-cover"
-      />
+      <GrowReveal axis="width" className="pointer-events-none absolute inset-0">
+        <Image
+          src="/images/bg-dark.png"
+          alt=""
+          aria-hidden
+          fill
+          priority
+          sizes="100vw"
+          className="select-none object-cover"
+        />
+      </GrowReveal>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-b from-transparent to-brand-black"

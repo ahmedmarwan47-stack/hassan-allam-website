@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { Reveal } from "@/components/Reveal";
 
 const NAV_LINKS: { label: string; href: string }[] = [
   { label: "Home", href: "/" },
@@ -233,6 +234,7 @@ export default function Footer() {
         <div className="flex flex-col gap-12 md:flex-row md:items-start md:justify-between">
           {/* Left column: Nav + Newsletter */}
           <div className="flex w-full flex-col gap-12 md:w-[468px] md:justify-between md:gap-0 md:self-stretch">
+            <Reveal>
             <nav className="flex flex-col font-serif font-light uppercase leading-none tracking-[-0.02em] text-[3.25rem] md:text-[5.125rem]">
               {NAV_LINKS.map((link) => {
                 const active = isActive(link.href);
@@ -249,8 +251,9 @@ export default function Footer() {
                 );
               })}
             </nav>
+            </Reveal>
 
-            <div className="flex flex-col gap-7">
+            <Reveal delay={0.1} className="flex flex-col gap-7">
               <div className="flex flex-col gap-1">
                 <p className="font-serif text-[1.625rem] font-normal uppercase leading-none tracking-[-0.02em]">
                   Subscribe to our newsletter
@@ -260,11 +263,11 @@ export default function Footer() {
                 </p>
               </div>
               <NewsletterField />
-            </div>
+            </Reveal>
           </div>
 
           {/* Right column: Projects + Contact */}
-          <div className="flex w-full flex-col gap-[52px] md:w-[685px]">
+          <Reveal delay={0.05} className="flex w-full flex-col gap-[52px] md:w-[685px]">
             <div className="flex flex-col gap-[66px]">
               {/* Project listings — accordions on mobile, two columns on desktop */}
               <div className="font-sans font-medium">
@@ -336,7 +339,7 @@ export default function Footer() {
             </div>
 
             <div className="h-px w-full bg-white/16" />
-          </div>
+          </Reveal>
         </div>
 
         {/* ── Bottom bar ── */}

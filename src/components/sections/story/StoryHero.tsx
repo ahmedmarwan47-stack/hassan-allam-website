@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 
 export default function StoryHero() {
   return (
@@ -9,15 +10,17 @@ export default function StoryHero() {
     >
       {/* Light window-light backdrop whose white bottom fades into the white
           intro section below (desktop + mobile). */}
-      <Image
-        src="/images/bg-light.png"
-        alt=""
-        aria-hidden
-        fill
-        priority
-        sizes="100vw"
-        className="pointer-events-none select-none object-cover"
-      />
+      <GrowReveal axis="width" className="pointer-events-none absolute inset-0">
+        <Image
+          src="/images/bg-light.png"
+          alt=""
+          aria-hidden
+          fill
+          priority
+          sizes="100vw"
+          className="select-none object-cover"
+        />
+      </GrowReveal>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-b from-transparent to-brand-white"

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { Reveal } from "@/components/Reveal";
 import { withBasePath } from "@/lib/basePath";
 
 /**
@@ -76,11 +77,13 @@ export default function Hero() {
           removed because the hero footage already autoplays. */}
       <div className="relative z-10 flex h-full w-full flex-col">
         <div className="mt-auto flex w-full flex-col items-start px-6 pb-12 md:px-12 md:pb-16 lg:px-16">
-          <h1 className="max-w-[20ch] font-serif text-[clamp(2rem,3.5vw,2.625rem)] font-normal uppercase leading-none tracking-[-0.02em] text-white">
-            From Our
-            <br />
-            Family, to Yours.
-          </h1>
+          <Reveal>
+            <h1 className="max-w-[20ch] font-serif text-[clamp(2rem,3.5vw,2.625rem)] font-normal uppercase leading-none tracking-[-0.02em] text-white">
+              From Our
+              <br />
+              Family, to Yours.
+            </h1>
+          </Reveal>
         </div>
       </div>
     </section>

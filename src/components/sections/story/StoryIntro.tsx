@@ -14,7 +14,7 @@ export default function StoryIntro() {
           <span className="size-3 shrink-0 rounded-full border border-brand-black/40" />
           <p className="font-sans text-base text-brand-black">Scroll</p>
         </div>
-        <div className="grid gap-8 font-sans text-base leading-[1.4] text-brand-black md:grid-cols-2 md:gap-16">
+        <Reveal className="grid gap-8 font-sans text-base leading-[1.4] text-brand-black md:grid-cols-2 md:gap-16">
           <p>
             Hassan Allam Properties is the boutique real-estate arm of Hassan
             Allam Holding — one of Egypt&apos;s oldest and most respected
@@ -26,7 +26,7 @@ export default function StoryIntro() {
             construction firm into a nationwide developer, building intimate,
             thoughtfully designed communities where families always come first.
           </p>
-        </div>
+        </Reveal>
       </div>
 
       {/* Image + big serif statements */}

@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PROJECT_DETAILS } from "@/data/projectDetail";
 import { useDiscoverCursor } from "@/components/DiscoverCursor";
 import GrowReveal from "@/components/GrowReveal";
+import { Reveal } from "@/components/Reveal";
 import type { Category } from "@/data/mapProjects";
 
 interface ProjectCard {
@@ -62,14 +63,18 @@ export default function AllProjects({
     >
       {/* ── Intro ── */}
       <div className="px-6 pb-12 pt-16 md:px-16 md:pb-20 md:pt-20">
-        <p className="font-sans text-sm font-medium uppercase leading-none tracking-[0.04em] text-brand-black md:text-base">
-          {filterLabel}
-        </p>
-        <p className="mt-10 max-w-[857px] font-serif font-light uppercase leading-[1.2] tracking-[-0.02em] [font-size:clamp(1.5rem,3vw,2.625rem)] md:mt-14">
-          Our refined expertise lies in the art of designing and transforming
-          living spaces, from elegant residences to exclusive coastal
-          destinations, from visionary neighborhoods to established communities.
-        </p>
+        <Reveal>
+          <p className="font-sans text-sm font-medium uppercase leading-none tracking-[0.04em] text-brand-black md:text-base">
+            {filterLabel}
+          </p>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <p className="mt-10 max-w-[857px] font-serif font-light uppercase leading-[1.2] tracking-[-0.02em] [font-size:clamp(1.5rem,3vw,2.625rem)] md:mt-14">
+            Our refined expertise lies in the art of designing and transforming
+            living spaces, from elegant residences to exclusive coastal
+            destinations, from visionary neighborhoods to established communities.
+          </p>
+        </Reveal>
       </div>
 
       {/* ── In The City — cards reveal by growing in HEIGHT on scroll ── */}
@@ -142,11 +147,13 @@ function CommunitySection({
           {String(count).padStart(2, "0")}
         </span>
 
-        <h3 className="font-sans font-medium uppercase leading-[1.1] tracking-[0.01em] text-brand-black [font-size:clamp(1.5rem,2.6vw,2rem)] md:text-center">
-          {title}
-          <br />
-          {subtitle}
-        </h3>
+        <Reveal>
+          <h3 className="font-sans font-medium uppercase leading-[1.1] tracking-[0.01em] text-brand-black [font-size:clamp(1.5rem,2.6vw,2rem)] md:text-center">
+            {title}
+            <br />
+            {subtitle}
+          </h3>
+        </Reveal>
 
         <ViewToggle view={view} onChange={onViewChange} />
       </div>
@@ -277,9 +284,11 @@ function GridView({
                 />
               </div>
             </GrowReveal>
-            <p className="mt-4 font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1rem,1.8vw,1.625rem)] md:mt-6">
-              {p.name}
-            </p>
+            <Reveal delay={(i % 3) * 0.12}>
+              <p className="mt-4 font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1rem,1.8vw,1.625rem)] md:mt-6">
+                {p.name}
+              </p>
+            </Reveal>
           </Link>
         );
       })}

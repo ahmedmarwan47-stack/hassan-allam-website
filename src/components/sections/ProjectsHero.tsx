@@ -11,6 +11,7 @@ import {
 import MapPin from "@/components/MapPin";
 import ProjectSidebar from "@/components/ProjectSidebar";
 import MapFilterBarMobile from "@/components/MapFilterBarMobile";
+import GrowReveal from "@/components/GrowReveal";
 
 export default function ProjectsHero({
   activeFilter,
@@ -58,14 +59,16 @@ export default function ProjectsHero({
           className="h-full overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none]"
         >
           <div className="relative h-full w-[711px]">
-            <Image
-              src="/images/map/egypt-map.png"
-              alt="Aerial map of Egypt showing Hassan Allam project locations"
-              fill
-              className="object-cover"
-              sizes="711px"
-              priority
-            />
+            <GrowReveal axis="width" className="absolute inset-0">
+              <Image
+                src="/images/map/egypt-map.png"
+                alt="Aerial map of Egypt showing Hassan Allam project locations"
+                fill
+                className="object-cover"
+                sizes="711px"
+                priority
+              />
+            </GrowReveal>
             {MAP_PROJECTS.map((project) => (
               <MapPin
                 key={project.id}
@@ -113,7 +116,7 @@ export default function ProjectsHero({
 
       {/* ── Desktop layout — full viewport, no overflow ── */}
       <div className="relative hidden h-screen w-full overflow-hidden md:block">
-        <div className="absolute inset-0">
+        <GrowReveal axis="width" className="absolute inset-0">
           <Image
             src="/images/map/egypt-map.png"
             alt="Aerial map of Egypt showing Hassan Allam project locations"
@@ -122,7 +125,7 @@ export default function ProjectsHero({
             priority
             sizes="100vw"
           />
-        </div>
+        </GrowReveal>
 
         {MAP_PROJECTS.map((project) => (
           <MapPin

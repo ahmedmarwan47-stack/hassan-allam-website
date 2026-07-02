@@ -10,6 +10,8 @@ import {
   useTransform,
 } from "framer-motion";
 import { useDiscoverCursor } from "@/components/DiscoverCursor";
+import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 import { withBasePath } from "@/lib/basePath";
 
 /**
@@ -92,9 +94,11 @@ export default function AssetClasses() {
           unoptimized
           className="pointer-events-none -z-10 select-none object-cover"
         />
-        <h2 className="relative z-10 font-serif text-[1.875rem] font-light uppercase leading-[1.1] tracking-[-0.02em] text-black">
-          Asset Classes Designed for Future Lifestyles
-        </h2>
+        <Reveal className="relative z-10">
+          <h2 className="font-serif text-[1.875rem] font-light uppercase leading-[1.1] tracking-[-0.02em] text-black">
+            Asset Classes Designed for Future Lifestyles
+          </h2>
+        </Reveal>
 
         <div className="relative z-10 mt-8 h-[440px] overflow-hidden">
           <motion.div
@@ -110,12 +114,17 @@ export default function AssetClasses() {
                 className="flex h-full flex-col"
                 style={{ width: `${100 / TOTAL_CARDS}%` }}
               >
-                <div className="relative min-h-0 flex-1 overflow-hidden rounded-[2px] bg-grey-300">
+                <GrowReveal
+                  axis="height"
+                  className="relative min-h-0 flex-1 overflow-hidden rounded-[2px] bg-grey-300"
+                >
                   <Image src={card.src} alt={card.label} fill sizes="90vw" className="object-cover" />
-                </div>
-                <figcaption className="mt-3 shrink-0 font-sans text-base font-medium leading-[1.3] text-black">
-                  {card.label}
-                </figcaption>
+                </GrowReveal>
+                <Reveal className="mt-3 shrink-0">
+                  <figcaption className="font-sans text-base font-medium leading-[1.3] text-black">
+                    {card.label}
+                  </figcaption>
+                </Reveal>
               </Link>
             ))}
           </motion.div>
@@ -168,12 +177,14 @@ export default function AssetClasses() {
 
         {/* Heading top-right, wrapping 4 → 2 lines. */}
         <div className="relative z-10 flex justify-end">
-          <motion.h2
-            style={{ fontSize: headingPx, lineHeight: headingLh, width: headingW }}
-            className="origin-top-right text-right font-serif font-light uppercase tracking-[-0.02em] text-black"
-          >
-            Asset Classes Designed for Future Lifestyles
-          </motion.h2>
+          <Reveal>
+            <motion.h2
+              style={{ fontSize: headingPx, lineHeight: headingLh, width: headingW }}
+              className="origin-top-right text-right font-serif font-light uppercase tracking-[-0.02em] text-black"
+            >
+              Asset Classes Designed for Future Lifestyles
+            </motion.h2>
+          </Reveal>
         </div>
 
         <div className="relative z-10 mt-6 flex min-h-0 flex-1 flex-col md:mt-10">
@@ -184,14 +195,18 @@ export default function AssetClasses() {
               transition={{ type: "spring", stiffness: 140, damping: 24 }}
               className="flex h-full gap-3 md:gap-5"
             >
-              {CARDS.map((card) => (
+              {CARDS.map((card, i) => (
                 <Link
                   key={card.label}
                   href={projectsHref(card.filter)}
                   {...bind}
                   className={`group flex h-full min-w-0 flex-1 flex-col ${hoverClass}`}
                 >
-                  <div className="relative w-full flex-1 min-h-0 overflow-hidden rounded-[2px] bg-grey-300">
+                  <GrowReveal
+                    axis="height"
+                    delay={i * 0.08}
+                    className="relative w-full flex-1 min-h-0 overflow-hidden rounded-[2px] bg-grey-300"
+                  >
                     <Image
                       src={card.src}
                       alt={card.label}
@@ -199,13 +214,15 @@ export default function AssetClasses() {
                       sizes="(max-width: 768px) 40vw, 50vw"
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                     />
-                  </div>
-                  <motion.figcaption
-                    style={{ fontSize: labelPx }}
-                    className="mt-3 origin-left font-sans font-medium leading-[1.3] text-black md:mt-4"
-                  >
-                    {card.label}
-                  </motion.figcaption>
+                  </GrowReveal>
+                  <Reveal delay={i * 0.08}>
+                    <motion.figcaption
+                      style={{ fontSize: labelPx }}
+                      className="mt-3 origin-left font-sans font-medium leading-[1.3] text-black md:mt-4"
+                    >
+                      {card.label}
+                    </motion.figcaption>
+                  </Reveal>
                 </Link>
               ))}
             </motion.div>

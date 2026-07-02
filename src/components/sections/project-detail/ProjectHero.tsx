@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 import type { ProjectDetailData } from "@/data/projectDetail";
 
 export default function ProjectHero({ data }: { data: ProjectDetailData }) {
@@ -11,15 +12,17 @@ export default function ProjectHero({ data }: { data: ProjectDetailData }) {
       {/* Soft window-light backdrop (light variant, from the project folder).
           Its bottom is plain white, so it fades seamlessly into the white
           ProjectIntro section below — on both desktop and mobile. */}
-      <Image
-        src="/images/bg-light.png"
-        alt=""
-        aria-hidden
-        fill
-        priority
-        sizes="100vw"
-        className="pointer-events-none select-none object-cover"
-      />
+      <GrowReveal axis="width" className="pointer-events-none absolute inset-0">
+        <Image
+          src="/images/bg-light.png"
+          alt=""
+          aria-hidden
+          fill
+          priority
+          sizes="100vw"
+          className="select-none object-cover"
+        />
+      </GrowReveal>
       {/* Fade the image's bottom into the next section's white. */}
       <div
         aria-hidden

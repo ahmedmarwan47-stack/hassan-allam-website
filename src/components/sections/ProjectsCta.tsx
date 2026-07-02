@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 
 export default function ProjectsCta() {
   return (
@@ -8,17 +10,19 @@ export default function ProjectsCta() {
       data-nav-theme="dark"
       className="relative isolate flex min-h-[600px] items-center justify-center overflow-hidden md:min-h-[958px]"
     >
-      <Image
-        src="/images/section-bg.png"
-        alt=""
-        fill
-        priority={false}
-        className="-z-10 object-cover"
-        sizes="100vw"
-      />
+      <GrowReveal axis="width" className="absolute inset-0 -z-10">
+        <Image
+          src="/images/section-bg.png"
+          alt=""
+          fill
+          priority={false}
+          className="object-cover"
+          sizes="100vw"
+        />
+      </GrowReveal>
       <div className="absolute inset-0 -z-10 bg-black/55" />
 
-      <div className="flex w-full max-w-[441px] flex-col items-center px-6 text-center text-white">
+      <Reveal className="flex w-full max-w-[441px] flex-col items-center px-6 text-center text-white">
         <h2 className="font-serif text-[3rem] font-light uppercase leading-[1.05] tracking-[-0.02em] md:text-[5rem]">
           Want to work with us?
         </h2>
@@ -47,7 +51,7 @@ export default function ProjectsCta() {
             />
           </svg>
         </Link>
-      </div>
+      </Reveal>
     </section>
   );
 }

@@ -11,13 +11,15 @@ export default function FeatureGrid({
 }) {
   return (
     <div className="flex w-full flex-col items-start gap-10 md:ml-auto md:max-w-[867px] md:gap-10">
-      <h2 className="max-w-[606px] font-sans font-medium leading-none text-brand-black [font-size:clamp(1.75rem,4vw,3rem)]">
-        {heading.map((line, i) => (
-          <span key={i} className="block">
-            {line}
-          </span>
-        ))}
-      </h2>
+      <Reveal>
+        <h2 className="max-w-[606px] font-sans font-medium leading-none text-brand-black [font-size:clamp(1.75rem,4vw,3rem)]">
+          {heading.map((line, i) => (
+            <span key={i} className="block">
+              {line}
+            </span>
+          ))}
+        </h2>
+      </Reveal>
       <div className="grid w-full grid-cols-1 gap-x-[70px] gap-y-0 sm:grid-cols-2">
         {items.map((item, i) => (
           <Reveal

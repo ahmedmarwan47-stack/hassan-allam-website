@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import GrowReveal from "@/components/GrowReveal";
+import { Reveal } from "@/components/Reveal";
 import type { NewsArticle } from "@/data/news";
 import { NEWS_DETAILS } from "@/data/newsDetail";
 
@@ -86,9 +87,11 @@ export default function NewsCard({ article }: { article: NewsArticle }) {
         </GrowReveal>
       </Link>
 
-      <p className={`${TITLE_MAX[article.span]} font-sans text-lg font-medium leading-[1.3] text-brand-black md:text-2xl`}>
-        {article.title}
-      </p>
+      <Reveal>
+        <p className={`${TITLE_MAX[article.span]} font-sans text-lg font-medium leading-[1.3] text-brand-black md:text-2xl`}>
+          {article.title}
+        </p>
+      </Reveal>
     </div>
   );
 }

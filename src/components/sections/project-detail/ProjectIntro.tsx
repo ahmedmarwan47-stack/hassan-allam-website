@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/Reveal";
 import type { ProjectDetailData } from "@/data/projectDetail";
 import GrowImagePair from "./GrowImagePair";
 
@@ -15,10 +16,10 @@ export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
           <span className="size-3 shrink-0 rounded-full border border-brand-black/40" />
           <p className="font-sans text-base text-brand-black">{data.scrollLabel}</p>
         </div>
-        <div className="grid gap-8 font-sans text-base leading-[1.4] text-brand-black md:ml-auto md:w-[66.16%] md:grid-cols-[372fr_424fr] md:gap-x-[72px]">
+        <Reveal className="grid gap-8 font-sans text-base leading-[1.4] text-brand-black md:ml-auto md:w-[66.16%] md:grid-cols-[372fr_424fr] md:gap-x-[72px]">
           <p>{data.introParagraphs[0]}</p>
           <p>{data.introParagraphs[1]}</p>
-        </div>
+        </Reveal>
       </div>
 
       {/* Image pair — equal heights + scroll-driven grow (height then width). */}
@@ -27,19 +28,22 @@ export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
       {/* Tag + community heading + brochure — right block is the exact 868
           column (Figma Frame 1097). */}
       <div className="flex flex-col gap-10 md:flex-row md:items-stretch md:justify-between">
-        <div className="flex shrink-0 flex-col items-start justify-between gap-10 md:w-[284px] md:gap-0">
+        <Reveal className="flex shrink-0 flex-col items-start justify-between gap-10 md:w-[284px] md:gap-0">
           <span className="flex h-[54px] items-center justify-center rounded-[2px] border border-brand-black/20 px-4 font-sans text-lg font-medium text-brand-black">
             {data.tag}
           </span>
           <p className="max-w-[284px] font-sans text-base leading-[1.4] text-brand-black">
             {data.tagline}
           </p>
-        </div>
+        </Reveal>
 
         <div className="flex flex-col items-start gap-8 md:w-[66.16%] md:gap-8">
-          <p className="font-sans text-xl font-medium text-success-dark md:text-2xl">
-            {data.communityLabel}
-          </p>
+          <Reveal delay={0.05}>
+            <p className="font-sans text-xl font-medium text-success-dark md:text-2xl">
+              {data.communityLabel}
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
           <p className="font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1.75rem,4.3vw,3.875rem)]">
             {data.communityHeading.map((segment, i) =>
               segment.link ? (
@@ -55,6 +59,7 @@ export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
               ),
             )}
           </p>
+          </Reveal>
           <button
             type="button"
             className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-[4px] border border-grey-500/60 p-2 transition-colors duration-500 hover:border-brand-black md:w-auto md:justify-start"

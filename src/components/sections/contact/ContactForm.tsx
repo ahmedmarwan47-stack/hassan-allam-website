@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { TextField, SelectField, TextareaField, type FieldStatus } from "@/components/FormField";
+import { Reveal } from "@/components/Reveal";
 
 const SUBJECTS = [
   "Real Estate",
@@ -106,7 +107,7 @@ export default function ContactForm() {
       className="flex flex-col gap-16 bg-brand-white px-6 py-16 text-brand-black md:flex-row md:gap-20 md:px-16 md:py-20"
     >
       {/* Contact info */}
-      <div className="flex w-full flex-col gap-4 md:w-[313px] md:shrink-0">
+      <Reveal className="flex w-full flex-col gap-4 md:w-[313px] md:shrink-0">
         <div className="h-px w-full bg-brand-black/10" />
         <a
           href="mailto:info@hap.com.eg"
@@ -132,10 +133,10 @@ export default function ContactForm() {
           Hap on WhatsApp
         </a>
         <div className="h-px w-full bg-brand-black/10" />
-      </div>
+      </Reveal>
 
       {/* Form */}
-      <div className="w-full max-w-[919px]">
+      <Reveal delay={0.1} className="w-full max-w-[919px]">
         {submitted ? (
           <div className="flex flex-col items-start gap-4 py-10">
             <p className="font-serif text-4xl font-light leading-[1.1] tracking-[-0.02em] text-field-success md:text-5xl">
@@ -243,7 +244,7 @@ export default function ContactForm() {
             </button>
           </form>
         )}
-      </div>
+      </Reveal>
     </section>
   );
 }
