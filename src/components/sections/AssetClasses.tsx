@@ -11,6 +11,7 @@ import {
 } from "framer-motion";
 import { useDiscoverCursor } from "@/components/DiscoverCursor";
 import { withBasePath } from "@/lib/basePath";
+import { Reveal } from "@/components/Reveal";
 
 /**
  * AssetClasses — Figma node 16988-1390.
@@ -92,9 +93,11 @@ export default function AssetClasses() {
           unoptimized
           className="pointer-events-none -z-10 select-none object-cover"
         />
-        <h2 className="relative z-10 font-serif text-[1.875rem] font-light uppercase leading-[1.1] tracking-[-0.02em] text-black">
-          Asset Classes Designed for Future Lifestyles
-        </h2>
+        <Reveal className="relative z-10">
+          <h2 className="font-serif text-[1.875rem] font-light uppercase leading-[1.1] tracking-[-0.02em] text-black">
+            Asset Classes Designed for Future Lifestyles
+          </h2>
+        </Reveal>
 
         <div className="relative z-10 mt-8 h-[440px] overflow-hidden">
           <motion.div
@@ -167,14 +170,14 @@ export default function AssetClasses() {
         />
 
         {/* Heading top-right, wrapping 4 → 2 lines. */}
-        <div className="relative z-10 flex justify-end">
+        <Reveal className="relative z-10 flex justify-end">
           <motion.h2
             style={{ fontSize: headingPx, lineHeight: headingLh, width: headingW }}
             className="origin-top-right text-right font-serif font-light uppercase tracking-[-0.02em] text-black"
           >
             Asset Classes Designed for Future Lifestyles
           </motion.h2>
-        </div>
+        </Reveal>
 
         <div className="relative z-10 mt-6 flex min-h-0 flex-1 flex-col md:mt-10">
           <div className="relative flex-1 min-h-0 overflow-hidden">

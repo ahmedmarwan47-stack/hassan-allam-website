@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Reveal } from "@/components/Reveal";
 
 const KEY_BENEFITS = [
   "Effortlessly explore your community",
@@ -68,16 +69,24 @@ export default function AppCta() {
            warm-50 background above it. ── */}
       <div className="md:hidden">
         <div className="flex flex-col gap-8 px-6 pb-10 pt-28">
-          <h2 className="font-serif text-[2.5rem] font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black">
-            Manage your home anytime with HAP Family App
-          </h2>
-          <StoreBadges />
-          <p className="font-serif text-[1.375rem] font-medium capitalize leading-[1.2] tracking-[-0.02em] text-brand-black">
-            <span>HAP Family App </span>
-            <strong className="font-bold">enables homeowners</strong>
-            <span> to seamlessly manage their properties from their phones.</span>
-          </p>
-          <KeyBenefits />
+          <Reveal>
+            <h2 className="font-serif text-[2.5rem] font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black">
+              Manage your home anytime with HAP Family App
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <StoreBadges />
+          </Reveal>
+          <Reveal delay={0.15}>
+            <p className="font-serif text-[1.375rem] font-medium capitalize leading-[1.2] tracking-[-0.02em] text-brand-black">
+              <span>HAP Family App </span>
+              <strong className="font-bold">enables homeowners</strong>
+              <span> to seamlessly manage their properties from their phones.</span>
+            </p>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <KeyBenefits />
+          </Reveal>
         </div>
         <div className="relative h-[600px] w-full overflow-hidden">
           <Image
@@ -105,7 +114,7 @@ export default function AppCta() {
         </div>
 
         {/* Heading + badges — right side */}
-        <div
+        <Reveal
           className="absolute flex flex-col items-start gap-[38px]"
           style={{ left: "50.7%", top: "17.95%", width: "35.35%" }}
         >
@@ -113,25 +122,29 @@ export default function AppCta() {
             Manage your home anytime with HAP Family App
           </h2>
           <StoreBadges />
-        </div>
+        </Reveal>
 
         {/* Description — left side */}
-        <p
-          className="absolute font-serif text-[1.625rem] font-medium capitalize leading-[1.2] tracking-[-0.02em] text-brand-black"
+        <Reveal
+          delay={0.1}
+          className="absolute"
           style={{ left: "4.44%", top: "38.73%", width: "27.85%" }}
         >
-          <span>HAP Family App </span>
-          <strong className="font-bold">enables homeowners</strong>
-          <span> to seamlessly manage their properties from their phones.</span>
-        </p>
+          <p className="font-serif text-[1.625rem] font-medium capitalize leading-[1.2] tracking-[-0.02em] text-brand-black">
+            <span>HAP Family App </span>
+            <strong className="font-bold">enables homeowners</strong>
+            <span> to seamlessly manage their properties from their phones.</span>
+          </p>
+        </Reveal>
 
         {/* Key benefits — bottom left */}
-        <div
+        <Reveal
+          delay={0.15}
           className="absolute"
           style={{ left: "4.44%", top: "79.23%", width: "30.9%" }}
         >
           <KeyBenefits />
-        </div>
+        </Reveal>
       </div>
     </section>
   );

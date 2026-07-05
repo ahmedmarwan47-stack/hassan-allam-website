@@ -11,6 +11,7 @@ import {
 import MapPin from "@/components/MapPin";
 import ProjectSidebar from "@/components/ProjectSidebar";
 import MapFilterBarMobile from "@/components/MapFilterBarMobile";
+import { Reveal } from "@/components/Reveal";
 
 // Homepage "Discover our projects in Egypt" — the interactive map. Shares its
 // pins, sidebar and mobile filter bar with the Projects page hero.
@@ -79,13 +80,17 @@ export default function DiscoverProjects() {
 
         {/* Heading + subtitle over the blue sky area */}
         <div className="pointer-events-none absolute inset-x-0 top-0 px-6 pt-20">
-          <h2 className="font-serif text-[1.875rem] font-light uppercase leading-[1.05] tracking-[-0.02em] text-white [text-shadow:0_1px_12px_rgba(0,0,0,0.35)]">
-            Discover our projects in Egypt
-          </h2>
-          <p className="mt-3 max-w-[260px] font-serif text-[0.8rem] font-medium uppercase leading-tight tracking-[-0.02em] text-white [text-shadow:0_1px_12px_rgba(0,0,0,0.35)]">
-            Choose between In The City and By The Sea to discover current and
-            upcoming projects tailored to your preferences.
-          </p>
+          <Reveal>
+            <h2 className="font-serif text-[1.875rem] font-light uppercase leading-[1.05] tracking-[-0.02em] text-white [text-shadow:0_1px_12px_rgba(0,0,0,0.35)]">
+              Discover our projects in Egypt
+            </h2>
+          </Reveal>
+          <Reveal delay={0.12}>
+            <p className="mt-3 max-w-[260px] font-serif text-[0.8rem] font-medium uppercase leading-tight tracking-[-0.02em] text-white [text-shadow:0_1px_12px_rgba(0,0,0,0.35)]">
+              Choose between In The City and By The Sea to discover current and
+              upcoming projects tailored to your preferences.
+            </p>
+          </Reveal>
         </div>
 
         {/* Drag hint */}
@@ -136,32 +141,33 @@ export default function DiscoverProjects() {
         </div>
 
         {/* Heading — top right, over the blue sky area */}
-        <h2
-          className="pointer-events-none absolute font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-white"
-          style={{
-            left: "50.4%",
-            top: "14.3%",
-            width: "32%",
-            fontSize: "clamp(2rem, 4.3vw, 3.875rem)",
-          }}
+        <Reveal
+          className="pointer-events-none absolute"
+          style={{ left: "50.4%", top: "14.3%", width: "32%" }}
         >
-          Discover our projects in Egypt
-        </h2>
+          <h2
+            className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-white"
+            style={{ fontSize: "clamp(2rem, 4.3vw, 3.875rem)" }}
+          >
+            Discover our projects in Egypt
+          </h2>
+        </Reveal>
 
         {/* Subtitle — left, over the blue sky area */}
-        <p
-          className="pointer-events-none absolute font-serif font-medium uppercase leading-none tracking-[-0.02em] text-white"
-          style={{
-            left: "4.4%",
-            top: "51%",
-            width: "26%",
-            fontSize: "clamp(0.875rem, 1.5vw, 1.375rem)",
-          }}
+        <Reveal
+          delay={0.12}
+          className="pointer-events-none absolute"
+          style={{ left: "4.4%", top: "51%", width: "26%" }}
         >
-          Choose between In The City and By The Sea to discover current and
-          upcoming projects tailored to your preferences using two intuitive
-          filters.
-        </p>
+          <p
+            className="font-serif font-medium uppercase leading-none tracking-[-0.02em] text-white"
+            style={{ fontSize: "clamp(0.875rem, 1.5vw, 1.375rem)" }}
+          >
+            Choose between In The City and By The Sea to discover current and
+            upcoming projects tailored to your preferences using two intuitive
+            filters.
+          </p>
+        </Reveal>
 
         {/* Pins */}
         {MAP_PROJECTS.map((project) => (
