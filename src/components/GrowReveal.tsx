@@ -40,6 +40,7 @@ export default function GrowReveal({
   return (
     <div ref={ref} className={className}>
       <div
+        data-reveal=""
         className="absolute inset-0"
         style={{
           clipPath: inView ? "inset(0% 0% 0% 0%)" : hidden,

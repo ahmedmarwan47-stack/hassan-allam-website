@@ -38,3 +38,24 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+
+/* ── Reveal failsafe ─────────────────────────────────────────────────────
+   Reveal/GrowReveal SSR their hidden initial state inline (opacity 0,
+   clip-path, blur). If React never hydrates — stale cached HTML pointing at
+   replaced chunks, blocked JS — that content would stay invisible forever.
+   CSS animations outrank inline styles in the cascade, so while <html> lacks
+   the .hydrated class (added by HydrationMark on boot) every [data-reveal]
+   element force-fades in after a grace period. Once hydration adds the
+   class, this rule stops matching and framer owns the animations as usual. */
+@keyframes reveal-failsafe {
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+    filter: none;
+  }
+}
+
+html:not(.hydrated) [data-reveal] {
+  animation: reveal-failsafe 0.8s ease 2.5s forwards;
+}
