@@ -17,7 +17,7 @@ export default function GrowImagePair({
   const pairHeight = "md:h-[calc((100vw-128px)*0.4124)] md:max-h-[541px]";
 
   return (
-    <div className="flex flex-col gap-5 md:flex-row md:items-stretch">
+    <div className="flex flex-col gap-5 md:flex-row md:items-stretch md:justify-between md:gap-0">
       <GrowReveal
         axis="height"
         className={`relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-auto md:w-[32.24%] ${pairHeight}`}
@@ -34,7 +34,7 @@ export default function GrowImagePair({
       <GrowReveal
         axis="width"
         delay={0.12}
-        className={`relative aspect-[4/3] w-full flex-1 overflow-hidden rounded-[2px] md:aspect-auto ${pairHeight}`}
+        className={`relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-auto md:w-[66.16%] ${pairHeight}`}
       >
         <Image
           src={wide}

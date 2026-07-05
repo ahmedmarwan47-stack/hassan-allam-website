@@ -10,7 +10,7 @@ export default function ContactHero() {
       {/* Light window-light backdrop fading into the white form section below,
           kept short so the contact details are visible in the first viewport. */}
       <Image
-        src="/images/bg-light.png"
+        src="/images/bg-light.jpg"
         alt=""
         aria-hidden
         fill

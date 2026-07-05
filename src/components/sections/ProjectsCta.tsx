@@ -9,7 +9,7 @@ export default function ProjectsCta() {
       className="relative isolate flex min-h-[600px] items-center justify-center overflow-hidden md:min-h-[958px]"
     >
       <Image
-        src="/images/section-bg.png"
+        src="/images/section-bg.jpg"
         alt=""
         fill
         priority={false}

@@ -21,7 +21,7 @@ export default function ImageShowcase({
       >
         <Image src={full} alt="" fill sizes="100vw" quality={90} className="object-cover" />
       </GrowReveal>
-      <div className="flex flex-col gap-5 md:flex-row md:items-start">
+      <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between md:gap-0">
         <GrowReveal
           axis="height"
           className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-[424/540] md:w-[32.24%]"
@@ -38,7 +38,7 @@ export default function ImageShowcase({
         <GrowReveal
           axis="width"
           delay={0.12}
-          className="relative aspect-[4/3] w-full flex-1 overflow-hidden rounded-[2px] md:aspect-[868/1030]"
+          className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-[868/1030] md:w-[66.16%]"
         >
           <Image
             src={wide}

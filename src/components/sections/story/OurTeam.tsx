@@ -2,13 +2,16 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useDragControls } from "framer-motion";
 
 interface TeamMember {
   name: string;
   role: string;
   image?: string;
-  bio: string;
+  /** Large 26px lead paragraph in the bio pop-up (Figma 17043-51814). */
+  intro: string;
+  /** Two-column 16px body copy in the bio pop-up. */
+  body: [string, string];
 }
 
 const TEAM: TeamMember[] = [
@@ -16,17 +19,32 @@ const TEAM: TeamMember[] = [
     name: "Mohamed Allam",
     role: "CEO",
     image: "/images/team-mohamed-allam.jpg",
-    bio: "As CEO, Mohamed Allam leads Hassan Allam Properties with a family-first philosophy carried across three generations. He has steered the group's evolution into one of Egypt's most trusted boutique developers, championing intimate communities where design, quality and hospitality come together.",
+    intro:
+      "As CEO, Mohamed Allam leads Hassan Allam Properties with a family-first philosophy carried across three generations, championing intimate communities where design, quality and hospitality come together.",
+    body: [
+      "Under his leadership, HAP has grown from a boutique family operation into one of Egypt's most trusted developers — 30+ developments across 10 governorates — while keeping the intimacy and craftsmanship that defined its earliest neighborhoods.",
+      "He has steered the group's expansion from Cairo's east side to the Red Sea and the North Coast, pairing three generations of engineering heritage with a genuine care for the families who call each project home.",
+    ],
   },
   {
     name: "Amr Gad",
     role: "Operations Director",
-    bio: "Amr Gad oversees day-to-day operations across Hassan Allam Properties' nationwide portfolio, ensuring every community is delivered to the group's exacting standards of quality, timing and craftsmanship.",
+    intro:
+      "Amr Gad oversees day-to-day operations across Hassan Allam Properties' nationwide portfolio, ensuring every community is delivered to the group's exacting standards.",
+    body: [
+      "From groundwork to handover, he coordinates the engineering, construction and delivery teams behind every HAP neighborhood, keeping quality, timing and craftsmanship aligned across 10 governorates.",
+      "His operational discipline is what lets a boutique developer run at a nationwide scale — every project, city or coast, held to the same family standard.",
+    ],
   },
   {
     name: "Ayten Anwar",
     role: "Investment & Strategy Director",
-    bio: "Ayten Anwar leads investment and strategy, shaping the long-term direction of the portfolio and identifying the opportunities that keep Hassan Allam Properties at the forefront of Egyptian real estate.",
+    intro:
+      "Ayten Anwar leads investment and strategy, shaping the long-term direction of the portfolio that keeps Hassan Allam Properties at the forefront of Egyptian real estate.",
+    body: [
+      "She identifies the land, partnerships and market opportunities behind the group's growth — from prime addresses in New Cairo and Mostakbal City to seaside destinations on the Red Sea and North Coast.",
+      "Her strategic lens balances heritage with ambition: protecting the exclusivity HAP is known for while opening the doors to its next generation of communities.",
+    ],
   },
 ];
 
@@ -46,11 +64,28 @@ function PlusIcon() {
 
 export default function OurTeam() {
   const [selected, setSelected] = useState<TeamMember | null>(null);
+  // Below md the pop-up becomes a bottom sheet (slides up, drag to dismiss).
+  const [isMobile, setIsMobile] = useState(false);
+  // Sheet drags only from the grab handle so the bio content can scroll.
+  const dragControls = useDragControls();
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = selected ? "hidden" : "";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelected(null);
+    };
+    if (selected) window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
     };
   }, [selected]);
 
@@ -138,35 +173,86 @@ export default function OurTeam() {
               role="dialog"
               aria-modal="true"
               aria-label={`${selected.name} biography`}
-              className="fixed left-1/2 top-1/2 z-[90] w-[90vw] max-w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-[2px] bg-brand-white p-8 md:p-10"
-              initial={{ opacity: 0, y: 20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.98 }}
-              transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+              className="fixed inset-x-0 bottom-0 z-[90] flex max-h-[88vh] w-full flex-col rounded-t-[4px] bg-brand-black p-6 pb-10 pt-3 text-brand-white md:inset-x-auto md:bottom-auto md:left-1/2 md:top-1/2 md:w-[calc(100vw-128px)] md:max-w-[1312px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[4px] md:p-16"
+              initial={isMobile ? { y: "100%" } : { opacity: 0, y: 20, scale: 0.98 }}
+              animate={isMobile ? { y: 0 } : { opacity: 1, y: 0, scale: 1 }}
+              exit={isMobile ? { y: "100%" } : { opacity: 0, y: 20, scale: 0.98 }}
+              transition={{ duration: isMobile ? 0.45 : 0.3, ease: [0.32, 0.72, 0, 1] }}
+              drag={isMobile ? "y" : false}
+              dragControls={dragControls}
+              dragListener={false}
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={{ top: 0, bottom: 0.6 }}
+              onDragEnd={(_, info) => {
+                if (isMobile && (info.offset.y > 120 || info.velocity.y > 600)) {
+                  setSelected(null);
+                }
+              }}
             >
-              <div className="flex items-start justify-between gap-6">
-                <div className="flex flex-col gap-1">
-                  <p className="font-serif text-3xl uppercase leading-none tracking-[-0.02em] text-brand-black">
-                    {selected.name}
-                  </p>
-                  <p className="font-sans text-lg font-medium text-grey-500">
-                    {selected.role}
+              {/* Grab handle — bottom sheet affordance + drag trigger, mobile only */}
+              <div
+                onPointerDown={(e) => isMobile && dragControls.start(e)}
+                className="flex shrink-0 cursor-grab touch-none justify-center pb-4 pt-1 active:cursor-grabbing md:hidden"
+              >
+                <div aria-hidden className="h-1 w-10 rounded-full bg-white/30" />
+              </div>
+
+              <div className="flex min-h-0 flex-col gap-8 overflow-y-auto md:flex-row md:items-start md:gap-[100px]">
+              {/* Portrait — 314×400 per Figma; monogram fallback for members
+                  without a real photo, dark variant. */}
+              <div className="relative aspect-[314/400] w-full shrink-0 md:w-[314px]">
+                {selected.image ? (
+                  <Image
+                    src={selected.image}
+                    alt={selected.name}
+                    fill
+                    sizes="314px"
+                    quality={90}
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-white/15 to-white/5">
+                    <span className="font-serif text-7xl font-light tracking-[0.02em] text-brand-white/35">
+                      {initials(selected.name)}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex min-w-0 flex-1 flex-col gap-10 md:gap-20">
+                <div className="flex flex-col gap-6 md:gap-10">
+                  <div className="flex items-start justify-between gap-6">
+                    <p className="font-serif font-light leading-none text-brand-white [font-size:clamp(2.75rem,6.94vw,6.25rem)]">
+                      {selected.name.split(" ").map((word) => (
+                        <span key={word} className="block">
+                          {word}
+                        </span>
+                      ))}
+                    </p>
+                    {/* Mobile bottom sheet closes via drag/backdrop/Escape —
+                        no X there, per feedback. */}
+                    <button
+                      type="button"
+                      onClick={() => setSelected(null)}
+                      aria-label="Close"
+                      className="hidden shrink-0 text-brand-white transition-opacity duration-200 hover:opacity-60 md:block"
+                    >
+                      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden>
+                        <path d="M9 9l22 22M31 9L9 31" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                      </svg>
+                    </button>
+                  </div>
+                  <p className="font-sans text-lg leading-[1.3] text-brand-white md:text-[1.625rem]">
+                    {selected.intro}
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setSelected(null)}
-                  aria-label="Close"
-                  className="shrink-0 text-brand-black transition-opacity duration-200 hover:opacity-60"
-                >
-                  <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
-                    <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" strokeWidth="1.5" />
-                  </svg>
-                </button>
+
+                <div className="grid gap-6 font-sans text-base leading-[1.4] text-brand-white md:grid-cols-2">
+                  <p>{selected.body[0]}</p>
+                  <p>{selected.body[1]}</p>
+                </div>
               </div>
-              <p className="mt-6 font-sans text-base leading-[1.5] text-brand-black">
-                {selected.bio}
-              </p>
+              </div>
             </motion.div>
           </>
         )}

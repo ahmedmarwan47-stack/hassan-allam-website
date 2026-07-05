@@ -10,7 +10,9 @@ export default function FeatureGrid({
   items: FeatureItem[];
 }) {
   return (
-    <div className="flex w-full flex-col items-start gap-10 md:ml-auto md:max-w-[867px] md:gap-10">
+    // 66.16% = the 868px "exceeding" column of the 1312 grid — keeps the text
+    // left-aligned with the wide photo's left edge at every viewport width.
+    <div className="flex w-full flex-col items-start gap-10 md:ml-auto md:w-[66.16%] md:gap-10">
       <h2 className="max-w-[606px] font-sans font-medium leading-none text-brand-black [font-size:clamp(1.75rem,4vw,3rem)]">
         {heading.map((line, i) => (
           <span key={i} className="block">
@@ -18,7 +20,9 @@ export default function FeatureGrid({
           </span>
         ))}
       </h2>
-      <div className="grid w-full grid-cols-1 gap-x-[70px] gap-y-0 sm:grid-cols-2">
+      {/* Two columns only where the 66.16% block is wide enough (≥lg);
+          at md the block is ~424px so pairs would cram. */}
+      <div className="grid w-full grid-cols-1 gap-x-[70px] gap-y-0 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
         {items.map((item, i) => (
           <Reveal
             key={item.title}

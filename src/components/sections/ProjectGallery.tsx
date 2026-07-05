@@ -17,14 +17,14 @@ type GalleryProject = { id: string; name: string; src: string };
 const GROUPS: Record<(typeof FILTERS)[number], GalleryProject[]> = {
   "In The City": [
     { id: "swanlake-residences", name: "Swanlake Residences", src: "/images/map/slg.jpg" },
-    { id: "swanlake-west", name: "Swanlake West", src: "/images/image 398.png" },
-    { id: "parkview", name: "Parkview", src: "/images/image 399.png" },
-    { id: "swanlake-katameya", name: "Swanlake Katameya", src: "/images/image 400.png" },
-    { id: "seasons-city", name: "Seasons Residences", src: "/images/image 401.png" },
+    { id: "swanlake-west", name: "Swanlake West", src: "/images/image 398.jpg" },
+    { id: "parkview", name: "Parkview", src: "/images/image 399.jpg" },
+    { id: "swanlake-katameya", name: "Swanlake Katameya", src: "/images/image 400.jpg" },
+    { id: "seasons-city", name: "Seasons Residences", src: "/images/image 401.jpg" },
   ],
   "By The Sea": [
     { id: "swanlake-residences-sea", name: "Swanlake Residences El Gouna", src: "/images/map/slg.jpg" },
-    { id: "seasons-sea", name: "Seasons Residences", src: "/images/image 402.png" },
+    { id: "seasons-sea", name: "Seasons Residences", src: "/images/image 402.jpg" },
     { id: "swanlake-october-sea", name: "Swanlake October", src: "/images/hospitality.jpg" },
   ],
 };

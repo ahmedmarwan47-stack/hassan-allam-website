@@ -18,7 +18,7 @@ export default function ProductsSection({
       className="flex flex-col gap-10 bg-brand-white px-6 py-16 text-brand-black md:px-16 md:py-16"
     >
       {/* Figma Frame 1135: narrow image bottom-aligned against the tall one. */}
-      <div className="flex flex-col gap-5 md:flex-row md:items-end">
+      <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between md:gap-0">
         <GrowReveal
           axis="height"
           className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-[424/540] md:w-[32.24%]"
@@ -35,7 +35,7 @@ export default function ProductsSection({
         <GrowReveal
           axis="width"
           delay={0.12}
-          className="relative aspect-[4/3] w-full flex-1 overflow-hidden rounded-[2px] md:aspect-[868/1030]"
+          className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-[868/1030] md:w-[66.16%]"
         >
           <Image
             src={images.wide}

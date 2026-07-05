@@ -30,14 +30,14 @@ export const NEWS: NewsArticle[] = [
     date: "15.02.2025",
     title:
       "Hassan Allam Group unveils a new integrated mixed-use community in New Cairo, blending residential, retail and office space across 240 feddans.",
-    image: "/images/image 385.png",
+    image: "/images/image 385.jpg",
     span: "two-thirds",
   },
   {
     id: "acwa-hau-financial-close",
     date: "02.02.2025",
     title: "ACWA Power and HAU Energy achieve financial close on 200 MW solar project.",
-    image: "/images/image 388.png",
+    image: "/images/image 388.jpg",
     span: "third",
   },
   {
@@ -59,7 +59,7 @@ export const NEWS: NewsArticle[] = [
     id: "park-central-mostakbal",
     date: "01.12.2024",
     title: "Hassan Allam Properties launches Park Central at Mostakbal City.",
-    image: "/images/image 391.png",
+    image: "/images/image 391.jpg",
     span: "full",
   },
 ];

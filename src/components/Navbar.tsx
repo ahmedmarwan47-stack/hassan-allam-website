@@ -8,7 +8,7 @@ import { useSectionTheme } from "@/hooks/useSectionTheme";
 const NAV_LINKS = [
   { label: "Projects", href: "/projects" },
   { label: "Our Story", href: "/story" },
-  { label: "News", href: "/news" },
+  { label: "Media Center", href: "/news" },
   { label: "FAQs", href: "/#faqs" },
 ];
 

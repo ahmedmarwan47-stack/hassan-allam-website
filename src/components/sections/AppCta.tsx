@@ -81,7 +81,7 @@ export default function AppCta() {
         </div>
         <div className="relative h-[600px] w-full overflow-hidden">
           <Image
-            src="/images/app-bg.png"
+            src="/images/app-bg.jpg"
             alt="Hand holding phone with the HAP Family App"
             fill
             className="object-cover"
@@ -96,7 +96,7 @@ export default function AppCta() {
         {/* Background image */}
         <div className="absolute inset-0">
           <Image
-            src="/images/app-bg.png"
+            src="/images/app-bg.jpg"
             alt="Hand holding phone with HAP Family App"
             fill
             className="object-cover"

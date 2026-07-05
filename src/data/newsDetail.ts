@@ -33,7 +33,7 @@ export const NEWS_DETAILS: Record<string, NewsDetail> = {
     ],
     bodyImages: [
       "/images/commercial-real-estate.jpg",
-      "/images/image 388.png",
+      "/images/image 388.jpg",
     ],
   },
 
@@ -45,14 +45,14 @@ export const NEWS_DETAILS: Record<string, NewsDetail> = {
       "Hassan Allam Properties has unveiled a new fully-integrated mixed-use community in the heart of New Cairo. The 240-feddan destination brings together premium residential neighbourhoods, curated retail and grade-A office space in a single walkable master plan.",
       "Designed for long-term liveability, the community continues HAP's approach to placemaking: gated privacy, generous landscaping, and destinations that draw both residents and neighbours.",
     ],
-    heroImage: "/images/image 385.png",
+    heroImage: "/images/image 385.jpg",
     bigIntroParagraph:
       "Spanning 240 feddans at the heart of New Cairo, the new destination brings together premium residential, curated retail and grade-A office space in a single walkable master plan — centred on a landscaped public realm.",
     body: [
       "The scheme is anchored by a central park and a retail spine that connects residents to daily-life essentials — from grocery to fitness, culture and dining — without leaving the community.",
       "Handover of the first residential phase is planned for 2027, with retail and office components opening in staged waves alongside it. Full delivery is set for 2029.",
     ],
-    bodyImages: ["/images/image 391.png", "/images/map/slg.jpg"],
+    bodyImages: ["/images/image 391.jpg", "/images/map/slg.jpg"],
   },
 };
 

@@ -20,8 +20,10 @@ export default function VisionSection() {
         </p>
       </Reveal>
 
-      <div className="flex w-full flex-col items-start gap-5 md:flex-row md:justify-between">
-        <div className="flex w-full flex-col gap-5 md:w-[32%] md:justify-center">
+      <div className="flex w-full flex-col items-start gap-5 md:flex-row md:justify-between md:gap-0">
+        {/* 32.24% / 66.16% = the shared 3-column grid (424 / 868 of 1312) —
+            same fractions as the project-detail image pairs. */}
+        <div className="flex w-full flex-col gap-5 md:w-[32.24%] md:justify-center">
           <GrowReveal
             axis="height"
             className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-auto md:h-[30vw] md:max-h-[520px]"
@@ -40,7 +42,7 @@ export default function VisionSection() {
             desirable addresses.
           </p>
         </div>
-        <div className="flex w-full flex-1 flex-col gap-5">
+        <div className="flex w-full flex-col gap-5 md:w-[66.16%]">
           <GrowReveal
             axis="width"
             delay={0.12}

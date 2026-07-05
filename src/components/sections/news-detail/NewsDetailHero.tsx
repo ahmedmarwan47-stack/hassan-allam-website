@@ -19,7 +19,7 @@ export default function NewsDetailHero({
           Rendered at full strength so the light streaks actually read; only
           the bottom fades into the black content section below. */}
       <Image
-        src="/images/bg-dark.png"
+        src="/images/bg-dark.jpg"
         alt=""
         aria-hidden
         fill

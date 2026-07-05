@@ -10,7 +10,7 @@ export default function StoryHero() {
       {/* Light window-light backdrop whose white bottom fades into the white
           intro section below (desktop + mobile). */}
       <Image
-        src="/images/bg-light.png"
+        src="/images/bg-light.jpg"
         alt=""
         aria-hidden
         fill

@@ -85,7 +85,7 @@ export default function AssetClasses() {
       {/* ── Mobile layout: fixed-height carousel with arrows ── */}
       <div className="relative flex flex-col overflow-hidden px-6 py-24 md:hidden">
         <Image
-          src={withBasePath("/images/section-bg.png")}
+          src={withBasePath("/images/section-bg.jpg")}
           alt=""
           aria-hidden
           fill
@@ -157,7 +157,7 @@ export default function AssetClasses() {
       {/* ── Desktop layout: scroll-driven expanding carousel ── */}
       <div className="sticky top-0 hidden h-screen flex-col overflow-hidden px-6 py-14 md:flex md:px-12 md:py-20 lg:px-16">
         <Image
-          src={withBasePath("/images/section-bg.png")}
+          src={withBasePath("/images/section-bg.jpg")}
           alt=""
           aria-hidden
           fill

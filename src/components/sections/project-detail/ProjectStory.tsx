@@ -48,7 +48,10 @@ export default function ProjectStory({
       {/* Text row — body column starts at the half-grid point (x=666 of 1312,
           Figma Frame 1131). */}
       <div className="flex flex-col gap-8 md:flex-row">
-        <p className="font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1.75rem,4.3vw,3.875rem)] md:w-[50.76%] md:max-w-none">
+        {/* Heading width + the row's 32px gap = half the row + half the 20px
+            gutter, so the body column starts exactly at the second photo's
+            left edge at any viewport width. */}
+        <p className="font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black md:w-[calc(50%-22px)] md:max-w-none [font-size:clamp(1.75rem,4.3vw,3.875rem)]">
           <span className="block max-w-[400px]">{heading}</span>
         </p>
         <div className="flex max-w-[445px] flex-1 flex-col gap-4 font-sans text-base leading-[1.4] text-brand-black">

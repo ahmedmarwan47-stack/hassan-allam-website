@@ -49,10 +49,11 @@ function CallIcon() {
   );
 }
 
-function WhatsAppIcon() {
+function LocationIcon() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M17.472 14.382C17.178 14.233 15.752 13.533 15.482 13.433C15.212 13.333 15.012 13.283 14.812 13.583C14.612 13.883 14.062 14.533 13.892 14.733C13.722 14.933 13.552 14.958 13.258 14.808C12.964 14.658 12.032 14.358 10.932 13.383C10.072 12.618 9.492 11.683 9.322 11.383C9.152 11.083 9.302 10.923 9.452 10.773C9.582 10.643 9.752 10.433 9.902 10.258C10.052 10.083 10.102 9.958 10.202 9.758C10.302 9.558 10.252 9.383 10.177 9.233C10.102 9.083 9.502 7.658 9.252 7.058C9.012 6.478 8.762 6.558 8.582 6.548L8.012 6.533C7.812 6.533 7.492 6.608 7.222 6.908C6.952 7.208 6.202 7.908 6.202 9.333C6.202 10.758 7.252 12.133 7.402 12.333C7.552 12.533 9.492 15.523 12.452 16.758C13.152 17.058 13.702 17.233 14.132 17.368C14.832 17.583 15.472 17.553 15.982 17.478C16.552 17.393 17.722 16.783 17.972 16.108C18.222 15.433 18.222 14.858 18.147 14.733C18.072 14.608 17.872 14.533 17.572 14.383L17.472 14.382ZM12.052 21.788H12.047C10.2438 21.7884 8.47283 21.3059 6.907 20.388L6.547 20.173L2.847 21.143L3.837 17.543L3.597 17.168C2.58912 15.5458 2.05689 13.6834 2.057 11.782C2.06 6.272 6.547 1.788 12.057 1.788C14.722 1.788 17.227 2.828 19.107 4.708C20.987 6.588 22.027 9.093 22.027 11.788C22.023 17.298 17.537 21.788 12.052 21.788ZM20.527 3.288C18.267 1.028 15.257 -0.212 12.052 -0.212C5.462 -0.212 0.072 5.178 0.067 11.778C0.067 13.878 0.617 15.928 1.667 17.738L0 24L6.407 22.368C8.147 23.328 10.082 23.828 12.047 23.828H12.052C18.642 23.828 24.032 18.438 24.037 11.838C24.037 8.608 22.787 5.548 20.527 3.288Z" fill="white"/>
+      <path d="M12 21C12 21 5 15.5 5 10C5 6.13401 8.13401 3 12 3C15.866 3 19 6.13401 19 10C19 15.5 12 21 12 21Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx="12" cy="10" r="2.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 }
@@ -161,7 +162,7 @@ function NewsletterField() {
 
 function ProjectLinks({ items }: { items: string[] }) {
   return (
-    <div className="flex flex-col gap-1 text-base leading-[1.4]">
+    <div className="flex flex-col gap-3 text-base leading-[1.4]">
       {items.map((project) => (
         <a
           key={project}
@@ -228,28 +229,81 @@ export default function Footer() {
       data-nav-theme="dark"
       className="bg-black text-white"
     >
-      <div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-16 p-6 md:min-h-[912px] md:gap-0 md:p-16">
-        {/* ── Top section ── */}
-        <div className="flex flex-col gap-12 md:flex-row md:items-start md:justify-between">
-          {/* Left column: Nav + Newsletter */}
-          <div className="flex w-full flex-col gap-12 md:w-[468px] md:justify-between md:gap-0 md:self-stretch">
-            <nav className="flex flex-col font-serif font-light uppercase leading-none tracking-[-0.02em] text-[3.25rem] md:text-[5.125rem]">
-              {NAV_LINKS.map((link) => {
-                const active = isActive(link.href);
-                return (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    className={`transition-colors duration-300 hover:text-white ${
-                      active ? "text-white" : "text-white/30"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
-            </nav>
+      <div className="mx-auto flex max-w-[1440px] flex-col gap-10 p-6 md:p-16">
+        {/* ── Top section: nav (left) + projects/contact/newsletter (right) ── */}
+        <div className="flex flex-col gap-12 md:flex-row md:items-start md:gap-[60px]">
+          {/* Left column: Nav */}
+          <nav className="flex w-full flex-col font-serif font-light uppercase leading-none tracking-[-0.02em] text-[3.25rem] md:w-[468px] md:shrink-0 md:text-[5.125rem]">
+            {NAV_LINKS.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className={`transition-colors duration-300 hover:text-white ${
+                    active ? "text-white" : "text-white/30"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
 
+          {/* Right column: Projects + Get In Touch, then Newsletter below */}
+          <div className="flex w-full flex-col gap-12 md:flex-1 md:gap-[52px]">
+            {/* Project listings — accordions on mobile, three columns on desktop */}
+            <div className="font-sans font-medium">
+              <div className="flex flex-col md:hidden">
+                <FooterAccordion title="In the City" items={IN_THE_CITY} />
+                <FooterAccordion title="By the Sea" items={BY_THE_SEA} />
+              </div>
+              <div className="flex flex-col gap-10 md:flex-row md:items-start md:gap-[66px]">
+                <div className="hidden flex-1 flex-col gap-7 md:flex">
+                  <p className="text-[1.625rem] leading-[1.3]">In the City</p>
+                  <ProjectLinks items={IN_THE_CITY} />
+                </div>
+                <div className="hidden flex-1 flex-col gap-7 md:flex">
+                  <p className="text-[1.625rem] leading-[1.3]">By the Sea</p>
+                  <ProjectLinks items={BY_THE_SEA} />
+                </div>
+
+                {/* Get In Touch — contact rows + socials in one stack */}
+                <div className="flex flex-1 flex-col gap-7 pt-10 md:pt-0">
+                  <p className="text-[1.625rem] leading-[1.3]">Get In Touch</p>
+                  <div className="flex flex-col gap-3">
+                    <a href="mailto:info@hap.com.eg" className="flex items-center gap-3 text-base leading-[1.4] transition-colors duration-300 hover:text-white/70">
+                      <MailIcon />
+                      info@hap.com.eg
+                    </a>
+                    <a href="tel:+2019172" className="flex items-center gap-3 text-base leading-[1.4] transition-colors duration-300 hover:text-white/70">
+                      <CallIcon />
+                      +20 19 172
+                    </a>
+                    <p className="flex items-center gap-3 text-base leading-[1.4]">
+                      <LocationIcon />
+                      67 - Southern Road 90 - New Cairo
+                    </p>
+                    <div className="flex gap-4 pt-1">
+                      <a href="#" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="Instagram">
+                        <InstagramIcon />
+                      </a>
+                      <a href="#" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="Facebook">
+                        <FacebookIcon />
+                      </a>
+                      <a href="#" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="YouTube">
+                        <YouTubeIcon />
+                      </a>
+                      <a href="#" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="LinkedIn">
+                        <LinkedInIcon />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Newsletter — sits in the right column per the updated design */}
             <div className="flex flex-col gap-7">
               <div className="flex flex-col gap-1">
                 <p className="font-serif text-[1.625rem] font-normal uppercase leading-none tracking-[-0.02em]">
@@ -262,85 +316,13 @@ export default function Footer() {
               <NewsletterField />
             </div>
           </div>
-
-          {/* Right column: Projects + Contact */}
-          <div className="flex w-full flex-col gap-[52px] md:w-[685px]">
-            <div className="flex flex-col gap-[66px]">
-              {/* Project listings — accordions on mobile, two columns on desktop */}
-              <div className="font-sans font-medium">
-                <div className="flex flex-col md:hidden">
-                  <FooterAccordion title="In the City" items={IN_THE_CITY} />
-                  <FooterAccordion title="By the Sea" items={BY_THE_SEA} />
-                </div>
-                <div className="hidden items-start justify-between md:flex">
-                  <div className="flex flex-1 flex-col gap-7">
-                    <p className="text-[1.625rem] leading-[1.3]">In the City</p>
-                    <ProjectLinks items={IN_THE_CITY} />
-                  </div>
-                  <div className="flex flex-1 flex-col gap-7">
-                    <p className="text-[1.625rem] leading-[1.3]">By the Sea</p>
-                    <ProjectLinks items={BY_THE_SEA} />
-                  </div>
-                </div>
-              </div>
-
-              {/* Get In Touch + Social Media */}
-              <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
-                <div className="flex flex-1 flex-col gap-7">
-                  <p className="font-sans text-[1.625rem] font-medium leading-[1.3]">
-                    Get In Touch
-                  </p>
-                  <div className="flex flex-col gap-5">
-                    <div className="flex flex-col gap-1">
-                      <a href="mailto:info@hap.com.eg" className="flex items-center gap-3 font-sans text-base font-medium leading-[1.4] transition-colors duration-300 hover:text-white/70">
-                        <MailIcon />
-                        info@hap.com.eg
-                      </a>
-                      <a href="tel:+2019172" className="flex items-center gap-3 font-sans text-base font-medium leading-[1.4] transition-colors duration-300 hover:text-white/70">
-                        <CallIcon />
-                        +20 19 172
-                      </a>
-                      <a href="#" className="flex items-center gap-3 font-sans text-base font-medium leading-[1.4] transition-colors duration-300 hover:text-white/70">
-                        <WhatsAppIcon />
-                        Hap on WhatsApp
-                      </a>
-                    </div>
-                    <p className="font-sans text-base font-medium leading-[1.4]">
-                      Hassan Allam Properties Head Office Building
-                      <br />
-                      67 - Southern Road 90 - New Cairo - Egypt
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex flex-1 flex-col gap-7">
-                  <p className="font-sans text-[1.625rem] font-medium leading-[1.3]">
-                    Social Media
-                  </p>
-                  <div className="flex gap-4">
-                    <a href="#" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="Instagram">
-                      <InstagramIcon />
-                    </a>
-                    <a href="#" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="Facebook">
-                      <FacebookIcon />
-                    </a>
-                    <a href="#" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="YouTube">
-                      <YouTubeIcon />
-                    </a>
-                    <a href="#" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="LinkedIn">
-                      <LinkedInIcon />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="h-px w-full bg-white/16" />
-          </div>
         </div>
 
+        {/* ── Divider ── */}
+        <div className="h-px w-full bg-white/16" />
+
         {/* ── Bottom bar ── */}
-        <div className="mt-12 flex flex-col gap-4 font-sans text-sm font-medium leading-[1.4] md:mt-0 md:flex-row md:items-center md:justify-between md:text-base">
+        <div className="flex flex-col gap-4 font-sans text-xs font-normal leading-[1.4] md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-7">
             <p>&copy; {new Date().getFullYear()} HAP</p>
             <a href="#" className="transition-colors duration-300 hover:text-white/70">Terms of Use</a>

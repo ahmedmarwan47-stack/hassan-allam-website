@@ -12,7 +12,7 @@ export default function ProjectHero({ data }: { data: ProjectDetailData }) {
           Its bottom is plain white, so it fades seamlessly into the white
           ProjectIntro section below — on both desktop and mobile. */}
       <Image
-        src="/images/bg-light.png"
+        src="/images/bg-light.jpg"
         alt=""
         aria-hidden
         fill

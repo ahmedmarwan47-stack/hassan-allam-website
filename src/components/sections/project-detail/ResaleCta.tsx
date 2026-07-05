@@ -17,7 +17,7 @@ export default function ResaleCta({
       className="relative isolate flex min-h-[600px] items-center justify-center overflow-hidden md:min-h-[958px]"
     >
       <Image
-        src="/images/section-bg.png"
+        src="/images/section-bg.jpg"
         alt=""
         fill
         className="-z-10 object-cover"
