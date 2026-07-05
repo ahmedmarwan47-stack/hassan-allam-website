@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { useInView } from "framer-motion";
+import { useSeenOnce } from "@/hooks/useSeenOnce";
 
 /**
  * GrowReveal — the site-wide card/image entrance.
@@ -30,7 +30,10 @@ export default function GrowReveal({
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.35 });
+  // useSeenOnce (not framer's useInView): observer callbacks get dropped by
+  // WebKit during fast continuous scrolling, which left cards permanently
+  // clipped. The hook pairs the observer with a scroll-idle geometry check.
+  const inView = useSeenOnce(ref);
 
   const hidden =
     axis === "height" ? "inset(0% 0% 100% 0%)" : "inset(0% 100% 0% 0%)";

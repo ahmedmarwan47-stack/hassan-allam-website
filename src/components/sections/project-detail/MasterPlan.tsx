@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import type { MasterPlanItem } from "@/data/projectDetail";
+import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 
 // Circle geometry measured from Figma frame 17043-49871: the map renders at
 // 866×824 with 39px resting circles and a 64px active circle. The artwork
@@ -37,10 +39,11 @@ export default function MasterPlan({
       {/* List keeps its Figma share of the grid (333/1312) so the map can
           hold the 868 column at any width. */}
       <ul className="flex w-full flex-col lg:w-[25.38%] lg:shrink-0">
-        {items.map((item) => {
+        {items.map((item, i) => {
           const isActive = active === item.number;
           return (
             <li key={item.number}>
+              <Reveal delay={i * 0.04} y={16}>
               <a
                 href="#"
                 onMouseEnter={() => setActive(item.number)}
@@ -72,6 +75,7 @@ export default function MasterPlan({
                   />
                 </svg>
               </a>
+              </Reveal>
             </li>
           );
         })}
@@ -82,14 +86,16 @@ export default function MasterPlan({
           (same as the intro text above it) at every viewport width. */}
       <div className="relative aspect-[866/824] w-full overflow-hidden rounded-[2px] lg:ml-auto lg:w-[66.16%]">
         <div className="absolute inset-0">
-          <Image
-            src={mapImage}
-            alt="SwanLake Residences New Cairo master plan"
-            fill
-            sizes="(min-width: 768px) 62vw, 100vw"
-            quality={95}
-            className="object-cover"
-          />
+          <GrowReveal axis="width" className="absolute inset-0">
+            <Image
+              src={mapImage}
+              alt="SwanLake Residences New Cairo master plan"
+              fill
+              sizes="(min-width: 768px) 62vw, 100vw"
+              quality={95}
+              className="object-cover"
+            />
+          </GrowReveal>
           {PINS.map((pin) => {
             const isActive = active === pin.number;
             return (

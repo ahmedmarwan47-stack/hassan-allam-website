@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import { useDiscoverCursor } from "@/components/DiscoverCursor";
 import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 
 const FACTS = [
   {
@@ -35,14 +36,16 @@ function StoryCta() {
       {...bind}
       className={`group relative block aspect-square w-full max-w-[454px] overflow-hidden ${hoverClass}`}
     >
-      <Image
-        src="/images/story-hands.jpg"
-        alt="Hands joining together"
-        fill
-        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-        sizes="(max-width: 768px) 90vw, 454px"
-      />
-      <div className="absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/30" />
+      <GrowReveal axis="height" className="absolute inset-0">
+        <Image
+          src="/images/story-hands.jpg"
+          alt="Hands joining together"
+          fill
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+          sizes="(max-width: 768px) 90vw, 454px"
+        />
+        <div className="absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/30" />
+      </GrowReveal>
       {/* Static label for touch / mobile — no cursor to follow there. */}
       <span className="pointer-events-none absolute inset-0 flex items-center justify-center gap-2 font-sans text-lg font-medium text-white md:hidden">
         Discover the story

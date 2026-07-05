@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useDragControls } from "framer-motion";
+import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 
 interface TeamMember {
   name: string;
@@ -96,33 +98,43 @@ export default function OurTeam() {
     >
       <div className="flex flex-col gap-16 md:gap-20">
         {/* Title matches the Facts & Figures heading above it. */}
-        <h2 className="w-full text-left font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(4rem,9.2vw,8.25rem)] md:text-center">
-          Our Team
-        </h2>
+        <Reveal>
+          <h2 className="w-full text-left font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(4rem,9.2vw,8.25rem)] md:text-center">
+            Our Team
+          </h2>
+        </Reveal>
         <div className="grid gap-8 font-sans text-base leading-[1.4] text-brand-black md:grid-cols-2 md:gap-16">
-          <p>
-            Behind every Hassan Allam Properties community is a team that treats
-            development as a craft — pairing three generations of engineering
-            heritage with a genuine care for the families who will call each
-            project home.
-          </p>
-          <p>
-            Led from the top by the Allam family, our directors bring together
-            decades of operational, financial and design expertise to keep the
-            group at the forefront of Egyptian real estate.
-          </p>
+          <Reveal delay={0.1}>
+            <p>
+              Behind every Hassan Allam Properties community is a team that treats
+              development as a craft — pairing three generations of engineering
+              heritage with a genuine care for the families who will call each
+              project home.
+            </p>
+          </Reveal>
+          <Reveal delay={0.18}>
+            <p>
+              Led from the top by the Allam family, our directors bring together
+              decades of operational, financial and design expertise to keep the
+              group at the forefront of Egyptian real estate.
+            </p>
+          </Reveal>
         </div>
       </div>
 
       <div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-5">
-        {TEAM.map((member) => (
+        {TEAM.map((member, i) => (
           <button
             key={member.name}
             type="button"
             onClick={() => setSelected(member)}
             className="group flex flex-col gap-5 text-left"
           >
-            <div className="relative aspect-[424/454] w-full overflow-hidden rounded-[2px]">
+            <GrowReveal
+              axis="height"
+              delay={i * 0.08}
+              className="relative aspect-[424/454] w-full overflow-hidden rounded-[2px]"
+            >
               {member.image ? (
                 <Image
                   src={member.image}
@@ -144,15 +156,15 @@ export default function OurTeam() {
               <span className="absolute bottom-4 right-4 flex size-[42px] items-center justify-center bg-brand-white text-brand-black transition-transform duration-300 ease-out group-hover:rotate-45">
                 <PlusIcon />
               </span>
-            </div>
-            <div className="flex flex-col gap-2">
+            </GrowReveal>
+            <Reveal delay={0.1 + i * 0.08} className="flex flex-col gap-2">
               <p className="font-serif text-2xl uppercase leading-none tracking-[-0.02em] text-brand-black">
                 {member.name}
               </p>
               <p className="font-sans text-xl font-medium text-brand-black">
                 {member.role}
               </p>
-            </div>
+            </Reveal>
           </button>
         ))}
       </div>

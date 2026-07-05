@@ -12,6 +12,7 @@ import {
 import { useDiscoverCursor } from "@/components/DiscoverCursor";
 import { withBasePath } from "@/lib/basePath";
 import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 
 /**
  * AssetClasses — Figma node 16988-1390.
@@ -113,9 +114,9 @@ export default function AssetClasses() {
                 className="flex h-full flex-col"
                 style={{ width: `${100 / TOTAL_CARDS}%` }}
               >
-                <div className="relative min-h-0 flex-1 overflow-hidden rounded-[2px] bg-grey-300">
+                <GrowReveal axis="height" className="relative min-h-0 flex-1 overflow-hidden rounded-[2px] bg-grey-300">
                   <Image src={card.src} alt={card.label} fill sizes="90vw" className="object-cover" />
-                </div>
+                </GrowReveal>
                 <figcaption className="mt-3 shrink-0 font-sans text-base font-medium leading-[1.3] text-black">
                   {card.label}
                 </figcaption>
@@ -194,7 +195,7 @@ export default function AssetClasses() {
                   {...bind}
                   className={`group flex h-full min-w-0 flex-1 flex-col ${hoverClass}`}
                 >
-                  <div className="relative w-full flex-1 min-h-0 overflow-hidden rounded-[2px] bg-grey-300">
+                  <GrowReveal axis="height" className="relative w-full flex-1 min-h-0 overflow-hidden rounded-[2px] bg-grey-300">
                     <Image
                       src={card.src}
                       alt={card.label}
@@ -202,7 +203,7 @@ export default function AssetClasses() {
                       sizes="(max-width: 768px) 40vw, 50vw"
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                     />
-                  </div>
+                  </GrowReveal>
                   <motion.figcaption
                     style={{ fontSize: labelPx }}
                     className="mt-3 origin-left font-sans font-medium leading-[1.3] text-black md:mt-4"

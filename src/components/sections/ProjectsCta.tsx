@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Reveal } from "@/components/Reveal";
 
 export default function ProjectsCta() {
   return (
@@ -19,14 +20,18 @@ export default function ProjectsCta() {
       <div className="absolute inset-0 -z-10 bg-black/55" />
 
       <div className="flex w-full max-w-[441px] flex-col items-center px-6 text-center text-white">
-        <h2 className="font-serif text-[3rem] font-light uppercase leading-[1.05] tracking-[-0.02em] md:text-[5rem]">
-          Want to work with us?
-        </h2>
-        <p className="mt-8 max-w-[420px] font-sans text-base font-medium leading-[1.4] text-white/90 md:mt-10">
-          Hassan Allam Properties offers an exceptional portfolio of 11 projects
-          located in strategic locations, both in the heart of dynamic urban
-          centers and along the coastline.
-        </p>
+        <Reveal>
+          <h2 className="font-serif text-[3rem] font-light uppercase leading-[1.05] tracking-[-0.02em] md:text-[5rem]">
+            Want to work with us?
+          </h2>
+        </Reveal>
+        <Reveal delay={0.12}>
+          <p className="mt-8 max-w-[420px] font-sans text-base font-medium leading-[1.4] text-white/90 md:mt-10">
+            Hassan Allam Properties offers an exceptional portfolio of 11 projects
+            located in strategic locations, both in the heart of dynamic urban
+            centers and along the coastline.
+          </p>
+        </Reveal>
         <Link
           href="/contact"
           className="group relative mt-10 inline-flex w-full items-center justify-center gap-3 overflow-hidden border border-white px-8 py-4 font-serif text-lg uppercase tracking-[0.02em] text-white transition-colors duration-500 hover:text-black md:mt-14 md:w-auto md:text-2xl"

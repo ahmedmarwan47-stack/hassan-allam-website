@@ -9,7 +9,7 @@ const NAV_LINKS = [
   { label: "Projects", href: "/projects" },
   { label: "Our Story", href: "/story" },
   { label: "Media Center", href: "/news" },
-  { label: "FAQs", href: "/#faqs" },
+  { label: "FAQs", href: "/faqs" },
 ];
 
 // Large serif links for the mobile menu overlay (matches Figma 991:520).
@@ -18,6 +18,7 @@ const MOBILE_LINKS = [
   { label: "Projects", href: "/projects" },
   { label: "The Story", href: "/story" },
   { label: "News", href: "/news" },
+  { label: "FAQs", href: "/faqs" },
   { label: "Contact", href: "/contact" },
 ];
 

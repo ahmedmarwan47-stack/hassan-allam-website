@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Reveal } from "@/components/Reveal";
+import GrowReveal from "@/components/GrowReveal";
 
 const KEY_BENEFITS = [
   "Effortlessly explore your community",
@@ -88,7 +89,7 @@ export default function AppCta() {
             <KeyBenefits />
           </Reveal>
         </div>
-        <div className="relative h-[600px] w-full overflow-hidden">
+        <GrowReveal axis="height" className="relative h-[600px] w-full overflow-hidden">
           <Image
             src="/images/app-bg.jpg"
             alt="Hand holding phone with the HAP Family App"
@@ -97,7 +98,7 @@ export default function AppCta() {
             style={{ objectPosition: "53% 58%" }}
             sizes="100vw"
           />
-        </div>
+        </GrowReveal>
       </div>
 
       {/* ── Desktop layout: viewport-ratio composition ── */}

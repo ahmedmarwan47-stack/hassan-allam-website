@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRef } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { Reveal } from "@/components/Reveal";
 
 const MILESTONES = [
   {
@@ -173,9 +174,11 @@ export default function HistoryTimeline() {
       <div className="sticky top-0 flex h-screen flex-col overflow-hidden pt-24 md:pt-28">
         {/* Header */}
         <div className="shrink-0 px-6 md:px-16">
-          <p className="font-sans text-sm font-medium uppercase tracking-[0.08em] text-grey-500">
-            Our Journey
-          </p>
+          <Reveal y={12}>
+            <p className="font-sans text-sm font-medium uppercase tracking-[0.08em] text-grey-500">
+              Our Journey
+            </p>
+          </Reveal>
         </div>
 
         {/* Stage: stationary photo frame + horizontally panning text.

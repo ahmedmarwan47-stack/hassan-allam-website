@@ -9,6 +9,7 @@ const NAV_LINKS: { label: string; href: string }[] = [
   { label: "Projects", href: "/projects" },
   { label: "The Story", href: "/story" },
   { label: "News", href: "/news" },
+  { label: "FAQs", href: "/faqs" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -130,8 +131,9 @@ function NewsletterField() {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
+      {/* One line on every breakpoint — input + button side by side. */}
       <div
-        className={`flex flex-wrap items-center gap-3 border py-2 pl-4 pr-2 transition-colors duration-200 ${borderState}`}
+        className={`flex items-center gap-3 border py-2 pl-4 pr-2 transition-colors duration-200 ${borderState}`}
       >
         <input
           type="email"
@@ -146,7 +148,7 @@ function NewsletterField() {
         />
         <button
           type="submit"
-          className="w-full shrink-0 bg-white/80 px-5 py-3 font-serif text-sm font-medium uppercase leading-[1.4] text-black transition-colors duration-300 hover:bg-white sm:w-auto"
+          className="shrink-0 bg-white/80 px-4 py-3 font-serif text-sm font-medium uppercase leading-[1.4] text-black transition-colors duration-300 hover:bg-white sm:px-5"
         >
           Subscribe now
         </button>

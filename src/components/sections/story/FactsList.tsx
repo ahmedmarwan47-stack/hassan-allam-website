@@ -1,4 +1,5 @@
 import { FactRow } from "@/components/sections/FactsFigures";
+import { Reveal } from "@/components/Reveal";
 
 // Reuses the homepage Facts & Figures hover/scroll photo-reveal effect.
 const FACTS = [
@@ -31,9 +32,11 @@ export default function FactsList() {
       data-nav-theme="light"
       className="flex flex-col items-start gap-10 bg-brand-white px-6 py-20 text-brand-black md:items-center md:gap-[70px] md:px-16 md:py-24"
     >
-      <h2 className="w-full text-left font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(4rem,9.2vw,8.25rem)] md:text-center">
-        Facts and Figures
-      </h2>
+      <Reveal className="w-full">
+        <h2 className="w-full text-left font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(4rem,9.2vw,8.25rem)] md:text-center">
+          Facts and Figures
+        </h2>
+      </Reveal>
 
       <div className="flex w-full flex-col">
         {FACTS.map((fact) => (

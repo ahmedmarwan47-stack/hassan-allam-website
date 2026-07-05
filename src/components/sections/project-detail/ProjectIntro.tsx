@@ -1,5 +1,6 @@
 import type { ProjectDetailData } from "@/data/projectDetail";
 import GrowImagePair from "./GrowImagePair";
+import { Reveal } from "@/components/Reveal";
 
 export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
   return (
@@ -11,13 +12,17 @@ export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
           (x=444 of the 1312 grid), split 372/424 with a 72px gutter (Figma
           Frame 1092). */}
       <div className="flex flex-col items-start gap-8 md:flex-row md:items-start">
-        <div className="flex shrink-0 items-center gap-3">
+        <Reveal className="flex shrink-0 items-center gap-3">
           <span className="size-3 shrink-0 rounded-full border border-brand-black/40" />
           <p className="font-sans text-base text-brand-black">{data.scrollLabel}</p>
-        </div>
+        </Reveal>
         <div className="grid gap-8 font-sans text-base leading-[1.4] text-brand-black md:ml-auto md:w-[66.16%] md:grid-cols-[372fr_424fr] md:gap-x-[72px]">
-          <p>{data.introParagraphs[0]}</p>
-          <p>{data.introParagraphs[1]}</p>
+          <Reveal delay={0.1}>
+            <p>{data.introParagraphs[0]}</p>
+          </Reveal>
+          <Reveal delay={0.18}>
+            <p>{data.introParagraphs[1]}</p>
+          </Reveal>
         </div>
       </div>
 
@@ -28,19 +33,26 @@ export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
           column (Figma Frame 1097). */}
       <div className="flex flex-col gap-10 md:flex-row md:items-stretch md:justify-between">
         <div className="flex shrink-0 flex-col items-start justify-between gap-10 md:w-[284px] md:gap-0">
-          <span className="flex h-[54px] items-center justify-center rounded-[2px] border border-brand-black/20 px-4 font-sans text-lg font-medium text-brand-black">
-            {data.tag}
-          </span>
-          <p className="max-w-[284px] font-sans text-base leading-[1.4] text-brand-black">
-            {data.tagline}
-          </p>
+          <Reveal>
+            <span className="flex h-[54px] items-center justify-center rounded-[2px] border border-brand-black/20 px-4 font-sans text-lg font-medium text-brand-black">
+              {data.tag}
+            </span>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="max-w-[284px] font-sans text-base leading-[1.4] text-brand-black">
+              {data.tagline}
+            </p>
+          </Reveal>
         </div>
 
         <div className="flex flex-col items-start gap-8 md:w-[66.16%] md:gap-8">
-          <p className="font-sans text-xl font-medium text-success-dark md:text-2xl">
-            {data.communityLabel}
-          </p>
-          <p className="font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1.75rem,4.3vw,3.875rem)]">
+          <Reveal>
+            <p className="font-sans text-xl font-medium text-success-dark md:text-2xl">
+              {data.communityLabel}
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1.75rem,4.3vw,3.875rem)]">
             {data.communityHeading.map((segment, i) =>
               segment.link ? (
                 <a
@@ -55,6 +67,8 @@ export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
               ),
             )}
           </p>
+          </Reveal>
+          <Reveal delay={0.2} className="w-full md:w-auto">
           <button
             type="button"
             className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-[4px] border border-grey-500/60 p-2 transition-colors duration-500 hover:border-brand-black md:w-auto md:justify-start"
@@ -80,6 +94,7 @@ export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
               {data.brochureLabel}
             </span>
           </button>
+          </Reveal>
         </div>
       </div>
     </section>
