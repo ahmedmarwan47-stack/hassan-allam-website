@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Footer from "@/components/Footer";
+import FaqsHero from "@/components/sections/faqs/FaqsHero";
 import FaqsList from "@/components/sections/faqs/FaqsList";
 
 export const metadata: Metadata = {
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 export default function FaqsPage() {
   return (
     <main>
+      <FaqsHero />
       <FaqsList />
       <Footer />
     </main>

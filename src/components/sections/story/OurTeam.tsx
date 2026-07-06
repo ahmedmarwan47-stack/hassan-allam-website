@@ -153,8 +153,11 @@ export default function OurTeam() {
                   </span>
                 </div>
               )}
-              <span className="absolute bottom-4 right-4 flex size-[42px] items-center justify-center bg-brand-white text-brand-black transition-transform duration-300 ease-out group-hover:rotate-45">
-                <PlusIcon />
+              {/* Dark square stays put; only the plus icon rotates → × on hover. */}
+              <span className="absolute bottom-4 right-4 flex size-[42px] items-center justify-center bg-brand-black text-brand-white">
+                <span className="transition-transform duration-300 ease-out group-hover:rotate-45">
+                  <PlusIcon />
+                </span>
               </span>
             </GrowReveal>
             <Reveal delay={0.1 + i * 0.08} className="flex flex-col gap-2">
