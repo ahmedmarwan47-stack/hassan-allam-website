@@ -72,6 +72,7 @@ export default function AllProjects({
   const { bind, hoverClass, cursor } = useDiscoverCursor();
   const [activeGroup, setActiveGroup] = useState<"city" | "sea">("city");
   const seaRef = useRef<HTMLDivElement>(null);
+  const groupsRef = useRef<HTMLDivElement>(null);
 
   // The sticky bar switches to "By The Sea" once the sea group's top edge
   // crosses the middle of the viewport — early enough that the short list
@@ -82,6 +83,11 @@ export default function AllProjects({
       raf = 0;
       const el = seaRef.current;
       setActiveGroup(el && el.getBoundingClientRect().top <= window.innerHeight * 0.5 ? "sea" : "city");
+      // While the communities bar owns the top edge, hide the navbar (it
+      // reads data-nav-hidden). Released once the groups scroll past.
+      const g = groupsRef.current?.getBoundingClientRect();
+      const stuck = !!g && g.top <= 80 && g.bottom > 160;
+      document.documentElement.toggleAttribute("data-nav-hidden", stuck);
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -93,6 +99,7 @@ export default function AllProjects({
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       if (raf) cancelAnimationFrame(raf);
+      document.documentElement.removeAttribute("data-nav-hidden");
     };
   }, []);
 
@@ -127,7 +134,7 @@ export default function AllProjects({
           17043:545): the subtitle and count follow whichever group is under
           the bar, so "In The City" hands over to "By The Sea" while scrolling. ── */}
       {(cityProjects.length > 0 || seaProjects.length > 0) && (
-        <div className="relative">
+        <div ref={groupsRef} className="relative">
           <CommunitiesBar
             count={(activeGroup === "sea" ? seaProjects : cityProjects).length || seaProjects.length}
             subtitle={
@@ -174,7 +181,8 @@ export default function AllProjects({
   );
 }
 
-/** Bar pinned under the fixed navbar (80px) while either group scrolls by. */
+/** Bar pinned to the top edge while either group scrolls by — the navbar
+ *  slides away meanwhile (see data-nav-hidden in AllProjects). */
 function CommunitiesBar({
   count,
   subtitle,
@@ -193,7 +201,7 @@ function CommunitiesBar({
     transition: { duration: 0.35, ease: [0.65, 0, 0.35, 1] as const },
   };
   return (
-    <div className="sticky top-20 z-20 border-b border-brand-black/10 bg-brand-white px-6 py-4 md:px-16 md:py-5">
+    <div className="sticky top-0 z-20 bg-brand-white px-6 py-4 md:px-16 md:py-5">
       <div className="flex items-center justify-between gap-4 md:gap-6">
         <span className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-brand-black/15 font-sans text-base font-medium text-brand-black md:size-[54px] md:text-xl">
           <AnimatePresence mode="wait" initial={false}>

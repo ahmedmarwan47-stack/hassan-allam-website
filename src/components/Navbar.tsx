@@ -43,7 +43,12 @@ export default function Navbar() {
   }, [menuOpen]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 h-20">
+    <header
+      // A page section can take over the top edge (e.g. the sticky "Our
+      // Communities" bar on /projects) by setting data-nav-hidden on <html>;
+      // the navbar then slides up out of the way until it's cleared.
+      className="fixed inset-x-0 top-0 z-50 h-20 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] [[data-nav-hidden]_&]:-translate-y-full"
+    >
       {/* Progressive background blur — three stacked backdrop-blur layers with
           successively shorter gradient masks, so the blur is strongest at the
           very top and dissolves smoothly into the page. */}
