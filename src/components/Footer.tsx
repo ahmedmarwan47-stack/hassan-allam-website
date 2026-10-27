@@ -7,10 +7,10 @@ import { useState } from "react";
 const NAV_LINKS: { label: string; href: string }[] = [
   { label: "Home", href: "/" },
   { label: "Projects", href: "/projects" },
-  { label: "The Story", href: "/story" },
-  { label: "News", href: "/news" },
-  { label: "FAQs", href: "/faqs" },
+  { label: "Our Story", href: "/story" },
+  { label: "Media Center", href: "/news" },
   { label: "Contact", href: "/contact" },
+  { label: "FAQs", href: "/faqs" },
   { label: "Careers", href: "/careers" },
 ];
 

@@ -36,9 +36,9 @@ export default function ProjectHero({ data }: { data: ProjectDetailData }) {
             {data.badgeScript}
           </span>
         </div>
-        {/* Narrower measure so the name wraps to 3 lines (e.g. SWANLAKE /
-            RESIDENCES / NEW CAIRO or … / EL GOUNA). */}
-        <h1 className="mx-auto max-w-[7.5em] font-serif font-light uppercase leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(2.75rem,8vw,8.25rem)]">
+        {/* Narrower measure so the name wraps to 3 lines (e.g. SwanLake /
+            Residences / New Cairo) — title case per the updated Figma. */}
+        <h1 className="mx-auto max-w-[7.5em] font-serif font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(2.75rem,8vw,8.25rem)]">
           <span className="block">{data.name[0]}</span>
           <span className="block">{data.name[1]}</span>
         </h1>

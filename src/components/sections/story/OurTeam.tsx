@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useDragControls } from "framer-motion";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
+import SliderArrow from "@/components/SliderArrow";
 
 interface TeamMember {
   name: string;
@@ -66,6 +67,10 @@ function PlusIcon() {
 
 export default function OurTeam() {
   const [selected, setSelected] = useState<TeamMember | null>(null);
+  // Desktop slider: three cards in view, arrows step one card at a time
+  // (Figma 17043:51706). With three members both arrows sit disabled.
+  const [index, setIndex] = useState(0);
+  const maxIndex = Math.max(0, TEAM.length - 3);
   // Below md the pop-up becomes a bottom sheet (slides up, drag to dismiss).
   const [isMobile, setIsMobile] = useState(false);
   // Sheet drags only from the grab handle so the bio content can scroll.
@@ -122,13 +127,22 @@ export default function OurTeam() {
         </div>
       </div>
 
-      <div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-5">
+      <div className="flex flex-col gap-6 md:gap-8">
+      <div className="hidden justify-end gap-2.5 md:flex">
+        <SliderArrow direction="prev" onClick={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0} label="Previous team members" />
+        <SliderArrow direction="next" onClick={() => setIndex((i) => Math.min(maxIndex, i + 1))} disabled={index === maxIndex} label="Next team members" />
+      </div>
+      <div className="w-full md:overflow-hidden">
+      <div
+        style={{ "--team-x": `calc(${-index} * (100% + 20px) / 3)` } as React.CSSProperties}
+        className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 md:flex md:gap-5 md:transition-transform md:duration-700 md:ease-[cubic-bezier(0.65,0,0.35,1)] md:[transform:translateX(var(--team-x))]"
+      >
         {TEAM.map((member, i) => (
           <button
             key={member.name}
             type="button"
             onClick={() => setSelected(member)}
-            className="group flex flex-col gap-5 text-left"
+            className="group flex flex-col gap-5 text-left md:w-[calc((100%-40px)/3)] md:shrink-0"
           >
             <GrowReveal
               axis="height"
@@ -170,6 +184,15 @@ export default function OurTeam() {
             </Reveal>
           </button>
         ))}
+      </div>
+      </div>
+      {/* Progress — the black segment marks the cards in view. */}
+      <div className="relative hidden h-0.5 w-full bg-brand-black/10 md:block">
+        <div
+          className="absolute inset-y-0 bg-brand-black transition-[left] duration-700 ease-[cubic-bezier(0.65,0,0.35,1)]"
+          style={{ width: `${(Math.min(3, TEAM.length) / TEAM.length) * 100}%`, left: `${(index / TEAM.length) * 100}%` }}
+        />
+      </div>
       </div>
 
       {/* Bio pop-up */}

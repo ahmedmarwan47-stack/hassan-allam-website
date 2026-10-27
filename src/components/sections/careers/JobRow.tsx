@@ -4,14 +4,14 @@ import { ArrowUpRightIcon, BriefcaseIcon, ClockIcon, LocationIcon } from "./icon
 
 /**
  * One listing row — Figma "Job row" (17135:1343). The arrow box fills black
- * on hover (the component's Hover variant). The last row in a list drops its
- * bottom border, per the client's audit of the careers pages.
+ * on hover (the component's Hover variant). Lists drop the last row's bottom
+ * border themselves (per the client's audit of the careers pages).
  */
 export default function JobRow({ job }: { job: Job }) {
   return (
     <Link
       href={`/careers/${job.slug}`}
-      className="group flex items-center justify-between gap-6 border-b border-brand-black py-6 last:border-b-0 md:py-7"
+      className="group flex items-center justify-between gap-6 border-b border-brand-black py-6 md:py-7"
     >
       <div className="flex min-w-0 flex-col gap-3">
         <h3 className="font-serif text-xl font-medium leading-[1.2] tracking-[-0.01em] text-brand-black md:text-[1.75rem]">

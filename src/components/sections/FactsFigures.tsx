@@ -172,7 +172,7 @@ export default function FactsFigures() {
       <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-28 px-6 py-24 md:gap-[200px] md:px-16 md:py-[180px]">
         {/* ── CEO Quote ── */}
         <Reveal className="flex max-w-[1110px] flex-col items-center gap-[58px] text-center">
-          <p className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] [font-size:clamp(2rem,4.3vw,3.875rem)]">
+          <p className="font-serif font-normal leading-[1.1] tracking-[-0.02em] [font-size:clamp(2rem,4.3vw,3.875rem)]">
             &ldquo;There is no greater pleasure than crafting{" "}
             <em className="italic">family-centric</em> communities where
             harmony and <em className="italic">exclusivity</em> translate into

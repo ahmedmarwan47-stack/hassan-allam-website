@@ -34,7 +34,7 @@ export default function NewsDetailHero({
 
       {/* Big headline, right-anchored on desktop to match the Figma layout. */}
       <Reveal className="relative z-10 flex justify-end pt-6 md:pt-0">
-        <p className="max-w-[868px] font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-white [font-size:clamp(1.75rem,4.3vw,3.875rem)]">
+        <p className="max-w-[868px] font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-white [font-size:clamp(1.75rem,4.3vw,3.875rem)]">
           {detail.headline}
         </p>
       </Reveal>

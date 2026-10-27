@@ -8,6 +8,7 @@ import { PROJECT_DETAILS } from "@/data/projectDetail";
 import { useDiscoverCursor } from "@/components/DiscoverCursor";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
+import SliderArrow from "@/components/SliderArrow";
 
 const FILTERS = ["In The City", "By The Sea"] as const;
 
@@ -108,24 +109,8 @@ export default function ProjectGallery() {
               </h2>
             </Reveal>
             <div className="flex shrink-0 gap-3">
-              <button
-                type="button"
-                onClick={goPrev}
-                disabled={index === 0}
-                aria-label="Previous projects"
-                className="flex size-12 items-center justify-center rounded-[2px] border border-white/20 font-sans text-xl text-brand-white transition-opacity disabled:opacity-25 md:size-[54px]"
-              >
-                ←
-              </button>
-              <button
-                type="button"
-                onClick={goNext}
-                disabled={index === maxIndex}
-                aria-label="Next projects"
-                className="flex size-12 items-center justify-center rounded-[2px] border border-white/20 font-sans text-xl text-brand-white transition-opacity disabled:opacity-25 md:size-[54px]"
-              >
-                →
-              </button>
+              <SliderArrow direction="prev" theme="dark" onClick={goPrev} disabled={index === 0} label="Previous projects" />
+              <SliderArrow direction="next" theme="dark" onClick={goNext} disabled={index === maxIndex} label="Next projects" />
             </div>
           </div>
 

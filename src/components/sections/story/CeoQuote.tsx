@@ -7,9 +7,9 @@ export default function CeoQuote() {
       className="flex justify-center bg-brand-white px-6 py-20 text-brand-black md:px-16 md:py-28"
     >
       <Reveal className="flex max-w-[1144px] flex-col gap-16 text-center md:gap-20">
-        <p className="font-serif text-2xl leading-[1.2] tracking-[-0.02em] text-brand-black md:text-[3.875rem]">
-          &ldquo;There is no greater pleasure than crafting family-centric
-          communities where harmony and exclusivity translate into everyday
+        <p className="font-serif text-2xl leading-[1.1] tracking-[-0.02em] text-brand-black md:text-[3.875rem]">
+          &ldquo;There is no greater pleasure than crafting{" "}
+          <em className="italic">family-centric</em> communities where harmony and exclusivity translate into everyday
           life.&rdquo;
         </p>
         <div className="grid gap-8 font-sans text-base leading-[1.4] text-brand-black md:grid-cols-2 md:gap-16 md:text-left">

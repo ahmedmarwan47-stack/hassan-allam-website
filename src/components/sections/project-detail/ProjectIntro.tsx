@@ -90,7 +90,7 @@ export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
                 />
               </svg>
             </span>
-            <span className="relative z-10 font-serif text-lg text-brand-black transition-colors duration-500 group-hover:text-brand-white md:text-2xl">
+            <span className="relative z-10 font-sans text-base font-medium text-brand-black transition-colors duration-500 group-hover:text-brand-white md:text-xl">
               {data.brochureLabel}
             </span>
           </button>

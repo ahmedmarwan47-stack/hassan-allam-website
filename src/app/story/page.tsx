@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import StoryHero from "@/components/sections/story/StoryHero";
 import StoryIntro from "@/components/sections/story/StoryIntro";
-import HistoryTimeline from "@/components/sections/story/HistoryTimeline";
+import ConstructionUpdates from "@/components/sections/story/ConstructionUpdates";
 import CeoQuote from "@/components/sections/story/CeoQuote";
 import VisionSection from "@/components/sections/story/VisionSection";
 import FactsList from "@/components/sections/story/FactsList";
@@ -12,7 +12,7 @@ export default function StoryPage() {
     <main>
       <StoryHero />
       <StoryIntro />
-      <HistoryTimeline />
+      <ConstructionUpdates />
       <CeoQuote />
       <VisionSection />
       <FactsList />

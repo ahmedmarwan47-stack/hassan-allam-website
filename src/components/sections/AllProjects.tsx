@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PROJECT_DETAILS } from "@/data/projectDetail";
 import { useDiscoverCursor } from "@/components/DiscoverCursor";
@@ -35,16 +35,16 @@ const TAG_LABEL: Record<Category, string> = {
 const PROJECTS: ProjectCard[] = [
   // In The City — 6 projects (3 thirds + 2 halves + 1 full)
   { id: "swanlake-west", name: "Swanlake West", tags: ["Residential", "Sports & Wellness"], image: "/images/map/slw.jpg", span: "third", group: "city" },
-  { id: "parkview", name: "Parkview", tags: ["Residential"], image: "/images/map/slo19.jpg", span: "third", group: "city" },
+  { id: "parkview", name: "Parkview", tags: ["Residential"], image: "/images/projects/parkview.jpg", span: "third", group: "city" },
   { id: "swanlake-katameya", name: "Swanlake Katameya", tags: ["Residential", "Retail", "Sports & Wellness"], image: "/images/map/slk10.jpg", span: "third", group: "city" },
   { id: "seasons-city", name: "Seasons Residences", tags: ["Residential", "Hospitality & Leisure"], image: "/images/map/seasons.jpg", span: "half", group: "city" },
-  { id: "swanlake-residences", name: "Swanlake Residences", tags: ["Residential", "Hospitality & Leisure", "Retail", "Office Space", "Sports & Wellness"], image: "/images/map/slg.jpg", span: "half", group: "city" },
-  { id: "swanlake-october", name: "Swanlake October", tags: ["Residential", "Office Space"], image: "/images/residential.jpg", span: "full", group: "city" },
+  { id: "swanlake-residences", name: "Swanlake Residences", tags: ["Residential", "Hospitality & Leisure", "Retail", "Office Space", "Sports & Wellness"], image: "/images/projects/swanlake-residences.jpg", span: "half", group: "city" },
+  { id: "swanlake-october", name: "Swanlake October", tags: ["Residential", "Office Space"], image: "/images/projects/swanlake-october.jpg", span: "full", group: "city" },
 
   // By The Sea — 3 projects (2 halves + 1 full)
   { id: "swanlake-residences-sea", name: "Swanlake El Gouna", tags: ["Residential", "Hospitality & Leisure"], image: "/images/map/slg.jpg", span: "half", group: "sea" },
-  { id: "swanlake-northcoast", name: "Swanlake Northcoast", tags: ["Residential", "Hospitality & Leisure", "Sports & Wellness"], image: "/images/hospitality.jpg", span: "half", group: "sea" },
-  { id: "little-venice", name: "Little Venice", tags: ["Residential"], image: "/images/sports.jpg", span: "full", group: "sea" },
+  { id: "swanlake-northcoast", name: "Swanlake Northcoast", tags: ["Residential", "Hospitality & Leisure", "Sports & Wellness"], image: "/images/projects/swanlake-northcoast.jpg", span: "half", group: "sea" },
+  { id: "little-venice", name: "Little Venice", tags: ["Residential"], image: "/images/projects/little-venice.jpg", span: "full", group: "sea" },
 ];
 
 /** Grey tag row with hairline dividers — Figma "Frame 2147227667". */
@@ -70,6 +70,31 @@ export default function AllProjects({
 }) {
   const [view, setView] = useState<View>("grid");
   const { bind, hoverClass, cursor } = useDiscoverCursor();
+  const [activeGroup, setActiveGroup] = useState<"city" | "sea">("city");
+  const seaRef = useRef<HTMLDivElement>(null);
+
+  // The sticky bar switches to "By The Sea" once the sea group's top edge
+  // crosses the middle of the viewport — early enough that the short list
+  // view (where the page ends before the group reaches the bar) still flips.
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const el = seaRef.current;
+      setActiveGroup(el && el.getBoundingClientRect().top <= window.innerHeight * 0.5 ? "sea" : "city");
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   const cityProjects = PROJECTS.filter(
     (p) => p.group === "city" && (activeFilter === "all" || p.tags.includes(activeFilter)),
@@ -78,7 +103,7 @@ export default function AllProjects({
     (p) => p.group === "sea" && (activeFilter === "all" || p.tags.includes(activeFilter)),
   );
 
-  const filterLabel = activeFilter === "all" ? "All Projects" : activeFilter;
+  const filterLabel = activeFilter === "all" ? "All projects" : activeFilter;
 
   return (
     <section
@@ -88,7 +113,7 @@ export default function AllProjects({
     >
       {/* ── Intro ── */}
       <div className="px-6 pb-12 pt-16 md:px-16 md:pb-20 md:pt-20">
-        <p className="font-sans text-sm font-medium uppercase leading-none tracking-[0.04em] text-brand-black md:text-base">
+        <p className="font-sans text-xl font-medium leading-[1.3] text-brand-black md:text-[1.625rem]">
           {filterLabel}
         </p>
         <p className="mt-10 max-w-[857px] font-serif font-light uppercase leading-[1.2] tracking-[-0.02em] [font-size:clamp(1.5rem,3vw,2.625rem)] md:mt-14">
@@ -98,38 +123,50 @@ export default function AllProjects({
         </p>
       </div>
 
-      {/* ── In The City — cards reveal by growing in HEIGHT on scroll ── */}
-      {cityProjects.length > 0 && (
-        <CommunitySection
-          number="01"
-          title="Our Communities"
-          subtitle="In The City"
-          revealAxis="height"
-          view={view}
-          onViewChange={setView}
-          projects={cityProjects}
-          bind={bind}
-          hoverClass={hoverClass}
-        />
-      )}
+      {/* ── Communities — one sticky bar shared by both groups (Figma
+          17043:545): the subtitle and count follow whichever group is under
+          the bar, so "In The City" hands over to "By The Sea" while scrolling. ── */}
+      {(cityProjects.length > 0 || seaProjects.length > 0) && (
+        <div className="relative">
+          <CommunitiesBar
+            count={(activeGroup === "sea" ? seaProjects : cityProjects).length || seaProjects.length}
+            subtitle={
+              cityProjects.length === 0 || activeGroup === "sea" ? "By The Sea" : "In The City"
+            }
+            view={view}
+            onViewChange={setView}
+          />
 
-      {cityProjects.length > 0 && seaProjects.length > 0 && (
-        <hr className="m-0 h-px w-full border-0 bg-grey-300" />
-      )}
+          {/* In The City — cards reveal by growing in HEIGHT on scroll */}
+          {cityProjects.length > 0 && (
+            <CommunityBody
+              revealAxis="height"
+              accent="var(--color-success-soft)"
+              view={view}
+              projects={cityProjects}
+              bind={bind}
+              hoverClass={hoverClass}
+            />
+          )}
 
-      {/* ── By The Sea — cards reveal by growing in WIDTH on scroll ── */}
-      {seaProjects.length > 0 && (
-        <CommunitySection
-          number="02"
-          title="Our Communities"
-          subtitle="By The Sea"
-          revealAxis="width"
-          view={view}
-          onViewChange={setView}
-          projects={seaProjects}
-          bind={bind}
-          hoverClass={hoverClass}
-        />
+          {cityProjects.length > 0 && seaProjects.length > 0 && (
+            <hr className="m-0 h-px w-full border-0 bg-grey-300" />
+          )}
+
+          {/* By The Sea — cards reveal by growing in WIDTH on scroll */}
+          {seaProjects.length > 0 && (
+            <div ref={seaRef}>
+              <CommunityBody
+                revealAxis="width"
+                accent="var(--color-info)"
+                view={view}
+                projects={seaProjects}
+                bind={bind}
+                hoverClass={hoverClass}
+              />
+            </div>
+          )}
+        </div>
       )}
 
       {cursor}
@@ -137,77 +174,98 @@ export default function AllProjects({
   );
 }
 
-function CommunitySection({
-  number,
-  title,
+/** Bar pinned under the fixed navbar (80px) while either group scrolls by. */
+function CommunitiesBar({
+  count,
   subtitle,
-  revealAxis,
   view,
   onViewChange,
-  projects,
-  bind,
-  hoverClass,
 }: {
-  number: string;
-  title: string;
+  count: number;
   subtitle: string;
-  revealAxis: "height" | "width";
   view: View;
   onViewChange: (v: View) => void;
-  projects: ProjectCard[];
-  bind: Record<string, unknown>;
-  hoverClass: string;
 }) {
-  const count = projects.length;
-
+  const swap = {
+    initial: { opacity: 0, y: "0.6em" },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: "-0.6em" },
+    transition: { duration: 0.35, ease: [0.65, 0, 0.35, 1] as const },
+  };
   return (
-    <div className="px-6 py-16 md:px-16 md:py-20">
-      {/* Section header */}
-      <div className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between md:gap-6">
-        <span className="flex size-[54px] items-center justify-center rounded-[2px] border border-brand-black/15 font-sans text-base font-medium text-brand-black">
-          {String(count).padStart(2, "0")}
+    <div className="sticky top-20 z-20 border-b border-brand-black/10 bg-brand-white px-6 py-4 md:px-16 md:py-5">
+      <div className="flex items-center justify-between gap-4 md:gap-6">
+        <span className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-brand-black/15 font-sans text-base font-medium text-brand-black md:size-[54px] md:text-xl">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span key={count} {...swap}>
+              {String(count).padStart(2, "0")}
+            </motion.span>
+          </AnimatePresence>
         </span>
 
-        <h3 className="font-sans font-medium uppercase leading-[1.1] tracking-[0.01em] text-brand-black [font-size:clamp(1.5rem,2.6vw,2rem)] md:text-center">
-          {title}
-          <br />
-          {subtitle}
+        <h3 className="min-w-0 flex-1 font-sans font-normal leading-none text-brand-black [font-size:clamp(1.25rem,2.8vw,2.5rem)] md:flex-none">
+          Our Communities
+          <span className="block overflow-hidden pb-[0.1em]">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span key={subtitle} className="block" {...swap}>
+                {subtitle}
+              </motion.span>
+            </AnimatePresence>
+          </span>
         </h3>
 
         <ViewToggle view={view} onChange={onViewChange} />
       </div>
+    </div>
+  );
+}
 
-      {/* Body */}
-      <div className="mt-12 md:mt-16">
-        <AnimatePresence mode="wait">
-          {view === "grid" ? (
-            <motion.div
-              key="grid"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-            >
-              <GridView
-                projects={projects}
-                revealAxis={revealAxis}
-                bind={bind}
-                hoverClass={hoverClass}
-              />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="list"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-            >
-              <ListView projects={projects} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+function CommunityBody({
+  revealAxis,
+  accent,
+  view,
+  projects,
+  bind,
+  hoverClass,
+}: {
+  revealAxis: "height" | "width";
+  /** List-row hover fill — green in the city, blue by the sea. */
+  accent: string;
+  view: View;
+  projects: ProjectCard[];
+  bind: Record<string, unknown>;
+  hoverClass: string;
+}) {
+  return (
+    <div className="px-6 py-12 md:px-16 md:py-16">
+      <AnimatePresence mode="wait">
+        {view === "grid" ? (
+          <motion.div
+            key="grid"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+          >
+            <GridView
+              projects={projects}
+              revealAxis={revealAxis}
+              bind={bind}
+              hoverClass={hoverClass}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="list"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+          >
+            <ListView projects={projects} accent={accent} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -225,10 +283,10 @@ function ViewToggle({
         type="button"
         onClick={() => onChange("grid")}
         className={[
-          "relative font-sans text-base font-medium uppercase tracking-[0.02em] transition-colors duration-200 md:text-lg",
+          "relative font-sans text-lg transition-colors duration-200 md:text-2xl",
           view === "grid"
-            ? "text-brand-black after:absolute after:-bottom-2 after:left-0 after:right-0 after:h-px after:bg-brand-black"
-            : "text-grey-500 hover:text-brand-black",
+            ? "font-bold text-success-dark after:absolute after:-bottom-2 after:left-0 after:right-0 after:h-px after:bg-success-dark"
+            : "font-medium text-brand-black hover:text-success-dark",
         ].join(" ")}
       >
         Grid
@@ -237,10 +295,10 @@ function ViewToggle({
         type="button"
         onClick={() => onChange("list")}
         className={[
-          "relative font-sans text-base font-medium uppercase tracking-[0.02em] transition-colors duration-200 md:text-lg",
+          "relative font-sans text-lg transition-colors duration-200 md:text-2xl",
           view === "list"
-            ? "text-brand-black after:absolute after:-bottom-2 after:left-0 after:right-0 after:h-px after:bg-brand-black"
-            : "text-grey-500 hover:text-brand-black",
+            ? "font-bold text-success-dark after:absolute after:-bottom-2 after:left-0 after:right-0 after:h-px after:bg-success-dark"
+            : "font-medium text-brand-black hover:text-success-dark",
         ].join(" ")}
       >
         List
@@ -317,7 +375,7 @@ function GridView({
 }
 
 // ─── List view ───────────────────────────────────────────────────────────────
-function ListView({ projects }: { projects: ProjectCard[] }) {
+function ListView({ projects, accent }: { projects: ProjectCard[]; accent: string }) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
@@ -339,7 +397,7 @@ function ListView({ projects }: { projects: ProjectCard[] }) {
               <motion.div
                 animate={{
                   backgroundColor: isHovered
-                    ? "var(--color-success-soft)"
+                    ? accent
                     : "rgba(255,255,255,0)",
                   paddingLeft: isHovered ? 64 : 0,
                   paddingRight: isHovered ? 64 : 0,

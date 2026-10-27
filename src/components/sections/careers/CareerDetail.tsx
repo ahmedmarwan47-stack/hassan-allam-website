@@ -176,7 +176,7 @@ function OtherRoles({ job }: { job: Job }) {
             <ArrowUpRightIcon size={20} />
           </Link>
         </div>
-        <div className="flex flex-col border-t border-brand-black">
+        <div className="flex flex-col border-t border-brand-black [&>a:last-child]:border-b-0">
           {others.map((o) => (
             <JobRow key={o.slug} job={o} />
           ))}

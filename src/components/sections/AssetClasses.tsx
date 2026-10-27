@@ -13,6 +13,7 @@ import { useDiscoverCursor } from "@/components/DiscoverCursor";
 import { withBasePath } from "@/lib/basePath";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
+import SliderArrow from "@/components/SliderArrow";
 
 /**
  * AssetClasses — Figma node 16988-1390.
@@ -227,25 +228,9 @@ export default function AssetClasses() {
                 className="absolute inset-y-0 bg-black"
               />
             </div>
-            <div className="flex items-center gap-5">
-              <button
-                type="button"
-                onClick={goPrev}
-                disabled={index === 0}
-                aria-label="Previous asset classes"
-                className="font-sans text-2xl text-black transition-opacity duration-300 disabled:opacity-25"
-              >
-                &#8592;
-              </button>
-              <button
-                type="button"
-                onClick={goNext}
-                disabled={index === MAX_INDEX}
-                aria-label="Next asset classes"
-                className="font-sans text-2xl text-black transition-opacity duration-300 disabled:opacity-25"
-              >
-                &#8594;
-              </button>
+            <div className="flex items-center gap-2.5">
+              <SliderArrow direction="prev" onClick={goPrev} disabled={index === 0} label="Previous asset classes" />
+              <SliderArrow direction="next" onClick={goNext} disabled={index === MAX_INDEX} label="Next asset classes" />
             </div>
           </motion.div>
         </div>

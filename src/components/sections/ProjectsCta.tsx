@@ -19,14 +19,14 @@ export default function ProjectsCta() {
       />
       <div className="absolute inset-0 -z-10 bg-black/55" />
 
-      <div className="flex w-full max-w-[441px] flex-col items-center px-6 text-center text-white">
+      <div className="flex w-full max-w-[718px] flex-col items-center px-6 text-center text-white">
         <Reveal>
-          <h2 className="font-serif text-[3rem] font-light uppercase leading-[1.05] tracking-[-0.02em] md:text-[5rem]">
-            Want to work with us?
+          <h2 className="font-serif text-[3rem] font-normal uppercase leading-none tracking-[-0.02em] md:text-[3.875rem]">
+            Want to work<br />with us?
           </h2>
         </Reveal>
         <Reveal delay={0.12}>
-          <p className="mt-8 max-w-[420px] font-sans text-base font-medium leading-[1.4] text-white/90 md:mt-10">
+          <p className="mt-8 max-w-[546px] font-sans text-base leading-[1.1] text-white/90 md:text-xl md:mt-10">
             Hassan Allam Properties offers an exceptional portfolio of 11 projects
             located in strategic locations, both in the heart of dynamic urban
             centers and along the coastline.
