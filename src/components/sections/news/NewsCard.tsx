@@ -86,7 +86,8 @@ export default function NewsCard({ article }: { article: NewsArticle }) {
         </GrowReveal>
       </Link>
 
-      <p className={`${TITLE_MAX[article.span]} font-sans text-lg font-medium leading-[1.3] text-brand-black md:text-2xl`}>
+      {/* Max two lines on every card (homepage teaser + /news), per client. */}
+      <p className={`${TITLE_MAX[article.span]} line-clamp-2 font-sans text-lg font-medium leading-[1.3] text-brand-black md:text-2xl`}>
         {article.title}
       </p>
     </div>

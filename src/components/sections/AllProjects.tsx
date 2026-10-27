@@ -423,7 +423,7 @@ function ListView({ projects, accent }: { projects: ProjectCard[]; accent: strin
                 <motion.span
                   animate={{ color: isHovered ? "#ffffff" : "#000000" }}
                   transition={{ duration: 0.35 }}
-                  className="whitespace-pre-wrap text-right font-sans text-sm font-medium md:text-base"
+                  className="w-[45%] whitespace-pre-wrap text-right font-sans text-xs font-medium leading-[1.3] md:w-[31.4%] md:max-w-[414px] md:text-sm"
                 >
                   {p.tags.map((t) => TAG_LABEL[t]).join("  |  ")}
                 </motion.span>
@@ -438,12 +438,12 @@ function ListView({ projects, accent }: { projects: ProjectCard[]; accent: strin
                       transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
                       className="pointer-events-none absolute left-1/2 top-1/2 z-40 -translate-x-1/2 -translate-y-1/2"
                     >
-                      <div className="relative h-[400px] w-[320px] overflow-hidden shadow-2xl">
+                      <div className="relative h-[333px] w-[261px] overflow-hidden shadow-2xl">
                         <Image
                           src={p.image}
                           alt={p.name}
                           fill
-                          sizes="320px"
+                          sizes="261px"
                           quality={95}
                           className="object-cover"
                         />
