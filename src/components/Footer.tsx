@@ -11,6 +11,7 @@ const NAV_LINKS: { label: string; href: string }[] = [
   { label: "News", href: "/news" },
   { label: "FAQs", href: "/faqs" },
   { label: "Contact", href: "/contact" },
+  { label: "Careers", href: "/careers" },
 ];
 
 const IN_THE_CITY = [

@@ -12,7 +12,8 @@ import type { Category } from "@/data/mapProjects";
 interface ProjectCard {
   id: string;
   name: string;
-  category: Category;
+  /** Asset classes shown under the card / beside the list row. */
+  tags: Category[];
   image: string;
   /** Grid span. */
   span: "third" | "half" | "full";
@@ -20,20 +21,45 @@ interface ProjectCard {
   group: "city" | "sea";
 }
 
+// Card-tag wording from Figma (Asset classes 17043:545) — longer than the
+// map filter labels.
+const TAG_LABEL: Record<Category, string> = {
+  Residential: "Residential",
+  "Hospitality & Leisure": "Hospitality and Leisure",
+  Retail: "Curated Retail & Dining",
+  "Office Space": "Office Space",
+  "Sports & Wellness": "Sports and Wellness",
+};
+
+// Tag mix per project mirrors the Figma grid + list variants.
 const PROJECTS: ProjectCard[] = [
   // In The City — 6 projects (3 thirds + 2 halves + 1 full)
-  { id: "swanlake-west", name: "Swanlake West", category: "Residential", image: "/images/map/slw.jpg", span: "third", group: "city" },
-  { id: "parkview", name: "Parkview", category: "Residential", image: "/images/map/slo19.jpg", span: "third", group: "city" },
-  { id: "swanlake-katameya", name: "Swanlake Katameya", category: "Residential", image: "/images/map/slk10.jpg", span: "third", group: "city" },
-  { id: "seasons-city", name: "Seasons Residences", category: "Residential", image: "/images/map/seasons.jpg", span: "half", group: "city" },
-  { id: "swanlake-residences", name: "Swanlake Residences", category: "Residential", image: "/images/map/slg.jpg", span: "half", group: "city" },
-  { id: "swanlake-october", name: "Swanlake October", category: "Office Space", image: "/images/residential.jpg", span: "full", group: "city" },
+  { id: "swanlake-west", name: "Swanlake West", tags: ["Residential", "Sports & Wellness"], image: "/images/map/slw.jpg", span: "third", group: "city" },
+  { id: "parkview", name: "Parkview", tags: ["Residential"], image: "/images/map/slo19.jpg", span: "third", group: "city" },
+  { id: "swanlake-katameya", name: "Swanlake Katameya", tags: ["Residential", "Retail", "Sports & Wellness"], image: "/images/map/slk10.jpg", span: "third", group: "city" },
+  { id: "seasons-city", name: "Seasons Residences", tags: ["Residential", "Hospitality & Leisure"], image: "/images/map/seasons.jpg", span: "half", group: "city" },
+  { id: "swanlake-residences", name: "Swanlake Residences", tags: ["Residential", "Hospitality & Leisure", "Retail", "Office Space", "Sports & Wellness"], image: "/images/map/slg.jpg", span: "half", group: "city" },
+  { id: "swanlake-october", name: "Swanlake October", tags: ["Residential", "Office Space"], image: "/images/residential.jpg", span: "full", group: "city" },
 
   // By The Sea — 3 projects (2 halves + 1 full)
-  { id: "seasons-sea", name: "Seasons Residences", category: "Hospitality & Leisure", image: "/images/hospitality.jpg", span: "half", group: "sea" },
-  { id: "swanlake-residences-sea", name: "Swanlake Residences", category: "Hospitality & Leisure", image: "/images/map/slg.jpg", span: "half", group: "sea" },
-  { id: "swanlake-october-sea", name: "Swanlake October", category: "Sports & Wellness", image: "/images/sports.jpg", span: "full", group: "sea" },
+  { id: "swanlake-residences-sea", name: "Swanlake El Gouna", tags: ["Residential", "Hospitality & Leisure"], image: "/images/map/slg.jpg", span: "half", group: "sea" },
+  { id: "swanlake-northcoast", name: "Swanlake Northcoast", tags: ["Residential", "Hospitality & Leisure", "Sports & Wellness"], image: "/images/hospitality.jpg", span: "half", group: "sea" },
+  { id: "little-venice", name: "Little Venice", tags: ["Residential"], image: "/images/sports.jpg", span: "full", group: "sea" },
 ];
+
+/** Grey tag row with hairline dividers — Figma "Frame 2147227667". */
+function TagList({ tags }: { tags: Category[] }) {
+  return (
+    <ul className="flex flex-wrap items-center gap-x-[7px] gap-y-0.5 font-sans text-[11px] leading-[1.4] text-grey-500 md:text-xs">
+      {tags.map((tag, i) => (
+        <li key={tag} className="flex items-center gap-[7px]">
+          {i > 0 && <span aria-hidden className="h-3.5 w-px bg-grey-300" />}
+          {TAG_LABEL[tag]}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 type View = "grid" | "list";
 
@@ -46,10 +72,10 @@ export default function AllProjects({
   const { bind, hoverClass, cursor } = useDiscoverCursor();
 
   const cityProjects = PROJECTS.filter(
-    (p) => p.group === "city" && (activeFilter === "all" || p.category === activeFilter),
+    (p) => p.group === "city" && (activeFilter === "all" || p.tags.includes(activeFilter)),
   );
   const seaProjects = PROJECTS.filter(
-    (p) => p.group === "sea" && (activeFilter === "all" || p.category === activeFilter),
+    (p) => p.group === "sea" && (activeFilter === "all" || p.tags.includes(activeFilter)),
   );
 
   const filterLabel = activeFilter === "all" ? "All Projects" : activeFilter;
@@ -277,9 +303,12 @@ function GridView({
                 />
               </div>
             </GrowReveal>
-            <p className="mt-4 font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1rem,1.8vw,1.625rem)] md:mt-6">
-              {p.name}
-            </p>
+            <div className="mt-4 flex flex-col gap-1 md:mt-6">
+              <p className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1rem,1.8vw,1.625rem)]">
+                {p.name}
+              </p>
+              <TagList tags={p.tags} />
+            </div>
           </Link>
         );
       })}
@@ -316,7 +345,7 @@ function ListView({ projects }: { projects: ProjectCard[] }) {
                   paddingRight: isHovered ? 64 : 0,
                 }}
                 transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
-                className="relative flex items-center justify-between py-8 md:py-10"
+                className="relative flex items-center justify-between gap-6 py-8 md:py-10"
               >
                 <motion.span
                   animate={{ color: isHovered ? "#ffffff" : "#000000" }}
@@ -328,9 +357,9 @@ function ListView({ projects }: { projects: ProjectCard[] }) {
                 <motion.span
                   animate={{ color: isHovered ? "#ffffff" : "#000000" }}
                   transition={{ duration: 0.35 }}
-                  className="font-sans text-sm font-medium md:text-base"
+                  className="whitespace-pre-wrap text-right font-sans text-sm font-medium md:text-base"
                 >
-                  {p.category}
+                  {p.tags.map((t) => TAG_LABEL[t]).join("  |  ")}
                 </motion.span>
 
                 <AnimatePresence>

@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { label: "Our Story", href: "/story" },
   { label: "Media Center", href: "/news" },
   { label: "FAQs", href: "/faqs" },
+  { label: "Careers", href: "/careers" },
 ];
 
 // Large serif links for the mobile menu overlay (matches Figma 991:520).
@@ -19,6 +20,7 @@ const MOBILE_LINKS = [
   { label: "The Story", href: "/story" },
   { label: "News", href: "/news" },
   { label: "FAQs", href: "/faqs" },
+  { label: "Careers", href: "/careers" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -90,13 +92,13 @@ export default function Navbar() {
 
         {/* Primary links (desktop) */}
         <ul
-          className={`hidden items-center gap-9 md:flex lg:gap-10 ${TRANSITION} ${onDark ? "text-white" : "text-black"}`}
+          className={`hidden items-center gap-7 md:flex lg:gap-[42px] ${TRANSITION} ${onDark ? "text-white" : "text-black"}`}
         >
           {NAV_LINKS.map((link) => (
             <li key={link.label}>
               <Link
                 href={link.href}
-                className="font-sans text-[18px] font-medium opacity-90 transition-opacity duration-300 hover:opacity-100"
+                className="font-sans text-[15px] font-medium uppercase opacity-90 lg:text-base transition-opacity duration-300 hover:opacity-100"
               >
                 {link.label}
               </Link>
@@ -107,7 +109,7 @@ export default function Navbar() {
         {/* CTA (desktop) — inverse fill sweeps up from the bottom edge. */}
         <Link
           href="/contact"
-          className={`group relative hidden h-[52px] items-center justify-center overflow-hidden px-6 font-serif text-[18px] uppercase tracking-[0.06em] md:flex ${TRANSITION} ${
+          className={`group relative hidden h-[52px] items-center justify-center overflow-hidden rounded-[4px] px-5 font-serif text-xl font-medium uppercase tracking-[0.06em] md:flex ${TRANSITION} ${
             onDark
               ? "bg-white/90 text-black hover:text-white"
               : "bg-black/90 text-white hover:text-black"
