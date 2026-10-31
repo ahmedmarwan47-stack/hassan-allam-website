@@ -7,12 +7,14 @@ import ImageShowcase from "./ImageShowcase";
 import AmenitiesSection from "./AmenitiesSection";
 import ProjectStory from "./ProjectStory";
 import ProductsSection from "./ProductsSection";
-import ResaleCta from "./ResaleCta";
+import ConstructionTimeline from "./ConstructionTimeline";
+import RequestInterestForm from "./RequestInterestForm";
 
 /**
  * Shared project detail template. The Master Plan section only renders when
  * `data.masterPlan` is present — "By The Sea" projects omit it entirely,
  * "In The City" projects (e.g. Swanlake Residences New Cairo) include it.
+ * Every "Request interest" button on the page jumps to the closing form.
  */
 export default function ProjectDetailTemplate({ data }: { data: ProjectDetailData }) {
   return (
@@ -34,11 +36,8 @@ export default function ProjectDetailTemplate({ data }: { data: ProjectDetailDat
         heading={data.productsHeading}
         items={data.products}
       />
-      <ResaleCta
-        heading={data.ctaHeading}
-        paragraph={data.ctaParagraph}
-        buttonLabel={data.ctaButtonLabel}
-      />
+      <ConstructionTimeline data={data.construction} />
+      <RequestInterestForm projectName={data.name.join(" ")} image={data.showcase.full} />
       <Footer />
     </main>
   );

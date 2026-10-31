@@ -137,3 +137,20 @@ html:not(.hydrated) [data-reveal] {
 [data-fx="media"]:not([data-fx-in]) {
   clip-path: inset(100% 0 0 0);
 }
+
+/* ── Master plan pins: a soft ring breathing out, so they read as clickable. */
+@keyframes plan-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [class*="plan-pulse"] {
+    animation: none;
+  }
+}

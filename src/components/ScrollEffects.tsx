@@ -74,13 +74,11 @@ export default function ScrollEffects() {
       enter.observe(el);
     };
     // Backup for observer misses (fast scrolls, clipped targets): anything
-    // pending whose top has come into view plays on the next scroll frame.
+    // pending whose top has reached the viewport — or that was scrolled
+    // past entirely — plays on the next scroll frame.
     const sweep = () => {
       const vh = window.innerHeight;
-      const due = [...pending].filter((el) => {
-        const r = el.getBoundingClientRect();
-        return r.top < vh * 0.92 && r.bottom > 0;
-      });
+      const due = [...pending].filter((el) => el.getBoundingClientRect().top < vh * 0.92);
       if (due.length) play(due);
     };
 

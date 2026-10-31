@@ -7,6 +7,7 @@ import FactsFigures from "@/components/sections/FactsFigures";
 import HomeMediaCenter from "@/components/sections/HomeMediaCenter";
 import AppCta from "@/components/sections/AppCta";
 import Footer from "@/components/Footer";
+import ContactUsSection from "@/components/ContactUsSection";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
       <FactsFigures />
       <HomeMediaCenter />
       <AppCta />
+      <ContactUsSection />
       <Footer />
     </main>
   );

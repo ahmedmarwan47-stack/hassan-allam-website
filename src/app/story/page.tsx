@@ -1,4 +1,5 @@
 import Footer from "@/components/Footer";
+import ContactUsSection from "@/components/ContactUsSection";
 import SectionNav from "@/components/SectionNav";
 import StoryHero from "@/components/sections/story/StoryHero";
 import StoryIntro from "@/components/sections/story/StoryIntro";
@@ -30,6 +31,7 @@ export default function StoryPage() {
       <FactsList id="facts-and-figures" />
       <LegacySection id="our-legacy" />
       <OurTeam id="people-behind-hap" />
+      <ContactUsSection />
       <Footer />
       <SectionNav items={SECTIONS} />
     </main>

@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/Reveal";
 import { FeatureIcon } from "./icons";
 import type { FeatureItem } from "@/data/projectDetail";
+import { RequestInterest } from "@/components/ActionButton";
 
 export default function FeatureGrid({
   heading,
@@ -43,6 +44,9 @@ export default function FeatureGrid({
           </Reveal>
         ))}
       </div>
+      <Reveal>
+        <RequestInterest />
+      </Reveal>
     </div>
   );
 }

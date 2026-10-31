@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Footer from "@/components/Footer";
+import ContactUsSection from "@/components/ContactUsSection";
 import FaqsHero from "@/components/sections/faqs/FaqsHero";
 import FaqsList from "@/components/sections/faqs/FaqsList";
 
@@ -14,6 +15,7 @@ export default function FaqsPage() {
     <main>
       <FaqsHero />
       <FaqsList />
+      <ContactUsSection />
       <Footer />
     </main>
   );

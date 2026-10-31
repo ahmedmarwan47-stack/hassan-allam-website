@@ -15,6 +15,23 @@ export interface FeatureItem {
 export interface MasterPlanItem {
   number: number;
   name: string;
+  /** Short description for the neighborhood drawer (placeholder copy). */
+  blurb: string;
+  image: string;
+}
+
+export interface ConstructionPhase {
+  title: string;
+  /** e.g. "Q1 2023 — Q3 2023" */
+  period: string;
+  status: "Completed" | "In progress" | "Upcoming";
+  text: string;
+  image: string;
+}
+
+export interface ConstructionUpdates {
+  updated: string;
+  phases: ConstructionPhase[];
 }
 
 export interface ProjectDetailData {
@@ -60,6 +77,8 @@ export interface ProjectDetailData {
   productsHeading: string;
   products: FeatureItem[];
 
+  construction: ConstructionUpdates;
+
   ctaHeading: string;
   ctaParagraph: string;
   ctaButtonLabel: string;
@@ -83,6 +102,49 @@ const SLR_PRODUCTS: FeatureItem[] = [
   { icon: "fitness", title: "Fitness Facility", description: "A fully equipped gym to keep residents in shape." },
   { icon: "leisure", title: "Leisure Component", description: "A high-end culinary experience in an elegant setting." },
 ];
+
+// Placeholder construction timeline (dummy dates and images) until
+// real site updates are available.
+const SAMPLE_CONSTRUCTION: ConstructionUpdates = {
+  updated: "October 2026",
+  phases: [
+    {
+      title: "Groundbreaking & Site Preparation",
+      period: "Q1 2023 — Q3 2023",
+      status: "Completed",
+      text: "Site clearing, levelling and the main access roads, laying out the masterplan's first neighborhoods.",
+      image: "/images/image 386.jpg",
+    },
+    {
+      title: "Infrastructure & Utilities",
+      period: "Q3 2023 — Q2 2024",
+      status: "Completed",
+      text: "Water, power and drainage networks across the site, with the central landscape spine taking shape.",
+      image: "/images/image 402.jpg",
+    },
+    {
+      title: "Structural Works",
+      period: "Q2 2024 — Q1 2026",
+      status: "In progress",
+      text: "Concrete frames are complete in The Selina and The Giselle, with The Scarlet's buildings rising floor by floor.",
+      image: "/images/image 388.jpg",
+    },
+    {
+      title: "Facades & Finishing",
+      period: "Q4 2025 — Q4 2026",
+      status: "In progress",
+      text: "Stone facades, glazing and interior finishing are under way in the first delivered buildings.",
+      image: "/images/image 384.jpg",
+    },
+    {
+      title: "Landscaping & Handover",
+      period: "Q3 2026 — Q2 2027",
+      status: "Upcoming",
+      text: "Gardens, pools and amenities are completed ahead of the first handovers to homeowners.",
+      image: "/images/image 385.jpg",
+    },
+  ],
+};
 
 export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
   // ─── In The City — full template, including the Master Plan section ──────
@@ -118,20 +180,20 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     masterPlan: {
       mapImage: "/images/masterplan-slr-clean.jpg",
       items: [
-        { number: 1, name: "The Selina" },
-        { number: 2, name: "The Giselle" },
-        { number: 3, name: "The Scarlet" },
-        { number: 4, name: "The Amaia" },
-        { number: 5, name: "The Phoenix" },
-        { number: 6, name: "The Iris" },
-        { number: 7, name: "Am:pm" },
-        { number: 8, name: "Villas Residence" },
-        { number: 9, name: "Villas Residence" },
-        { number: 10, name: "Villas Residence" },
-        { number: 11, name: "Villas Residence" },
-        { number: 12, name: "Villas Residence" },
-        { number: 13, name: "Villas Residence" },
-        { number: 14, name: "Sports Club" },
+        { number: 1, name: "The Selina", image: "/images/image 385.jpg", blurb: "Low-rise residences wrapped around landscaped courtyards, where every home opens onto green and the walk to the central park takes minutes." },
+        { number: 2, name: "The Giselle", image: "/images/image 388.jpg", blurb: "Contemporary apartments with generous terraces, set along quiet tree-lined promenades close to the retail hub." },
+        { number: 3, name: "The Scarlet", image: "/images/image 387.jpg", blurb: "A boutique collection of homes around a private pool garden, designed for families who value calm and privacy." },
+        { number: 4, name: "The Amaia", image: "/images/image 386.jpg", blurb: "Elegant duplexes and penthouses with open views across SLR's landscaped spine." },
+        { number: 5, name: "The Phoenix", image: "/images/image 384.jpg", blurb: "Refined residences with stone facades and double-height lobbies, a short stroll from the clubhouse." },
+        { number: 6, name: "The Iris", image: "/images/image 383.jpg", blurb: "Resort-style living around a sunlit pool deck, with shaded cabanas and gardens between every building." },
+        { number: 7, name: "Am:pm", image: "/images/image 402.jpg", blurb: "SLR's lifestyle centre — cafés, dining and boutiques that keep the community lively from morning to night." },
+        { number: 8, name: "Villas Residence", image: "/images/image 398.jpg", blurb: "Standalone villas on generous plots, each with a private garden and pool." },
+        { number: 9, name: "Villas Residence", image: "/images/image 390.jpg", blurb: "Standalone villas on generous plots, each with a private garden and pool." },
+        { number: 10, name: "Villas Residence", image: "/images/image 391.jpg", blurb: "Twin and town villas facing the green corridors, made for growing families." },
+        { number: 11, name: "Villas Residence", image: "/images/image 392.jpg", blurb: "Twin and town villas facing the green corridors, made for growing families." },
+        { number: 12, name: "Villas Residence", image: "/images/image 398.jpg", blurb: "Signature villas at the edge of the masterplan, with the most private settings in SLR." },
+        { number: 13, name: "Villas Residence", image: "/images/image 390.jpg", blurb: "Signature villas at the edge of the masterplan, with the most private settings in SLR." },
+        { number: 14, name: "Sports Club", image: "/images/image 401.jpg", blurb: "A full sports club with courts, a fitness centre and family pools, at the heart of community life." },
       ],
     },
 
@@ -157,6 +219,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     },
     productsHeading: "Types of Products Offered In Our Project",
     products: SLR_PRODUCTS,
+
+    construction: SAMPLE_CONSTRUCTION,
 
     ctaHeading: "A HAP Resale Expert Can Help You",
     ctaParagraph: "Hassan Allam Properties offers an exceptional portfolio of 11 projects located in strategic locations, both in the heart of dynamic urban centers and along the coastline.",
@@ -215,6 +279,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     },
     productsHeading: "Types of Products Offered In Our Project",
     products: SLR_PRODUCTS,
+
+    construction: SAMPLE_CONSTRUCTION,
 
     ctaHeading: "A HAP Resale Expert Can Help You",
     ctaParagraph: "Hassan Allam Properties offers an exceptional portfolio of 11 projects located in strategic locations, both in the heart of dynamic urban centers and along the coastline.",

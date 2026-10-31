@@ -1,5 +1,6 @@
 import Image from "@/components/ProgressiveImage";
 import GrowReveal from "@/components/GrowReveal";
+import { RequestInterest } from "@/components/ActionButton";
 
 export default function ProjectStory({
   images,
@@ -58,6 +59,7 @@ export default function ProjectStory({
           {paragraphs.map((p, i) => (
             <p key={i}>{p}</p>
           ))}
+          <RequestInterest className="mt-4 self-start" />
         </div>
       </div>
     </section>

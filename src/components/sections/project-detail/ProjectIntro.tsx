@@ -1,7 +1,7 @@
 import type { ProjectDetailData } from "@/data/projectDetail";
 import GrowImagePair from "./GrowImagePair";
 import { Reveal } from "@/components/Reveal";
-import RollText from "@/components/RollText";
+import ActionButton, { RequestInterest } from "@/components/ActionButton";
 
 export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
   return (
@@ -69,32 +69,9 @@ export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
             )}
           </p>
           </Reveal>
-          <Reveal delay={0.2} className="w-full md:w-auto">
-          <button
-            type="button"
-            className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-[4px] border border-grey-500/60 p-2 transition-colors duration-500 hover:border-brand-black md:w-auto md:justify-start"
-          >
-            {/* Premium sweep — black fill glides in; icon well + label invert. */}
-            <span
-              aria-hidden
-              className="absolute inset-0 translate-y-full bg-brand-black transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0"
-            />
-            <span className="relative z-10 flex size-10 items-center justify-center rounded-[2px] bg-brand-black transition-colors duration-500 group-hover:bg-brand-white">
-              <svg width="10" height="15" viewBox="0 0 10 15" fill="none" aria-hidden className="transition-transform duration-500 group-hover:translate-y-0.5">
-                <path
-                  d="M5 0v10m0 0L1 6m4 4 4-4M0.5 13h9"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-brand-white transition-colors duration-500 group-hover:text-brand-black"
-                />
-              </svg>
-            </span>
-            <span className="relative z-10 font-sans text-base font-medium text-brand-black transition-colors duration-500 group-hover:text-brand-white md:text-xl">
-              <RollText>{data.brochureLabel}</RollText>
-            </span>
-          </button>
+          <Reveal delay={0.2} className="flex flex-wrap gap-3">
+            <RequestInterest />
+            <ActionButton label={data.brochureLabel} icon="download" />
           </Reveal>
         </div>
       </div>
