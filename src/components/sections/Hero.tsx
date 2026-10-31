@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "@/components/ProgressiveImage";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -109,27 +108,14 @@ function ShowreelModal({ onClose }: { onClose: () => void }) {
  * (white) state because the footage is dark/colourful, so the section is
  * tagged data-nav-theme="dark".
  *
- * Drop the brand reel at `public/videos/hero.mp4` (and an optional `.webm`)
- * to replace the still poster fallback.
+ * The film is public/videos/videocutHAP3.mp4; the hero shows plain black
+ * until it can play.
  */
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [canPlay, setCanPlay] = useState(false);
   const [reelOpen, setReelOpen] = useState(false);
   const [reelMounted, setReelMounted] = useState(false);
-  // The 7 MB background film waits until the page has finished loading, so
-  // it doesn't compete with the images; the poster shows until then.
-  const [loadVideo, setLoadVideo] = useState(false);
-  useEffect(() => {
-    const go = () => setLoadVideo(true);
-    if (document.readyState === "complete") {
-      const t = setTimeout(go, 0);
-      return () => clearTimeout(t);
-    }
-    window.addEventListener("load", go, { once: true });
-    return () => window.removeEventListener("load", go);
-  }, []);
-
   // Mobile browsers (esp. iOS Safari) block autoplay unless `muted` is set as a
   // *property* — React only sets the attribute — and they often need an explicit
   // play() call. Force both, and retry once the first frame is decoded.
@@ -143,7 +129,7 @@ export default function Hero() {
     tryPlay();
     video.addEventListener("loadeddata", tryPlay);
     return () => video.removeEventListener("loadeddata", tryPlay);
-  }, [loadVideo]);
+  }, []);
 
   return (
     <section
@@ -151,8 +137,9 @@ export default function Hero() {
       data-nav-theme="dark"
       className="relative h-screen min-h-[680px] w-full overflow-hidden bg-black text-white"
     >
-      {/* Video background. Autoplays muted + inline so mobile browsers allow it.
-          If the file isn't there yet, the poster image stays visible. */}
+      {/* Video background — no poster image: the hero stays black until the
+          film can play, then fades it in. Autoplays muted + inline so mobile
+          browsers allow it; loads first (images below the fold are lazy). */}
       <video
         ref={videoRef}
         className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${canPlay ? "opacity-100" : "opacity-0"}`}
@@ -161,20 +148,9 @@ export default function Hero() {
         loop
         playsInline
         preload="auto"
-        src={loadVideo ? withBasePath("/videos/videocutHAP3.mp4") : undefined}
+        src={withBasePath("/videos/videocutHAP3.mp4")}
         onCanPlay={() => setCanPlay(true)}
         aria-hidden
-      />
-
-      {/* Poster fallback — shown until the video starts (or if it's missing). */}
-      <Image
-        src="/images/residential.jpg"
-        alt=""
-        aria-hidden
-        fill
-        priority
-        sizes="100vw"
-        className={`absolute inset-0 object-cover transition-opacity duration-700 ${canPlay ? "opacity-0" : "opacity-100"}`}
       />
 
       {/* Subtle bottom scrim so the headline + showreel link stay legible. */}
