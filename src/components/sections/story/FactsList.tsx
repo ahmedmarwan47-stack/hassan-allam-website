@@ -26,9 +26,10 @@ const FACTS = [
   },
 ];
 
-export default function FactsList() {
+export default function FactsList({ id }: { id?: string }) {
   return (
     <section
+      id={id}
       data-nav-theme="light"
       className="flex flex-col items-start gap-10 bg-brand-white px-6 py-20 text-brand-black md:items-center md:gap-[70px] md:px-16 md:py-24"
     >

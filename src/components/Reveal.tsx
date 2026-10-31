@@ -48,7 +48,7 @@ export function Reveal({ children, delay = 0, y = 28, blur = 12, className, ...r
       className={className}
       initial={hidden}
       animate={seen ? shown : hidden}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 + delay }}
+      transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay: 0.05 + delay }}
       {...rest}
     >
       {children}

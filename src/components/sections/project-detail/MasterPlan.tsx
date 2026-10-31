@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import type { MasterPlanItem } from "@/data/projectDetail";

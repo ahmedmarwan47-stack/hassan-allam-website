@@ -38,7 +38,7 @@ export default function GrowReveal({
   const hidden =
     axis === "height" ? "inset(0% 0% 100% 0%)" : "inset(0% 100% 0% 0%)";
   const ease = "cubic-bezier(0.22, 0.61, 0.21, 1)";
-  const t = `1.4s ${ease} ${0.25 + delay}s`;
+  const t = `1.1s ${ease} ${0.1 + delay}s`;
 
   return (
     <div ref={ref} className={className}>

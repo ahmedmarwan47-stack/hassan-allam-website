@@ -1,300 +1,181 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence, useDragControls } from "framer-motion";
+import { useCallback, useState } from "react";
+import { motion } from "framer-motion";
+import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
+import RollText from "@/components/RollText";
 import SliderArrow from "@/components/SliderArrow";
+import SectionEyebrow from "@/components/SectionEyebrow";
+import { useCarouselCursor } from "@/components/CarouselCursor";
+import TeamDrawer from "./TeamDrawer";
+import { TEAM } from "@/data/team";
 
-interface TeamMember {
-  name: string;
-  role: string;
-  image?: string;
-  /** Large 26px lead paragraph in the bio pop-up (Figma 17043-51814). */
-  intro: string;
-  /** Two-column 16px body copy in the bio pop-up. */
-  body: [string, string];
-}
+const VISIBLE = 3.4; // cards in view on desktop — the 4th peeks in at the edge
+const GAP = 20; // px between cards
 
-const TEAM: TeamMember[] = [
-  {
-    name: "Mohamed Allam",
-    role: "CEO",
-    image: "/images/team-mohamed-allam.jpg",
-    intro:
-      "As CEO, Mohamed Allam leads Hassan Allam Properties with a family-first philosophy carried across three generations, championing intimate communities where design, quality and hospitality come together.",
-    body: [
-      "Under his leadership, HAP has grown from a boutique family operation into one of Egypt's most trusted developers — 30+ developments across 10 governorates — while keeping the intimacy and craftsmanship that defined its earliest neighborhoods.",
-      "He has steered the group's expansion from Cairo's east side to the Red Sea and the North Coast, pairing three generations of engineering heritage with a genuine care for the families who call each project home.",
-    ],
-  },
-  {
-    name: "Amr Gad",
-    role: "Operations Director",
-    intro:
-      "Amr Gad oversees day-to-day operations across Hassan Allam Properties' nationwide portfolio, ensuring every community is delivered to the group's exacting standards.",
-    body: [
-      "From groundwork to handover, he coordinates the engineering, construction and delivery teams behind every HAP neighborhood, keeping quality, timing and craftsmanship aligned across 10 governorates.",
-      "His operational discipline is what lets a boutique developer run at a nationwide scale — every project, city or coast, held to the same family standard.",
-    ],
-  },
-  {
-    name: "Ayten Anwar",
-    role: "Investment & Strategy Director",
-    intro:
-      "Ayten Anwar leads investment and strategy, shaping the long-term direction of the portfolio that keeps Hassan Allam Properties at the forefront of Egyptian real estate.",
-    body: [
-      "She identifies the land, partnerships and market opportunities behind the group's growth — from prime addresses in New Cairo and Mostakbal City to seaside destinations on the Red Sea and North Coast.",
-      "Her strategic lens balances heritage with ambition: protecting the exclusivity HAP is known for while opening the doors to its next generation of communities.",
-    ],
-  },
-];
-
-const initials = (name: string) =>
-  name
-    .split(" ")
-    .map((w) => w[0])
-    .join("");
-
-function PlusIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-export default function OurTeam() {
-  const [selected, setSelected] = useState<TeamMember | null>(null);
-  // Desktop slider: three cards in view, arrows step one card at a time
-  // (Figma 17043:51706). With three members both arrows sit disabled.
+/**
+ * "The People Behind HAP" — the leadership team from hap.com.eg. Desktop is
+ * a draggable slider (three cards in view, the fourth peeking in at the
+ * right edge); mobile stacks two-up. Each card opens the member's profile
+ * in the black side drawer.
+ */
+export default function OurTeam({ id }: { id?: string }) {
+  const [open, setOpen] = useState<number | null>(null);
   const [index, setIndex] = useState(0);
-  const maxIndex = Math.max(0, TEAM.length - 3);
-  // Below md the pop-up becomes a bottom sheet (slides up, drag to dismiss).
-  const [isMobile, setIsMobile] = useState(false);
-  // Sheet drags only from the grab handle so the bio content can scroll.
-  const dragControls = useDragControls();
+  const maxIndex = Math.max(0, Math.ceil(TEAM.length - VISIBLE));
+  const cardW = `(100% - ${Math.floor(VISIBLE) * GAP}px) / ${VISIBLE}`;
 
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    const update = () => setIsMobile(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = selected ? "hidden" : "";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSelected(null);
-    };
-    if (selected) window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [selected]);
+  const goPrev = useCallback(() => setIndex((i) => Math.max(0, i - 1)), []);
+  const goNext = useCallback(() => setIndex((i) => Math.min(maxIndex, i + 1)), [maxIndex]);
+  const { bind, viewportClass, dragX, cursor } = useCarouselCursor({
+    onPrev: goPrev,
+    onNext: goNext,
+    discoverLabel: "View bio",
+    canPrev: index > 0,
+    canNext: index < maxIndex,
+    // Same timing as the track's CSS transition, so a drag glides on.
+    settle: { duration: 0.7, ease: [0.65, 0, 0.35, 1] },
+  });
 
   return (
     <section
+      id={id}
       data-nav-theme="light"
-      className="flex flex-col gap-14 bg-brand-white px-6 py-20 text-brand-black md:gap-16 md:px-16 md:py-24"
+      className="flex flex-col gap-14 bg-brand-white px-6 pb-20 pt-16 text-brand-black md:gap-16 md:px-16 md:pb-24 md:pt-24"
     >
-      <div className="flex flex-col gap-16 md:gap-20">
-        {/* Title matches the Facts & Figures heading above it. */}
+      <SectionEyebrow>People Behind HAP</SectionEyebrow>
+
+      {/* Title on the eyebrow's left edge; the intro stacked on the right. */}
+      <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between md:gap-16">
         <Reveal>
-          <h2 className="w-full text-left font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(4rem,9.2vw,8.25rem)] md:text-center">
+          <h2 className="text-left font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(4rem,9.2vw,8.25rem)]">
             Our Team
           </h2>
         </Reveal>
-        <div className="grid gap-8 font-sans text-base leading-[1.4] text-brand-black md:grid-cols-2 md:gap-16">
+        <div className="flex flex-col gap-5 font-sans text-base leading-[1.5] text-brand-black/80 md:w-[33.08%] md:pb-2">
           <Reveal delay={0.1}>
             <p>
-              Behind every Hassan Allam Properties community is a team that treats
-              development as a craft — pairing three generations of engineering
-              heritage with a genuine care for the families who will call each
-              project home.
+              Behind every HAP development is a dedicated team of experts;
+              architects, planners, creatives, and visionaries, driven by a
+              shared passion for excellence.
             </p>
           </Reveal>
           <Reveal delay={0.18}>
             <p>
-              Led from the top by the Allam family, our directors bring together
-              decades of operational, financial and design expertise to keep the
-              group at the forefront of Egyptian real estate.
+              Together, they bring our communities to life with purpose and
+              precision, crafting lasting spaces that reflect our values, enrich
+              lives, and carry forward the legacy we&rsquo;ve built over
+              generations.
             </p>
           </Reveal>
         </div>
       </div>
 
       <div className="flex flex-col gap-6 md:gap-8">
-      <div className="hidden justify-end gap-2.5 md:flex">
-        <SliderArrow direction="prev" onClick={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0} label="Previous team members" />
-        <SliderArrow direction="next" onClick={() => setIndex((i) => Math.min(maxIndex, i + 1))} disabled={index === maxIndex} label="Next team members" />
-      </div>
-      <div className="w-full md:overflow-hidden">
-      <div
-        style={{ "--team-x": `calc(${-index} * (100% + 20px) / 3)` } as React.CSSProperties}
-        className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 md:flex md:gap-5 md:transition-transform md:duration-700 md:ease-[cubic-bezier(0.65,0,0.35,1)] md:[transform:translateX(var(--team-x))]"
-      >
-        {TEAM.map((member, i) => (
-          <button
-            key={member.name}
-            type="button"
-            onClick={() => setSelected(member)}
-            className="group flex flex-col gap-5 text-left md:w-[calc((100%-40px)/3)] md:shrink-0"
-          >
-            <GrowReveal
-              axis="height"
-              delay={i * 0.08}
-              className="relative aspect-[424/454] w-full overflow-hidden rounded-[2px]"
+        {/* Desktop slider */}
+        <div {...bind} className={`hidden overflow-hidden md:-mr-16 md:block ${viewportClass}`}>
+          <motion.div style={{ x: dragX }}>
+            <div
+              style={{ "--team-x": `calc(${-index} * (${cardW} + ${GAP}px))` } as React.CSSProperties}
+              className="flex gap-5 transition-transform duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] [transform:translateX(var(--team-x))]"
             >
-              {member.image ? (
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  fill
-                  sizes="(min-width: 768px) 32vw, 100vw"
-                  quality={90}
-                  className="object-cover"
+              {TEAM.map((member, i) => (
+                <MemberCard
+                  key={member.slug}
+                  index={i}
+                  onOpen={() => setOpen(i)}
+                  className="shrink-0"
+                  style={{ width: `calc(${cardW})` }}
                 />
-              ) : (
-                // No portrait available — a branded monogram instead of an
-                // empty rectangle.
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-warm-100 to-grey-300">
-                  <span className="font-serif text-7xl font-light tracking-[0.02em] text-brand-black/35">
-                    {initials(member.name)}
-                  </span>
-                </div>
-              )}
-              {/* Dark square stays put; only the plus icon rotates → × on hover. */}
-              <span className="absolute bottom-4 right-4 flex size-[42px] items-center justify-center bg-brand-black text-brand-white">
-                <span className="transition-transform duration-300 ease-out group-hover:rotate-45">
-                  <PlusIcon />
-                </span>
-              </span>
-            </GrowReveal>
-            <Reveal delay={0.1 + i * 0.08} className="flex flex-col gap-2">
-              <p className="font-serif text-2xl uppercase leading-none tracking-[-0.02em] text-brand-black">
-                {member.name}
-              </p>
-              <p className="font-sans text-xl font-medium text-brand-black">
-                {member.role}
-              </p>
-            </Reveal>
-          </button>
-        ))}
-      </div>
-      </div>
-      {/* Progress — the black segment marks the cards in view. */}
-      <div className="relative hidden h-0.5 w-full bg-brand-black/10 md:block">
-        <div
-          className="absolute inset-y-0 bg-brand-black transition-[left] duration-700 ease-[cubic-bezier(0.65,0,0.35,1)]"
-          style={{ width: `${(Math.min(3, TEAM.length) / TEAM.length) * 100}%`, left: `${(index / TEAM.length) * 100}%` }}
-        />
-      </div>
-      </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
 
-      {/* Bio pop-up */}
-      <AnimatePresence>
-        {selected && (
-          <>
-            <motion.div
-              className="fixed inset-0 z-[80] bg-black/50"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              onClick={() => setSelected(null)}
-            />
-            <motion.div
-              role="dialog"
-              aria-modal="true"
-              aria-label={`${selected.name} biography`}
-              className="fixed inset-x-0 bottom-0 z-[90] flex max-h-[88vh] w-full flex-col rounded-t-[4px] bg-brand-black p-6 pb-10 pt-3 text-brand-white md:inset-x-auto md:bottom-auto md:left-1/2 md:top-1/2 md:w-[calc(100vw-128px)] md:max-w-[1312px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[4px] md:p-16"
-              initial={isMobile ? { y: "100%" } : { opacity: 0, y: 20, scale: 0.98 }}
-              animate={isMobile ? { y: 0 } : { opacity: 1, y: 0, scale: 1 }}
-              exit={isMobile ? { y: "100%" } : { opacity: 0, y: 20, scale: 0.98 }}
-              transition={{ duration: isMobile ? 0.45 : 0.3, ease: [0.32, 0.72, 0, 1] }}
-              drag={isMobile ? "y" : false}
-              dragControls={dragControls}
-              dragListener={false}
-              dragConstraints={{ top: 0, bottom: 0 }}
-              dragElastic={{ top: 0, bottom: 0.6 }}
-              onDragEnd={(_, info) => {
-                if (isMobile && (info.offset.y > 120 || info.velocity.y > 600)) {
-                  setSelected(null);
-                }
+        {/* Mobile grid */}
+        <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:hidden">
+          {TEAM.map((member, i) => (
+            <MemberCard key={member.slug} index={i} onOpen={() => setOpen(i)} />
+          ))}
+        </div>
+
+        {/* Track + arrows (desktop) */}
+        <div className="hidden items-center gap-6 md:flex">
+          <div className="relative h-[3px] flex-1 overflow-hidden bg-black/15">
+            <div
+              className="absolute inset-y-0 bg-brand-black transition-[left] duration-700 ease-[cubic-bezier(0.65,0,0.35,1)]"
+              style={{
+                width: `${(VISIBLE / TEAM.length) * 100}%`,
+                left: `${(maxIndex ? index / maxIndex : 0) * (1 - VISIBLE / TEAM.length) * 100}%`,
               }}
-            >
-              {/* Grab handle — bottom sheet affordance + drag trigger, mobile only */}
-              <div
-                onPointerDown={(e) => isMobile && dragControls.start(e)}
-                className="flex shrink-0 cursor-grab touch-none justify-center pb-4 pt-1 active:cursor-grabbing md:hidden"
-              >
-                <div aria-hidden className="h-1 w-10 rounded-full bg-white/30" />
-              </div>
+            />
+          </div>
+          <div className="flex items-center gap-2.5">
+            <SliderArrow direction="prev" onClick={goPrev} disabled={index === 0} emphasis label="Previous team members" />
+            <SliderArrow direction="next" onClick={goNext} disabled={index === maxIndex} emphasis label="Next team members" />
+          </div>
+        </div>
+      </div>
 
-              <div className="flex min-h-0 flex-col gap-8 overflow-y-auto md:flex-row md:items-start md:gap-[100px]">
-              {/* Portrait — 314×400 per Figma; monogram fallback for members
-                  without a real photo, dark variant. */}
-              <div className="relative aspect-[314/400] w-full shrink-0 md:w-[314px]">
-                {selected.image ? (
-                  <Image
-                    src={selected.image}
-                    alt={selected.name}
-                    fill
-                    sizes="314px"
-                    quality={90}
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-white/15 to-white/5">
-                    <span className="font-serif text-7xl font-light tracking-[0.02em] text-brand-white/35">
-                      {initials(selected.name)}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex min-w-0 flex-1 flex-col gap-10 md:gap-20">
-                <div className="flex flex-col gap-6 md:gap-10">
-                  <div className="flex items-start justify-between gap-6">
-                    <p className="font-serif font-light leading-none text-brand-white [font-size:clamp(2.75rem,6.94vw,6.25rem)]">
-                      {selected.name.split(" ").map((word) => (
-                        <span key={word} className="block">
-                          {word}
-                        </span>
-                      ))}
-                    </p>
-                    {/* Mobile bottom sheet closes via drag/backdrop/Escape —
-                        no X there, per feedback. */}
-                    <button
-                      type="button"
-                      onClick={() => setSelected(null)}
-                      aria-label="Close"
-                      className="hidden shrink-0 text-brand-white transition-opacity duration-200 hover:opacity-60 md:block"
-                    >
-                      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden>
-                        <path d="M9 9l22 22M31 9L9 31" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                      </svg>
-                    </button>
-                  </div>
-                  <p className="font-sans text-lg leading-[1.3] text-brand-white md:text-[1.625rem]">
-                    {selected.intro}
-                  </p>
-                </div>
-
-                <div className="grid gap-6 font-sans text-base leading-[1.4] text-brand-white md:grid-cols-2">
-                  <p>{selected.body[0]}</p>
-                  <p>{selected.body[1]}</p>
-                </div>
-              </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      <TeamDrawer members={TEAM} index={open} onClose={() => setOpen(null)} onIndex={setOpen} />
+      {cursor}
     </section>
+  );
+}
+
+function MemberCard({
+  index,
+  onOpen,
+  className = "",
+  style,
+}: {
+  index: number;
+  onOpen: () => void;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const member = TEAM[index];
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={`${member.name}, ${member.role} — view bio`}
+      style={style}
+      className={`group flex flex-col gap-4 text-left md:gap-5 ${className}`}
+    >
+      <GrowReveal
+        axis="height"
+        delay={(index % 3) * 0.08}
+        className="relative aspect-[3/4] w-full overflow-hidden rounded-[2px] bg-grey-100"
+      >
+        <div className="absolute inset-0 transition-transform duration-[1.2s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]">
+          <Image
+            src={member.image}
+            alt={member.name}
+            fill
+            sizes="(min-width: 768px) 32vw, 50vw"
+            quality={85}
+            className="object-cover object-top grayscale"
+          />
+        </div>
+        {/* "View bio" tag */}
+        <span className="absolute bottom-4 right-4 flex items-center gap-3 bg-brand-white px-4 py-2.5 font-sans text-xs font-medium uppercase tracking-[0.12em] text-brand-black md:text-sm">
+          <RollText>View bio</RollText>
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden className="transition-transform duration-500 group-hover:rotate-90">
+            <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
+        </span>
+      </GrowReveal>
+      <div className="flex flex-col gap-1.5">
+        <p className="font-serif text-xl uppercase leading-none tracking-[-0.02em] text-brand-black md:text-2xl">
+          {member.name}
+        </p>
+        <p className="font-sans text-sm font-medium leading-snug text-brand-black/60 md:text-base">
+          {member.role}
+        </p>
+      </div>
+    </button>
   );
 }

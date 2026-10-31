@@ -59,3 +59,81 @@ body {
 html:not(.hydrated) [data-reveal] {
   animation: reveal-failsafe 0.8s ease 2.5s forwards;
 }
+
+/* ── Map clouds ──────────────────────────────────────────────────────────
+   Slow, independent drifts for the three cloud layers in MapStage, so the
+   map feels alive the way the live site's WebGL clouds do. */
+@keyframes map-cloud-drift {
+  from {
+    transform: translate3d(-4%, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(4%, -1.5%, 0) scale(1.04);
+  }
+}
+
+.map-cloud-drift-a {
+  animation: map-cloud-drift 38s ease-in-out infinite alternate;
+}
+.map-cloud-drift-b {
+  animation: map-cloud-drift 52s ease-in-out -18s infinite alternate-reverse;
+}
+.map-cloud-drift-c {
+  animation: map-cloud-drift 46s ease-in-out -9s infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class*="map-cloud-drift-"] {
+    animation: none;
+  }
+}
+
+/* ── Typography: no orphans ──────────────────────────────────────────────
+   Headings balance their lines; running text avoids leaving a single word
+   alone on its last line. Utilities (text-wrap-*) can still override. */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  blockquote {
+    text-wrap: balance;
+  }
+  p,
+  li,
+  dd,
+  figcaption {
+    text-wrap: pretty;
+  }
+}
+
+/* ── Site-wide entrances (ScrollEffects) ─────────────────────────────────
+   Hidden state until [data-fx-in] is set as the element scrolls in; the
+   attributes are removed once the entrance has played. */
+[data-fx] {
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    translate 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-fx="heading"] {
+  transition-duration: 0.85s;
+}
+[data-fx="text"]:not([data-fx-in]) {
+  opacity: 0;
+  translate: 0 1.1rem;
+  filter: blur(6px);
+}
+[data-fx="heading"]:not([data-fx-in]) {
+  opacity: 0;
+  translate: 0 1.75rem;
+  filter: blur(10px);
+}
+[data-fx="media"] {
+  transition: clip-path 1s cubic-bezier(0.76, 0, 0.24, 1);
+}
+[data-fx="media"]:not([data-fx-in]) {
+  clip-path: inset(100% 0 0 0);
+}

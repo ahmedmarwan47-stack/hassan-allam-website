@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import HydrationMark from "@/components/HydrationMark";
+import ScrollEffects from "@/components/ScrollEffects";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -36,6 +37,7 @@ export default function RootLayout({
     >
       <body>
         <HydrationMark />
+        <ScrollEffects />
         <Navbar />
         {children}
       </body>

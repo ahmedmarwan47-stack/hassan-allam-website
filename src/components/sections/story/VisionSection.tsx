@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 

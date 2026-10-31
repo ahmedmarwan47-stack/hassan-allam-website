@@ -4,7 +4,9 @@ import { Reveal } from "@/components/Reveal";
 
 // No hero — the "Media Center" title sits in the same section as the cards,
 // ~60px above the grid. Top padding clears the fixed navbar. Title is 180px
-// on desktop, centered.
+// on desktop, centered. The latest story leads as a wide featured card on
+// the left (two columns, same image height as its neighbour); everything
+// after it is the standard one-column card.
 export default function NewsGrid() {
   return (
     <section
@@ -16,9 +18,12 @@ export default function NewsGrid() {
           Media Center
         </h1>
       </Reveal>
-      <div className="mt-[60px] grid grid-cols-1 gap-x-5 gap-y-10 md:grid-cols-3 md:gap-y-16">
-        {NEWS.map((article) => (
-          <NewsCard key={article.id} article={article} />
+      <div className="@container mt-[60px] grid grid-cols-1 gap-x-5 gap-y-10 md:grid-cols-3 md:gap-y-16">
+        {NEWS.map((article, i) => (
+          <NewsCard
+            key={article.id}
+            article={{ ...article, span: i === 0 ? "two-thirds" : "third" }}
+          />
         ))}
       </div>
     </section>

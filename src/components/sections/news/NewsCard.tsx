@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 import Link from "next/link";
 import GrowReveal from "@/components/GrowReveal";
 import type { NewsArticle } from "@/data/news";
@@ -15,7 +15,9 @@ const SPAN_CLASSES: Record<NewsArticle["span"], string> = {
 
 const ASPECT_CLASSES: Record<NewsArticle["span"], string> = {
   third: "aspect-[3/4] md:aspect-[424/540]",
-  "two-thirds": "aspect-[3/4] md:aspect-[868/900]",
+  // Exactly the image height of a third card beside it: a third is
+  // (grid − 2 gaps) / 3 wide at 424:540. Needs an @container grid (NewsGrid).
+  "two-thirds": "aspect-[3/4] md:aspect-auto md:h-[calc((100cqw-40px)/3*540/424)]",
   full: "aspect-[3/4] md:aspect-[1312/720]",
 };
 

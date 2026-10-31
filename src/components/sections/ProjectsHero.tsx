@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -8,7 +7,13 @@ import {
   MAP_FILTERS,
   type FilterValue,
 } from "@/data/mapProjects";
-import MapPin from "@/components/MapPin";
+import { PIN_COLORS } from "@/components/MapPin";
+import MapStage, {
+  centerMobileMapOnCairo,
+  MOBILE_MAP_FOCUS,
+  MOBILE_MAP_W_CLASS,
+  MOBILE_MAP_ZOOM,
+} from "@/components/MapStage";
 import ProjectSidebar from "@/components/ProjectSidebar";
 import MapFilterBarMobile from "@/components/MapFilterBarMobile";
 
@@ -26,7 +31,7 @@ export default function ProjectsHero({
   useEffect(() => {
     const el = mobileMapRef.current;
     if (!el) return;
-    el.scrollLeft = (el.scrollWidth - el.clientWidth) * 0.62;
+    centerMobileMapOnCairo(el);
   }, []);
 
   // Lock body scroll while the sidebar is open.
@@ -57,26 +62,16 @@ export default function ProjectsHero({
           ref={mobileMapRef}
           className="h-full overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none]"
         >
-          <div className="relative h-full w-[711px]">
-            <Image
-              src="/images/map/egypt-map.png"
-              alt="Aerial map of Egypt showing Hassan Allam project locations"
-              fill
-              className="object-cover"
-              sizes="711px"
+          <div className={`relative h-full ${MOBILE_MAP_W_CLASS} overflow-hidden`}>
+            <MapStage
+              zoom={MOBILE_MAP_ZOOM}
+              focus={MOBILE_MAP_FOCUS}
+              visibleIds={visibleIds}
+              hoveredId={hoveredId}
+              onHover={(id) => id && setHoveredId(id)}
+              onSelect={setSelectedId}
               priority
             />
-            {MAP_PROJECTS.map((project) => (
-              <MapPin
-                key={project.id}
-                project={project}
-                visible={visibleIds.has(project.id)}
-                isHovered={hoveredId === project.id}
-                onEnter={() => setHoveredId(project.id)}
-                onLeave={() => {}}
-                onClick={() => setSelectedId(project.id)}
-              />
-            ))}
           </div>
         </div>
 
@@ -113,61 +108,37 @@ export default function ProjectsHero({
 
       {/* ── Desktop layout — full viewport, no overflow ── */}
       <div className="relative hidden h-screen w-full overflow-hidden md:block">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/map/egypt-map.png"
-            alt="Aerial map of Egypt showing Hassan Allam project locations"
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
-        </div>
-
-        {MAP_PROJECTS.map((project) => (
-          <MapPin
-            key={project.id}
-            project={project}
-            visible={visibleIds.has(project.id)}
-            isHovered={hoveredId === project.id}
-            onEnter={() => setHoveredId(project.id)}
-            onLeave={() => setHoveredId(null)}
-            onClick={() => setSelectedId(project.id)}
-          />
-        ))}
+        <MapStage
+          zoom={120}
+          focus={{ x: 48, y: 50 }}
+          visibleIds={visibleIds}
+          hoveredId={hoveredId}
+          onHover={setHoveredId}
+          onSelect={setSelectedId}
+          priority
+        />
 
         {/* Bottom bar */}
         <div className="absolute bottom-16 left-16 right-16 flex flex-col gap-6">
-          <div className="flex items-end justify-between">
-            <div className="min-h-[56px]">
-              <AnimatePresence mode="wait">
-                {hoveredProject && (
-                  <motion.div
-                    key={hoveredProject.id}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.18, ease: "easeOut" }}
-                  >
-                    <p className="font-sans text-[1.625rem] font-medium leading-[1.3] text-brand-black">
-                      {hoveredProject.name}
-                    </p>
-                    <p className="font-sans text-[1.25rem] font-medium leading-[1.1] text-brand-black">
-                      {hoveredProject.category}
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            <p className="font-sans text-[1.25rem] font-medium leading-[1.1] text-brand-black">
-              Click a pin to explore
-            </p>
-          </div>
-
           <div className="flex h-12 items-center justify-between bg-brand-white px-16">
-            <span className="whitespace-nowrap font-sans text-base font-medium text-brand-black">
-              Filters
-            </span>
+            <div className="flex items-center gap-8">
+              <span className="whitespace-nowrap font-sans text-base font-medium text-brand-black">
+                Filters
+              </span>
+              {/* Pin colour legend — same as the homepage map. */}
+              <div className="flex items-center gap-5 font-sans text-sm font-medium text-grey-500">
+                {(["city", "sea"] as const).map((setting) => (
+                  <span key={setting} className="flex items-center gap-2 whitespace-nowrap">
+                    <span
+                      aria-hidden
+                      className="size-2.5 rounded-full"
+                      style={{ background: PIN_COLORS[setting], boxShadow: `0 0 6px ${PIN_COLORS[setting]}` }}
+                    />
+                    {setting === "city" ? "In the City" : "By the Sea"}
+                  </span>
+                ))}
+              </div>
+            </div>
             <div className="flex h-full items-center gap-[3.5vw]">
               {MAP_FILTERS.map(({ label, value }) => (
                 <button

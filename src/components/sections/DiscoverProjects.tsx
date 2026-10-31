@@ -1,14 +1,19 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
   MAP_PROJECTS,
   MAP_FILTERS,
   type FilterValue,
 } from "@/data/mapProjects";
-import MapPin from "@/components/MapPin";
+import { PIN_COLORS } from "@/components/MapPin";
+import MapStage, {
+  centerMobileMapOnCairo,
+  MOBILE_MAP_FOCUS,
+  MOBILE_MAP_W_CLASS,
+  MOBILE_MAP_ZOOM,
+} from "@/components/MapStage";
 import ProjectSidebar from "@/components/ProjectSidebar";
 import MapFilterBarMobile from "@/components/MapFilterBarMobile";
 import { Reveal } from "@/components/Reveal";
@@ -20,12 +25,25 @@ export default function DiscoverProjects() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
+  // Desktop parallax: the map (with its pins, so they stay on their spots)
+  // drifts slowly while the paragraph scrolls up over it much faster.
+  // Function-form transforms on purpose — the array form can be handed to a
+  // native ScrollTimeline, which mis-maps element offsets.
+  const desktopRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: desktopRef,
+    offset: ["start end", "end start"],
+  });
+  const mapY = useTransform(scrollYProgress, (v) => `${(v - 0.5) * 11}%`);
+  const headingY = useTransform(scrollYProgress, (v) => (v - 0.5) * -160);
+  const paragraphY = useTransform(scrollYProgress, (v) => (v - 0.5) * -1200);
+
   // Centre the (wider-than-viewport) mobile map on the project cluster on mount.
   const mobileMapRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = mobileMapRef.current;
     if (!el) return;
-    el.scrollLeft = (el.scrollWidth - el.clientWidth) * 0.62;
+    centerMobileMapOnCairo(el);
   }, []);
 
   // Lock body scroll while the sidebar is open.
@@ -56,25 +74,15 @@ export default function DiscoverProjects() {
           ref={mobileMapRef}
           className="h-full overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none]"
         >
-          <div className="relative h-full w-[711px]">
-            <Image
-              src="/images/map/egypt-map.png"
-              alt="Aerial map of Egypt showing Hassan Allam project locations"
-              fill
-              className="object-cover"
-              sizes="711px"
+          <div className={`relative h-full ${MOBILE_MAP_W_CLASS} overflow-hidden`}>
+            <MapStage
+              zoom={MOBILE_MAP_ZOOM}
+              focus={MOBILE_MAP_FOCUS}
+              visibleIds={visibleIds}
+              hoveredId={hoveredId}
+              onHover={(id) => id && setHoveredId(id)}
+              onSelect={setSelectedId}
             />
-            {MAP_PROJECTS.map((project) => (
-              <MapPin
-                key={project.id}
-                project={project}
-                visible={visibleIds.has(project.id)}
-                isHovered={hoveredId === project.id}
-                onEnter={() => setHoveredId(project.id)}
-                onLeave={() => {}}
-                onClick={() => setSelectedId(project.id)}
-              />
-            ))}
           </div>
         </div>
 
@@ -127,24 +135,28 @@ export default function DiscoverProjects() {
       </div>
 
       {/* ── Desktop layout: interactive aspect-ratio map ── */}
-      <div className="relative hidden aspect-[1440/1214] overflow-hidden md:block">
-        {/* Map */}
-        <div className="absolute inset-0">
-          <Image
-            src="/images/map/egypt-map.png"
-            alt="Aerial map of Egypt showing Hassan Allam project locations"
-            fill
-            className="object-cover"
+      <div ref={desktopRef} className="relative hidden aspect-[1440/1214] overflow-hidden md:block">
+        {/* Map, clouds + pins — one parallax layer, scaled up so its edges
+            never show while it drifts. */}
+        <motion.div className="absolute inset-0 scale-[1.12]" style={{ y: mapY }}>
+          <MapStage
+            zoom={125}
+            // Coast sits below the heading and paragraph, El Gouna still in view.
+            focus={{ x: 50, y: 41 }}
+            visibleIds={visibleIds}
+            hoveredId={hoveredId}
+            onHover={setHoveredId}
+            onSelect={setSelectedId}
             priority
-            sizes="100vw"
           />
-        </div>
+        </motion.div>
 
         {/* Heading — top right, over the blue sky area */}
-        <Reveal
+        <motion.div
           className="pointer-events-none absolute"
-          style={{ left: "50.4%", top: "14.3%", width: "32%" }}
+          style={{ left: "50.4%", top: "14.3%", width: "32%", y: headingY }}
         >
+        <Reveal>
           <h2
             className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-white"
             style={{ fontSize: "clamp(2rem, 4.3vw, 3.875rem)" }}
@@ -152,13 +164,14 @@ export default function DiscoverProjects() {
             Discover our projects in Egypt
           </h2>
         </Reveal>
+        </motion.div>
 
-        {/* Subtitle — left, over the blue sky area */}
-        <Reveal
-          delay={0.12}
-          className="pointer-events-none absolute"
-          style={{ left: "4.4%", top: "51%", width: "26%" }}
+        {/* Subtitle — scrolls up over the map faster than the page. */}
+        <motion.div
+          className="pointer-events-none absolute z-20"
+          style={{ left: "4rem", top: "28%", width: "26%", y: paragraphY }}
         >
+        <Reveal delay={0.12}>
           <p
             className="font-serif font-medium uppercase leading-none tracking-[-0.02em] text-white"
             style={{ fontSize: "clamp(0.875rem, 1.5vw, 1.375rem)" }}
@@ -168,54 +181,30 @@ export default function DiscoverProjects() {
             filters.
           </p>
         </Reveal>
-
-        {/* Pins */}
-        {MAP_PROJECTS.map((project) => (
-          <MapPin
-            key={project.id}
-            project={project}
-            visible={visibleIds.has(project.id)}
-            isHovered={hoveredId === project.id}
-            onEnter={() => setHoveredId(project.id)}
-            onLeave={() => setHoveredId(null)}
-            onClick={() => setSelectedId(project.id)}
-          />
-        ))}
+        </motion.div>
 
         {/* Bottom bar */}
         <div className="absolute bottom-16 left-16 right-16 flex flex-col gap-6">
-          {/* Project label row */}
-          <div className="flex items-end justify-between">
-            <div className="min-h-[56px]">
-              <AnimatePresence mode="wait">
-                {hoveredProject && (
-                  <motion.div
-                    key={hoveredProject.id}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.18, ease: "easeOut" }}
-                  >
-                    <p className="font-sans text-[1.625rem] font-medium leading-[1.3] text-brand-black">
-                      {hoveredProject.name}
-                    </p>
-                    <p className="font-sans text-[1.25rem] font-medium leading-[1.1] text-brand-black">
-                      {hoveredProject.category}
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            <p className="font-sans text-[1.25rem] font-medium leading-[1.1] text-brand-black">
-              Click a pin to explore
-            </p>
-          </div>
-
           {/* Filter bar */}
           <div className="flex h-12 items-center justify-between bg-brand-white px-16">
-            <span className="whitespace-nowrap font-sans text-base font-medium text-brand-black">
-              Filters
-            </span>
+            <div className="flex items-center gap-8">
+              <span className="whitespace-nowrap font-sans text-base font-medium text-brand-black">
+                Filters
+              </span>
+              {/* Pin colour legend */}
+              <div className="flex items-center gap-5 font-sans text-sm font-medium text-grey-500">
+                {(["city", "sea"] as const).map((setting) => (
+                  <span key={setting} className="flex items-center gap-2 whitespace-nowrap">
+                    <span
+                      aria-hidden
+                      className="size-2.5 rounded-full"
+                      style={{ background: PIN_COLORS[setting], boxShadow: `0 0 6px ${PIN_COLORS[setting]}` }}
+                    />
+                    {setting === "city" ? "In the City" : "By the Sea"}
+                  </span>
+                ))}
+              </div>
+            </div>
             <div className="flex h-full items-center gap-[3.5vw]">
               {MAP_FILTERS.map(({ label, value }) => (
                 <button

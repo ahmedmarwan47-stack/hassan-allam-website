@@ -1,6 +1,7 @@
 import type { ProjectDetailData } from "@/data/projectDetail";
 import GrowImagePair from "./GrowImagePair";
 import { Reveal } from "@/components/Reveal";
+import RollText from "@/components/RollText";
 
 export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
   return (
@@ -91,7 +92,7 @@ export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
               </svg>
             </span>
             <span className="relative z-10 font-sans text-base font-medium text-brand-black transition-colors duration-500 group-hover:text-brand-white md:text-xl">
-              {data.brochureLabel}
+              <RollText>{data.brochureLabel}</RollText>
             </span>
           </button>
           </Reveal>

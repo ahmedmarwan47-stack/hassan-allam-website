@@ -1,8 +1,9 @@
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
 import { JOBS, OFFER, type Job } from "@/data/careers";
 import JobRow from "./JobRow";
+import RollText from "@/components/RollText";
 import {
   ArrowLeftIcon,
   ArrowUpRightIcon,
@@ -97,7 +98,7 @@ function CareerBody({ job }: { job: Job }) {
       data-nav-theme="light"
       className="bg-brand-white px-6 py-16 text-brand-black md:px-16 md:py-20"
     >
-      <div className="mx-auto flex max-w-[1312px] flex-col gap-14 md:flex-row md:items-start md:gap-20">
+      <div className="flex flex-col gap-14 md:flex-row md:items-start md:gap-20">
         {/* Sidebar — sticks beside the description on desktop. */}
         <aside className="flex w-full flex-col gap-5 md:sticky md:top-28 md:w-[313px] md:shrink-0">
           <h2 className="font-serif text-2xl font-medium leading-[1.2] tracking-[-0.01em] md:text-[1.75rem]">
@@ -127,7 +128,7 @@ function CareerBody({ job }: { job: Job }) {
               aria-hidden
               className="absolute inset-0 translate-y-full bg-brand-white transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0"
             />
-            <span className="relative z-10">Apply now</span>
+            <RollText className="relative z-10">Apply now</RollText>
             <ArrowUpRightIcon size={24} className="relative z-10" />
           </Link>
         </aside>
@@ -163,7 +164,7 @@ function OtherRoles({ job }: { job: Job }) {
       data-nav-theme="light"
       className="border-t border-brand-black/20 bg-brand-white px-6 pb-20 pt-16 text-brand-black md:px-16 md:pb-[120px] md:pt-20"
     >
-      <div className="mx-auto flex max-w-[1312px] flex-col gap-10">
+      <div className="flex flex-col gap-10">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <h2 className="font-serif font-light leading-[1.1] tracking-[-0.02em] [font-size:clamp(2.5rem,5vw,3.875rem)]">
             Other open roles

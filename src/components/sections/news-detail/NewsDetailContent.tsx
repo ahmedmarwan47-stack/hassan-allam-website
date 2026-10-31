@@ -1,7 +1,8 @@
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 import type { NewsDetail } from "@/data/newsDetail";
+import RollText from "@/components/RollText";
 
 export default function NewsDetailContent({ detail }: { detail: NewsDetail }) {
   return (
@@ -60,7 +61,7 @@ export default function NewsDetailContent({ detail }: { detail: NewsDetail }) {
                 </svg>
               </span>
               <span className="relative z-10 font-sans text-lg font-medium text-brand-white transition-colors duration-500 group-hover:text-brand-black md:text-2xl">
-                Download PDF
+                <RollText>Download PDF</RollText>
               </span>
             </button>
           </Reveal>

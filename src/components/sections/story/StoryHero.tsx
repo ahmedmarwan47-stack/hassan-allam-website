@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
 
 export default function StoryHero() {
@@ -24,9 +24,10 @@ export default function StoryHero() {
       />
 
       <Reveal className="relative z-10">
-        <h1 className="text-center font-serif font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(2.75rem,8vw,8.25rem)]">
-          <span className="block">HAP At</span>
-          <span className="block">A Glance</span>
+        <h1 className="text-center font-serif font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(2.75rem,11vw,12rem)]">
+          <span className="block">INSIDE THE</span>
+          <span className="block">WORLD OF</span>
+          <span className="block">HAP</span>
         </h1>
       </Reveal>
     </section>

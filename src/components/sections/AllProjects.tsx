@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PROJECT_DETAILS } from "@/data/projectDetail";
+import { projectHref } from "@/data/projectDetail";
 import { useDiscoverCursor } from "@/components/DiscoverCursor";
 import GrowReveal from "@/components/GrowReveal";
 import type { Category } from "@/data/mapProjects";
@@ -350,7 +350,7 @@ function GridView({
             : p.span === "half"
               ? "(min-width: 768px) 50vw, 50vw"
               : "100vw";
-        const href = PROJECT_DETAILS[p.id] ? `/projects/${p.id}` : "#";
+        const href = projectHref(p.id);
         return (
           <Link key={p.id} href={href} className={`group flex flex-col ${colSpan}`}>
             <GrowReveal
@@ -390,7 +390,7 @@ function ListView({ projects, accent }: { projects: ProjectCard[]; accent: strin
     <ul className="relative flex flex-col">
       {projects.map((p, i) => {
         const isHovered = hoveredId === p.id;
-        const href = PROJECT_DETAILS[p.id] ? `/projects/${p.id}` : "#";
+        const href = projectHref(p.id);
         return (
           <li
             key={p.id}

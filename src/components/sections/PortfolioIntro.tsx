@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 
 export default function PortfolioIntro() {
   return (
@@ -17,7 +17,7 @@ export default function PortfolioIntro() {
       />
       <div className="absolute inset-0 bg-black/65" />
 
-      <div className="relative z-10 mx-auto max-w-[1440px] px-6 py-32 md:px-12 md:py-44 lg:px-16">
+      <div className="relative z-10 px-6 py-32 md:px-12 md:py-44 lg:px-16">
         <p className="font-sans text-sm font-medium uppercase tracking-[0.28em] text-white/55">
           Who we are
         </p>

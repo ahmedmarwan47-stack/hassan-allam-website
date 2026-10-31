@@ -1,6 +1,7 @@
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
+import RollText from "@/components/RollText";
 
 export default function ResaleCta({
   heading,
@@ -41,7 +42,7 @@ export default function ResaleCta({
             aria-hidden
             className="absolute inset-0 translate-y-full bg-white transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0"
           />
-          <span className="relative z-10">{buttonLabel}</span>
+          <RollText className="relative z-10">{buttonLabel}</RollText>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden className="relative z-10 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1">
             <path
               d="M3 11L11 3M11 3H4M11 3V10"

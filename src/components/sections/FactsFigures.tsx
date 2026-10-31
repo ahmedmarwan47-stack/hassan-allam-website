@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
@@ -169,7 +169,7 @@ export default function FactsFigures() {
       data-nav-theme="light"
       className="bg-brand-white text-brand-black"
     >
-      <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-28 px-6 py-24 md:gap-[200px] md:px-16 md:py-[180px]">
+      <div className="flex flex-col items-center gap-28 px-6 py-24 md:gap-[200px] md:px-16 md:py-[180px]">
         {/* ── CEO Quote ── */}
         <Reveal className="flex max-w-[1110px] flex-col items-center gap-[58px] text-center">
           <p className="font-serif font-normal leading-[1.1] tracking-[-0.02em] [font-size:clamp(2rem,4.3vw,3.875rem)]">

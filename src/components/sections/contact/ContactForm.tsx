@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { TextField, SelectField, TextareaField, type FieldStatus } from "@/components/FormField";
+import RollText from "@/components/RollText";
 
 const SUBJECTS = [
   "Real Estate",
@@ -230,7 +231,7 @@ export default function ContactForm() {
                 aria-hidden
                 className="absolute inset-0 translate-y-full bg-brand-black transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0"
               />
-              <span className="relative z-10">Submit Message</span>
+              <RollText className="relative z-10">Submit Message</RollText>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden className="relative z-10 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1">
                 <path
                   d="M6 18 18 6M18 6H8M18 6V16"

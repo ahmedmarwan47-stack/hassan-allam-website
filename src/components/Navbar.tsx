@@ -1,9 +1,10 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSectionTheme } from "@/hooks/useSectionTheme";
+import RollText from "@/components/RollText";
 
 const NAV_LINKS = [
   { label: "Projects", href: "/projects" },
@@ -34,6 +35,31 @@ export default function Navbar() {
   const onDark = theme === "dark";
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Hide on scroll down, reveal on scroll up. Always shown near the top of the
+  // page and while the mobile menu is open. Small jitters are ignored.
+  const [scrollHidden, setScrollHidden] = useState(false);
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let frame = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const delta = y - lastY;
+        if (y < 80) setScrollHidden(false);
+        else if (delta > 6) setScrollHidden(true);
+        else if (delta < -6) setScrollHidden(false);
+        if (Math.abs(delta) > 6 || y < 80) lastY = y;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
+  const hidden = scrollHidden && !menuOpen;
+
   // Lock body scroll while the mobile menu is open.
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
@@ -44,10 +70,11 @@ export default function Navbar() {
 
   return (
     <header
-      // A page section can take over the top edge (e.g. the sticky "Our
+      // Slides up while scrolling down and back in on scroll up. A page
+      // section can also take over the top edge (e.g. the sticky "Our
       // Communities" bar on /projects) by setting data-nav-hidden on <html>;
-      // the navbar then slides up out of the way until it's cleared.
-      className="fixed inset-x-0 top-0 z-50 h-20 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] [[data-nav-hidden]_&]:-translate-y-full"
+      // the navbar then stays out of the way until it's cleared.
+      className={`fixed inset-x-0 top-0 z-50 h-20 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] [[data-nav-hidden]_&]:-translate-y-full ${hidden ? "-translate-y-full" : ""}`}
     >
       {/* Progressive background blur — three stacked backdrop-blur layers with
           successively shorter gradient masks, so the blur is strongest at the
@@ -103,9 +130,9 @@ export default function Navbar() {
             <li key={link.label}>
               <Link
                 href={link.href}
-                className="font-sans text-[15px] font-medium uppercase opacity-90 lg:text-base transition-opacity duration-300 hover:opacity-100"
+                className="group font-sans text-[15px] font-medium uppercase opacity-90 lg:text-base transition-opacity duration-300 hover:opacity-100"
               >
-                {link.label}
+                <RollText>{link.label}</RollText>
               </Link>
             </li>
           ))}
@@ -126,7 +153,7 @@ export default function Navbar() {
               onDark ? "bg-black" : "bg-white"
             }`}
           />
-          <span className="relative z-10">Contact us</span>
+          <RollText className="relative z-10">Contact us</RollText>
         </Link>
 
         {/* Hamburger / close (mobile) */}

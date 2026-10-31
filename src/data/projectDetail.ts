@@ -225,3 +225,11 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
 export function getProjectDetail(slug: string): ProjectDetailData | undefined {
   return PROJECT_DETAILS[slug];
 }
+
+/** Project page every project links to until its own page is built. */
+export const DEFAULT_PROJECT_SLUG = "swanlake-residences";
+
+/** Link to a project's page — its own if built, otherwise the shared one. */
+export function projectHref(id: string): string {
+  return `/projects/${PROJECT_DETAILS[id] ? id : DEFAULT_PROJECT_SLUG}`;
+}

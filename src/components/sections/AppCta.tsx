@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 
@@ -129,7 +129,7 @@ export default function AppCta() {
         <Reveal
           delay={0.1}
           className="absolute"
-          style={{ left: "4.44%", top: "38.73%", width: "27.85%" }}
+          style={{ left: "4rem", top: "38.73%", width: "27.85%" }}
         >
           <p className="font-serif text-[1.625rem] font-medium capitalize leading-[1.2] tracking-[-0.02em] text-brand-black">
             <span>HAP Family App </span>
@@ -142,7 +142,7 @@ export default function AppCta() {
         <Reveal
           delay={0.15}
           className="absolute"
-          style={{ left: "4.44%", top: "79.23%", width: "30.9%" }}
+          style={{ left: "4rem", top: "79.23%", width: "30.9%" }}
         >
           <KeyBenefits />
         </Reveal>

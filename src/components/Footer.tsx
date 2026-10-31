@@ -234,7 +234,7 @@ export default function Footer() {
       data-nav-theme="dark"
       className="bg-black text-white"
     >
-      <div className="mx-auto flex max-w-[1440px] flex-col gap-10 p-6 md:p-16">
+      <div className="flex flex-col gap-10 p-6 md:p-16">
         {/* ── Top section: nav (left) + projects/contact/newsletter (right) ── */}
         <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-10">
           {/* Left column: Nav — Figma Footer 17099:2537: 567px of 1312 (43.2%),

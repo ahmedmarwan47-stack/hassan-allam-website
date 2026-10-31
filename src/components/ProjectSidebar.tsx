@@ -1,11 +1,13 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { MapProject } from "@/data/mapProjects";
-import { PROJECT_DETAILS } from "@/data/projectDetail";
+import { projectHref } from "@/data/projectDetail";
+import SliderArrow from "@/components/SliderArrow";
+import RollText from "@/components/RollText";
 
 /**
  * ProjectSidebar — the slide-in panel that opens when a map pin is clicked.
@@ -27,14 +29,13 @@ export default function ProjectSidebar({
   onPrev: () => void;
   onNext: () => void;
 }) {
-  const progress = total > 0 && index >= 0 ? ((index + 1) / total) * 100 : 0;
+  // Black segment marks the current project along the track (homepage style).
+  const segment = total > 0 ? 100 / total : 0;
+  const segmentLeft = index >= 0 ? index * segment : 0;
 
-  // Link to the built detail page when it exists, otherwise fall back to the
-  // projects listing filtered by this project's category (never a dead link).
+  // Its own page when built, otherwise the shared project page.
   const detailHref = project
-    ? PROJECT_DETAILS[project.id]
-      ? `/projects/${project.id}`
-      : `/projects?filter=${encodeURIComponent(project.category)}`
+    ? projectHref(project.id)
     : "#";
 
   return (
@@ -99,54 +100,44 @@ export default function ProjectSidebar({
                   <p className="mt-12 font-sans text-base font-medium leading-[1.4] text-brand-black">
                     {project.description}
                   </p>
+                  {/* CTA — the site's bordered button, dark variant, with the
+                      fill sweeping up from the bottom on hover. */}
+                  <Link
+                    href={detailHref}
+                    className="group relative mt-8 inline-flex items-center justify-center gap-3 self-start overflow-hidden border border-brand-black px-6 py-3 font-serif text-lg uppercase tracking-[0.02em] text-brand-black transition-colors duration-500 hover:text-brand-white"
+                  >
+                    <span
+                      aria-hidden
+                      className="absolute inset-0 translate-y-full bg-brand-black transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0"
+                    />
+                    <RollText className="relative z-10">Discover the project</RollText>
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="relative z-10 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1">
+                      <path
+                        d="M3 11L11 3M11 3H4M11 3V10"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </Link>
                 </motion.div>
               </AnimatePresence>
             </div>
 
-            {/* Footer: Discover link + progress + arrows. */}
-            <div className="flex flex-col gap-4 px-[30px] pb-[30px] pt-4">
-              <Link
-                href={detailHref}
-                className="inline-flex items-center gap-2 self-start font-sans text-lg font-medium text-brand-black transition-opacity duration-200 hover:opacity-60"
-              >
-                Discover
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path
-                    d="M3 11L11 3M11 3H4M11 3V10"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Link>
-
-              <div className="flex items-center gap-6">
-                <div className="relative h-px flex-1 bg-grey-300">
-                  <motion.div
-                    className="absolute inset-y-0 left-0 bg-brand-black"
-                    animate={{ width: `${progress}%` }}
-                    transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
-                  />
-                </div>
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={onPrev}
-                    aria-label="Previous project"
-                    className="font-sans text-xl leading-none text-brand-black transition-opacity duration-200 hover:opacity-60"
-                  >
-                    ←
-                  </button>
-                  <button
-                    type="button"
-                    onClick={onNext}
-                    aria-label="Next project"
-                    className="font-sans text-xl leading-none text-brand-black transition-opacity duration-200 hover:opacity-60"
-                  >
-                    →
-                  </button>
-                </div>
+            {/* Footer: track + arrows — the homepage slider style, compact. */}
+            <div className="flex items-center gap-5 px-[30px] pb-[30px] pt-4">
+              <div className="relative h-[3px] flex-1 overflow-hidden bg-black/20">
+                <motion.div
+                  className="absolute inset-y-0 bg-brand-black"
+                  style={{ width: `${segment}%` }}
+                  animate={{ left: `${segmentLeft}%` }}
+                  transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <SliderArrow direction="prev" size="sm" emphasis onClick={onPrev} label="Previous project" />
+                <SliderArrow direction="next" size="sm" emphasis onClick={onNext} label="Next project" />
               </div>
             </div>
           </motion.aside>

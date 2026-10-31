@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
 import type { NewsArticle } from "@/data/news";
 import type { NewsDetail } from "@/data/newsDetail";
@@ -32,9 +32,9 @@ export default function NewsDetailHero({
         className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-b from-transparent to-brand-black"
       />
 
-      {/* Big headline, right-anchored on desktop to match the Figma layout. */}
+      {/* Big headline on the shared right text column (66.16%), as in Figma. */}
       <Reveal className="relative z-10 flex justify-end pt-6 md:pt-0">
-        <p className="max-w-[868px] font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-white [font-size:clamp(1.75rem,4.3vw,3.875rem)]">
+        <p className="md:w-[66.16%] font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-white [font-size:clamp(1.75rem,4.3vw,3.875rem)]">
           {detail.headline}
         </p>
       </Reveal>
@@ -49,7 +49,7 @@ export default function NewsDetailHero({
           <span className="size-3 shrink-0 rounded-full border border-brand-white/40" />
           <p className="font-sans text-base text-brand-white">Scroll</p>
         </div>
-        <div className="grid gap-8 font-sans text-base leading-[1.4] text-brand-white md:max-w-[868px] md:grid-cols-2 md:gap-16">
+        <div className="grid gap-8 font-sans text-base leading-[1.4] text-brand-white md:w-[66.16%] md:grid-cols-2 md:gap-16">
           <p>{detail.intro[0]}</p>
           <p>{detail.intro[1]}</p>
         </div>
