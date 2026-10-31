@@ -93,14 +93,14 @@ const SLR_AMENITIES: FeatureItem[] = [
   { icon: "fitness", title: "Fitness Facility", description: "A fully equipped gym to keep residents in shape." },
 ];
 
+// Home types on offer (placeholder copy) — distinct from the amenities.
 const SLR_PRODUCTS: FeatureItem[] = [
-  { icon: "office", title: "Office Park", description: "A welcoming hub for meeting and unwinding." },
-  { icon: "retail", title: "Retail Hub", description: "Boutique storefronts for everyday errands and leisure shopping." },
-  { icon: "healthcare", title: "Healthcare Facility", description: "A dedicated clinic offering peace of mind close to home." },
-  { icon: "hospitality", title: "Hospitality", description: "A poolside bar perfect for cocktails in the sun." },
-  { icon: "dining", title: "Entertainment", description: "A refined table offering a varied, elevated cuisine." },
-  { icon: "fitness", title: "Fitness Facility", description: "A fully equipped gym to keep residents in shape." },
-  { icon: "leisure", title: "Leisure Component", description: "A high-end culinary experience in an elegant setting." },
+  { icon: "apartment", title: "Apartments", description: "Light-filled one to three-bedroom homes overlooking the landscaped gardens." },
+  { icon: "duplex", title: "Duplexes", description: "Two levels of living with private terraces and generous family space." },
+  { icon: "penthouse", title: "Penthouses", description: "Top-floor homes with roof terraces and open views across the community." },
+  { icon: "townhouse", title: "Townhouses", description: "Garden-fronted homes on quiet streets, made for growing families." },
+  { icon: "twinhouse", title: "Twin Houses", description: "Semi-detached villas pairing privacy with a shared, green setting." },
+  { icon: "villa", title: "Standalone Villas", description: "Detached villas on generous plots, each with a private garden and pool." },
 ];
 
 // Placeholder construction timeline (dummy dates and images) until
@@ -217,7 +217,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       half: "/images/image 392.jpg",
       wide: "/images/image 391.jpg",
     },
-    productsHeading: "Types of Products Offered In Our Project",
+    productsHeading: "Homes to Choose From",
     products: SLR_PRODUCTS,
 
     construction: SAMPLE_CONSTRUCTION,
@@ -277,7 +277,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       half: "/images/image 392.jpg",
       wide: "/images/image 391.jpg",
     },
-    productsHeading: "Types of Products Offered In Our Project",
+    productsHeading: "Homes to Choose From",
     products: SLR_PRODUCTS,
 
     construction: SAMPLE_CONSTRUCTION,
