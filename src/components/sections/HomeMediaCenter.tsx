@@ -29,7 +29,7 @@ export default function HomeMediaCenter() {
           ))}
         </div>
 
-        <ActionButton label="Read all news" href="/news" />
+        <ActionButton label="Read more" href="/news" look="plain" />
       </div>
     </section>
   );

@@ -1,12 +1,11 @@
-import Link from "next/link";
 import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
-import RollText from "@/components/RollText";
+import ActionButton from "@/components/ActionButton";
 
 /**
  * ContactUsSection — the closing invitation before the footer on Home, Our
  * Story and FAQs: the soft window-light backdrop, a large "Contact us" and
- * a short line, then a simple text CTA with a trailing arrow (no icon box).
+ * a short line, then the site's solid "Get in touch" button.
  */
 export default function ContactUsSection() {
   return (
@@ -37,27 +36,7 @@ export default function ContactUsSection() {
           </p>
         </Reveal>
         <Reveal delay={0.16}>
-          <Link
-            href="/contact"
-            className="group relative inline-flex items-center gap-3 pb-2 font-sans text-2xl font-medium md:text-[2rem]"
-          >
-            <RollText>Get in touch</RollText>
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 14 14"
-              fill="none"
-              aria-hidden
-              className="transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:-translate-y-0.5 group-hover:translate-x-1"
-            >
-              <path d="M3 11 11 3M11 3H4M11 3v7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            {/* Underline draws in from the left on hover. */}
-            <span
-              aria-hidden
-              className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-brand-black transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-x-100"
-            />
-          </Link>
+          <ActionButton label="Get in touch" href="/contact" variant="solid" look="arrow" />
         </Reveal>
       </div>
     </section>
