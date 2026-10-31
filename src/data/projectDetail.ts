@@ -93,8 +93,9 @@ const SLR_AMENITIES: FeatureItem[] = [
   { icon: "fitness", title: "Fitness Facility", description: "A fully equipped gym to keep residents in shape." },
 ];
 
-// Home types on offer (placeholder copy) — distinct from the amenities.
-const SLR_PRODUCTS: FeatureItem[] = [
+// Home types on offer, shared by every project page (placeholder copy) —
+// distinct from the amenities.
+const HOME_TYPES: FeatureItem[] = [
   { icon: "apartment", title: "Apartments", description: "Light-filled one to three-bedroom homes overlooking the landscaped gardens." },
   { icon: "duplex", title: "Duplexes", description: "Two levels of living with private terraces and generous family space." },
   { icon: "penthouse", title: "Penthouses", description: "Top-floor homes with roof terraces and open views across the community." },
@@ -218,7 +219,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       wide: "/images/image 391.jpg",
     },
     productsHeading: "Homes to Choose From",
-    products: SLR_PRODUCTS,
+    products: HOME_TYPES,
 
     construction: SAMPLE_CONSTRUCTION,
 
@@ -278,7 +279,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
       wide: "/images/image 391.jpg",
     },
     productsHeading: "Homes to Choose From",
-    products: SLR_PRODUCTS,
+    products: HOME_TYPES,
 
     construction: SAMPLE_CONSTRUCTION,
 
