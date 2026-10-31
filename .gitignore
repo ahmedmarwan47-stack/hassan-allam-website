@@ -42,3 +42,5 @@ next-env.d.ts
 
 # Generated image variants (npm run images)
 /public/_img/
+# gh-pages checkout used by scripts/deploy.sh
+/.deploy/
