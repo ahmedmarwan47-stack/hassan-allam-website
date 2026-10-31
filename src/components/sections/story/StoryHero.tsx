@@ -24,10 +24,10 @@ export default function StoryHero() {
       />
 
       <Reveal className="relative z-10">
-        <h1 className="text-center font-serif font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(2.75rem,11vw,12rem)]">
-          <span className="block">INSIDE THE</span>
-          <span className="block">WORLD OF</span>
-          <span className="block">HAP</span>
+        {/* Two lines; sized so "INSIDE THE WORLD" (~8.7em wide) always fits. */}
+        <h1 className="text-center font-serif font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(2rem,9.8vw,6rem)] md:[font-size:9vw] xl:[font-size:clamp(2.75rem,10vw,12rem)]">
+          <span className="block whitespace-nowrap">INSIDE THE WORLD</span>
+          <span className="block">OF HAP</span>
         </h1>
       </Reveal>
     </section>

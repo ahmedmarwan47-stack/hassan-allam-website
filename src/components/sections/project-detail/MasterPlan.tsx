@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "@/components/ProgressiveImage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { MasterPlanItem } from "@/data/projectDetail";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 import NeighborhoodDrawer from "./NeighborhoodDrawer";
+import { OPEN_NEIGHBORHOOD } from "./ProjectActions";
 import { RequestInterest } from "@/components/ActionButton";
 
 // Pin centres as % of the map box (measured from Figma frame 17043-49871 on
@@ -34,6 +35,16 @@ export default function MasterPlan({
   const [active, setActive] = useState<number | null>(null);
   const [open, setOpen] = useState<number | null>(null); // index into items
   const openNumber = (n: number) => setOpen(items.findIndex((it) => it.number === n));
+
+  // Neighborhood names elsewhere on the page (the intro) open their drawer.
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      const i = items.findIndex((it) => it.name === (e as CustomEvent<string>).detail);
+      if (i >= 0) setOpen(i);
+    };
+    window.addEventListener(OPEN_NEIGHBORHOOD, onOpen);
+    return () => window.removeEventListener(OPEN_NEIGHBORHOOD, onOpen);
+  }, [items]);
 
   return (
     <section

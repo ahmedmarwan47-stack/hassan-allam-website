@@ -1,9 +1,9 @@
 import Image from "@/components/ProgressiveImage";
+import ActionButton from "@/components/ActionButton";
 import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
 import { JOBS, OFFER, type Job } from "@/data/careers";
 import JobRow from "./JobRow";
-import RollText from "@/components/RollText";
 import {
   ArrowLeftIcon,
   ArrowUpRightIcon,
@@ -118,19 +118,14 @@ function CareerBody({ job }: { job: Job }) {
               </div>
             ))}
           </dl>
-          {/* Applications go through the contact form until a careers
-              inbox / ATS is confirmed. */}
-          <Link
-            href="/contact"
-            className="group relative flex h-[66px] items-center justify-center gap-2.5 overflow-hidden border border-brand-black bg-brand-black px-6 font-serif text-[1.625rem] uppercase leading-none tracking-[-0.02em] text-brand-white transition-colors duration-500 hover:text-brand-black"
-          >
-            <span
-              aria-hidden
-              className="absolute inset-0 translate-y-full bg-brand-white transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0"
-            />
-            <RollText className="relative z-10">Apply now</RollText>
-            <ArrowUpRightIcon size={24} className="relative z-10" />
-          </Link>
+          {/* Applications go to the main HAP inbox, subject pre-filled with
+              the role, until a careers inbox / ATS is confirmed. */}
+          <ActionButton
+            label="Apply now"
+            href={`mailto:info@hap.com.eg?subject=${encodeURIComponent(`Application: ${job.title}`)}`}
+            variant="solid"
+            className="self-start"
+          />
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col gap-12">

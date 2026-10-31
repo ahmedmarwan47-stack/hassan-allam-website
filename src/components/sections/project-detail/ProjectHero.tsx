@@ -1,6 +1,7 @@
 import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
 import type { ProjectDetailData } from "@/data/projectDetail";
+import { RequestInterest } from "@/components/ActionButton";
 
 export default function ProjectHero({ data }: { data: ProjectDetailData }) {
   return (
@@ -27,21 +28,18 @@ export default function ProjectHero({ data }: { data: ProjectDetailData }) {
       />
 
       <Reveal className="relative z-10 flex flex-col items-center gap-6 text-center md:gap-8">
-        {/* Tag — matches Figma 991-10797 ("SWANLAKE residences."). */}
-        <div className="flex items-baseline gap-1.5 rounded-[4px] border border-brand-black/25 px-5 py-3">
-          <span className="font-sans text-sm font-medium uppercase tracking-[0.12em] text-brand-black">
-            {data.badgeMain}
-          </span>
-          <span className="font-serif text-base italic text-brand-black">
-            {data.badgeScript}
-          </span>
-        </div>
-        {/* Narrower measure so the name wraps to 3 lines (e.g. SwanLake /
-            Residences / New Cairo) — title case per the updated Figma. */}
-        <h1 className="mx-auto max-w-[7.5em] font-serif font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(2.75rem,8vw,8.25rem)]">
+        {/* Eyebrow — the site's plain uppercase label (no box). */}
+        <p className="font-sans text-sm font-medium uppercase leading-[1.4] tracking-[0.12em] text-brand-black/60 md:text-base">
+          {data.badgeMain} {data.badgeScript.replace(/\.$/, "")}
+        </p>
+        {/* Phones: two lines, sized so the longer one ("Residences New
+            Cairo") fits the width. From tablet up a narrower measure wraps
+            the name to 3 lines (SwanLake / Residences / New Cairo). */}
+        <h1 className="mx-auto whitespace-nowrap font-serif md:max-w-[7.5em] md:whitespace-normal font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(1.75rem,9.4vw,4.5rem)] md:[font-size:clamp(2.75rem,8vw,8.25rem)]">
           <span className="block">{data.name[0]}</span>
           <span className="block">{data.name[1]}</span>
         </h1>
+        <RequestInterest className="mt-2" />
       </Reveal>
     </section>
   );

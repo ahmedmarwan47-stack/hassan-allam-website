@@ -12,9 +12,8 @@ export interface NewsDetail {
   bodyImages: [string, string];
 }
 
-/** Only a couple of the six listed articles have real detail pages built —
- *  the rest keep their `#` link on the news grid, same convention used for
- *  project detail pages ([[project-detail-template]]). */
+/** Every listed article has a detail page. Copy for all but the first two is
+ *  placeholder, written to match each headline until real releases arrive. */
 export const NEWS_DETAILS: Record<string, NewsDetail> = {
   "eden-embassy-of-denmark": {
     id: "eden-embassy-of-denmark",
@@ -53,6 +52,78 @@ export const NEWS_DETAILS: Record<string, NewsDetail> = {
       "Handover of the first residential phase is planned for 2027, with retail and office components opening in staged waves alongside it. Full delivery is set for 2029.",
     ],
     bodyImages: ["/images/image 391.jpg", "/images/map/slg.jpg"],
+  },
+
+  "acwa-hau-financial-close": {
+    id: "acwa-hau-financial-close",
+    headline:
+      "ACWA Power and HAU Energy reach financial close on a 200 MW solar project, adding clean capacity to Egypt's grid.",
+    intro: [
+      "ACWA Power and HAU Energy, part of the Hassan Allam Group, have reached financial close on a 200 MW solar photovoltaic plant in Egypt, clearing the way for construction to begin.",
+      "The project supports Egypt's target of generating a growing share of its electricity from renewable sources, and marks another step in the group's energy partnership.",
+    ],
+    heroImage: "/images/image 388.jpg",
+    bigIntroParagraph:
+      "Once operational, the plant will supply clean power to the national grid — enough for tens of thousands of homes — and offset a significant volume of carbon emissions every year.",
+    body: [
+      "Construction is expected to start in the coming months, drawing on the group's engineering and delivery expertise across large-scale infrastructure.",
+      "The financing brings together regional and international lenders, reflecting continued confidence in Egypt's renewable energy programme.",
+    ],
+    bodyImages: ["/images/commercial-real-estate.jpg", "/images/image 402.jpg"],
+  },
+
+  "swanlake-el-gouna-handover": {
+    id: "swanlake-el-gouna-handover",
+    headline:
+      "SwanLake Residences El Gouna welcomes its first wave of homeowners to its lagoon-side condos on the Red Sea.",
+    intro: [
+      "Hassan Allam Properties has begun handing over homes at SwanLake Residences El Gouna, with the first homeowners now settling into their finished waterfront condos.",
+      "The handover follows the completion of the community's first phase, including its swimmable crystal lagoons, landscaped promenades and resident amenities.",
+    ],
+    heroImage: "/images/map/slg.jpg",
+    bigIntroParagraph:
+      "Set around 360-degree swimmable lagoons in the heart of El Gouna, the community's Modern Greek architecture and fully finished homes are now home to their first residents.",
+    body: [
+      "Each home is delivered fully finished, with stone facades, wooden linings and private outdoor space designed for relaxed coastal living.",
+      "Further phases will be handed over in stages through the coming year, alongside the opening of additional amenities across the community.",
+    ],
+    bodyImages: ["/images/SLG-18 1.jpg", "/images/SLG-08 3.jpg"],
+  },
+
+  "cityscape-awards": {
+    id: "cityscape-awards",
+    headline:
+      "Hassan Allam Properties is recognised among Egypt's top developers at the Cityscape 2024 awards.",
+    intro: [
+      "Hassan Allam Properties has been named among Egypt's leading real estate developers at Cityscape 2024, recognising the quality and delivery record of its communities.",
+      "The recognition reflects HAP's focus on family-centric destinations, design quality and on-time delivery across its city and coastal portfolio.",
+    ],
+    heroImage: "/images/commercial-real-estate.jpg",
+    bigIntroParagraph:
+      "Judged on design, delivery and customer experience, the award places HAP among the country's most trusted developers, three generations after the family business began.",
+    body: [
+      "The award was accepted on behalf of the teams across HAP's projects, from planning and design to construction and community management.",
+      "HAP continues to expand its portfolio with new launches in New Cairo, Mostakbal City and along Egypt's coastlines.",
+    ],
+    bodyImages: ["/images/image 387.jpg", "/images/image 398.jpg"],
+  },
+
+  "park-central-mostakbal": {
+    id: "park-central-mostakbal",
+    headline:
+      "Hassan Allam Properties launches Park Central, a new park-side community at the heart of Mostakbal City.",
+    intro: [
+      "Hassan Allam Properties has launched Park Central, a new residential community in Mostakbal City built around a central park and a network of green walkways.",
+      "The community offers apartments, duplexes and townhouses designed for families, with schools, retail and leisure within walking distance.",
+    ],
+    heroImage: "/images/image 391.jpg",
+    bigIntroParagraph:
+      "Park Central brings HAP's community-first approach to Mostakbal City: homes set around open green space, with everyday essentials a short walk away.",
+    body: [
+      "The first phase is now open for reservations, with flexible payment plans and delivery scheduled in stages.",
+      "Park Central joins HAP's growing presence in Mostakbal City alongside Haptown and The Valleys.",
+    ],
+    bodyImages: ["/images/image 390.jpg", "/images/image 385.jpg"],
   },
 };
 

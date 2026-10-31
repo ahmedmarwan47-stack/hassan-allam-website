@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import ParallaxImage from "@/components/ParallaxImage";
 import { Reveal } from "@/components/Reveal";
 import ActionButton from "@/components/ActionButton";
+import { SelectField, TextField, TextareaField } from "@/components/FormField";
+import { PREFILL_INTEREST } from "./ProjectActions";
 
 /**
  * Request Interest — where every "Request interest" button on the project
@@ -30,12 +32,23 @@ export default function RequestInterestForm({
     lastName: "",
     phone: "",
     email: "",
-    unit: UNIT_TYPES[0],
+    unit: "",
     contactBy: "Phone" as (typeof CONTACT_BY)[number],
     message: "",
   });
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
   const [sent, setSent] = useState(false);
+
+  // Other buttons (e.g. the brochure) can pre-fill the message.
+  useEffect(() => {
+    const onPrefill = (e: Event) => {
+      const message = (e as CustomEvent<string>).detail;
+      setSent(false);
+      setValues((v) => ({ ...v, message }));
+    };
+    window.addEventListener(PREFILL_INTEREST, onPrefill);
+    return () => window.removeEventListener(PREFILL_INTEREST, onPrefill);
+  }, []);
 
   const set = (key: keyof typeof values) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
@@ -116,30 +129,20 @@ export default function RequestInterestForm({
                   exit={{ opacity: 0, y: -12, transition: { duration: 0.3 } }}
                   className="flex flex-col gap-7"
                 >
-                  <div className="grid gap-7 sm:grid-cols-2 sm:gap-x-8">
-                    <Input label="First name" value={values.firstName} onChange={set("firstName")} error={errors.firstName} autoComplete="given-name" />
-                    <Input label="Last name" value={values.lastName} onChange={set("lastName")} error={errors.lastName} autoComplete="family-name" />
-                    <Input label="Phone" type="tel" value={values.phone} onChange={set("phone")} error={errors.phone} autoComplete="tel" />
-                    <Input label="Email" type="email" value={values.email} onChange={set("email")} error={errors.email} autoComplete="email" />
+                  <div className="grid gap-6 sm:grid-cols-2 sm:gap-x-8">
+                    <TextField size="md" label="First name" value={values.firstName} onChange={set("firstName")} status={errors.firstName ? "error" : "idle"} message={errors.firstName} autoComplete="given-name" />
+                    <TextField size="md" label="Last name" value={values.lastName} onChange={set("lastName")} status={errors.lastName ? "error" : "idle"} message={errors.lastName} autoComplete="family-name" />
+                    <TextField size="md" label="Phone" type="tel" value={values.phone} onChange={set("phone")} status={errors.phone ? "error" : "idle"} message={errors.phone} autoComplete="tel" />
+                    <TextField size="md" label="Email" type="email" value={values.email} onChange={set("email")} status={errors.email ? "error" : "idle"} message={errors.email} autoComplete="email" />
                   </div>
 
-                  <label className="flex flex-col gap-2">
-                    <span className="font-sans text-sm text-brand-black/60">Interested in</span>
-                    <span className="relative flex items-center border-b border-brand-black/15 transition-colors focus-within:border-brand-black">
-                      <select
-                        value={values.unit}
-                        onChange={set("unit")}
-                        className="w-full cursor-pointer appearance-none bg-transparent py-2 font-sans text-lg focus:outline-none"
-                      >
-                        {UNIT_TYPES.map((t) => (
-                          <option key={t}>{t}</option>
-                        ))}
-                      </select>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden className="pointer-events-none absolute right-0">
-                        <path d="M5 8.5 12 15.5 19 8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </span>
-                  </label>
+                  <SelectField size="md" label="Interested in" value={values.unit} onChange={set("unit")}>
+                    {UNIT_TYPES.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </SelectField>
 
                   <fieldset className="flex flex-col gap-3">
                     <legend className="mb-3 font-sans text-sm text-brand-black/60">Preferred contact</legend>
@@ -162,18 +165,10 @@ export default function RequestInterestForm({
                     </div>
                   </fieldset>
 
-                  <label className="flex flex-col gap-2">
-                    <span className="font-sans text-sm text-brand-black/60">Message (optional)</span>
-                    <textarea
-                      rows={2}
-                      value={values.message}
-                      onChange={set("message")}
-                      className="resize-none border-b border-brand-black/15 bg-transparent py-2 font-sans text-lg transition-colors focus:border-brand-black focus:outline-none"
-                    />
-                  </label>
+                  <TextareaField size="md" label="Message (optional)" rows={2} value={values.message} onChange={set("message")} />
 
                   <div className="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
-                    <ActionButton label="Send request" icon="send" type="submit" variant="solid" />
+                    <ActionButton label="Send request" type="submit" variant="solid" look="arrow" />
                     <p className="max-w-[260px] font-sans text-xs leading-[1.4] text-brand-black/50">
                       By sending, you agree to be contacted by Hassan Allam Properties about this project.
                     </p>
@@ -185,25 +180,5 @@ export default function RequestInterestForm({
         </Reveal>
       </div>
     </section>
-  );
-}
-
-function Input({
-  label,
-  error,
-  ...props
-}: { label: string; error?: string } & React.InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <label className="flex flex-col gap-2">
-      <span className="font-sans text-sm text-brand-black/60">{label}</span>
-      <input
-        {...props}
-        aria-invalid={!!error}
-        className={`border-b bg-transparent py-2 font-sans text-lg transition-colors focus:outline-none ${
-          error ? "border-error" : "border-brand-black/15 focus:border-brand-black"
-        }`}
-      />
-      {error && <span className="font-sans text-xs text-error">{error}</span>}
-    </label>
   );
 }

@@ -223,7 +223,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     construction: SAMPLE_CONSTRUCTION,
 
     ctaHeading: "A HAP Resale Expert Can Help You",
-    ctaParagraph: "Hassan Allam Properties offers an exceptional portfolio of 11 projects located in strategic locations, both in the heart of dynamic urban centers and along the coastline.",
+    ctaParagraph: "Hassan Allam Properties offers an exceptional portfolio of 25 projects located in strategic locations, both in the heart of dynamic urban centers and along the coastline.",
     ctaButtonLabel: "Let's work together",
   },
 
@@ -283,7 +283,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     construction: SAMPLE_CONSTRUCTION,
 
     ctaHeading: "A HAP Resale Expert Can Help You",
-    ctaParagraph: "Hassan Allam Properties offers an exceptional portfolio of 11 projects located in strategic locations, both in the heart of dynamic urban centers and along the coastline.",
+    ctaParagraph: "Hassan Allam Properties offers an exceptional portfolio of 25 projects located in strategic locations, both in the heart of dynamic urban centers and along the coastline.",
     ctaButtonLabel: "Let's work together",
   },
 };

@@ -1,16 +1,30 @@
 "use client";
 
 import Image from "@/components/ProgressiveImage";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { withBasePath } from "@/lib/basePath";
 import { Reveal } from "@/components/Reveal";
+import RollText from "@/components/RollText";
 
 /**
  * Full-screen showreel player — the background loop plays muted with no
  * controls, so this gives visitors the reel with sound. Esc or the close
  * button dismisses it; page scroll is locked while open.
  */
+/**
+ * Showreel overlay — rendered into <body> (so no ancestor transform can
+ * confine it). The backdrop and the film fade in together while the film
+ * scales up quickly into place; playback starts as it settles. Closing
+ * reverses it. Escape or a click outside closes.
+ */
+const REEL_EASE = [0.76, 0, 0.24, 1] as const;
+
 function ShowreelModal({ onClose }: { onClose: () => void }) {
+  const reduce = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -24,33 +38,68 @@ function ShowreelModal({ onClose }: { onClose: () => void }) {
     };
   }, [onClose]);
 
+  // Sound is allowed thanks to the click that opened the reel; if a browser
+  // still refuses, play muted.
+  const start = useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.play().catch(() => {
+      v.muted = true;
+      v.play().catch(() => {});
+    });
+  }, []);
+
+  // Start as the entrance settles (straight away under reduced motion).
+  useEffect(() => {
+    const t = setTimeout(start, reduce ? 0 : 250);
+    return () => clearTimeout(t);
+  }, [reduce, start]);
+
   return (
-    <div
+    <motion.div
       role="dialog"
       aria-modal="true"
       aria-label="Showreel"
       onClick={onClose}
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 p-4 md:p-16"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-16"
     >
-      <button
+      <motion.div
+        aria-hidden
+        className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, transition: { duration: reduce ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] } }}
+        exit={{ opacity: 0, transition: { duration: reduce ? 0 : 0.3, ease: REEL_EASE, delay: reduce ? 0 : 0.05 } }}
+      />
+      <motion.button
         type="button"
         onClick={onClose}
         aria-label="Close showreel"
-        className="absolute right-4 top-4 flex size-11 items-center justify-center text-white transition-opacity duration-300 hover:opacity-70 md:right-8 md:top-8"
+        className="absolute right-4 top-4 z-10 flex size-11 items-center justify-center text-white transition-[opacity,transform] duration-300 hover:rotate-90 hover:opacity-70 md:right-8 md:top-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, transition: { duration: 0.3, delay: reduce ? 0 : 0.25 } }}
+        exit={{ opacity: 0, transition: { duration: 0.2 } }}
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
           <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" strokeWidth="1.5" />
         </svg>
-      </button>
-      <video
-        className="max-h-full w-full max-w-[1312px] bg-black"
-        src={withBasePath("/videos/videocutHAP3.mp4")}
-        autoPlay
-        controls
-        playsInline
+      </motion.button>
+      <motion.div
+        className="relative w-full max-w-[1312px] overflow-hidden bg-black"
         onClick={(e) => e.stopPropagation()}
-      />
-    </div>
+        initial={reduce ? false : { opacity: 0, scale: 0.92 }}
+        animate={{ opacity: 1, scale: 1, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }}
+        exit={{ opacity: 0, scale: 0.95, transition: { duration: reduce ? 0 : 0.3, ease: REEL_EASE } }}
+      >
+        <video
+          ref={videoRef}
+          className="block max-h-[calc(100svh-2rem)] w-full bg-black md:max-h-[calc(100svh-8rem)]"
+          src={withBasePath("/videos/videocutHAP3.mp4")}
+          controls
+          playsInline
+          preload="auto"
+        />
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -67,6 +116,7 @@ export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [canPlay, setCanPlay] = useState(false);
   const [reelOpen, setReelOpen] = useState(false);
+  const [reelMounted, setReelMounted] = useState(false);
 
   // Mobile browsers (esp. iOS Safari) block autoplay unless `muted` is set as a
   // *property* — React only sets the attribute — and they often need an explicit
@@ -137,21 +187,46 @@ export default function Hero() {
           <Reveal delay={0.4}>
             <button
               type="button"
-              onClick={() => setReelOpen(true)}
+              onClick={() => {
+                setReelMounted(true);
+                setReelOpen(true);
+              }}
               className="group flex items-center gap-2 font-sans text-base font-medium uppercase text-white"
             >
-              <span className="flex size-[26px] items-center justify-center rounded-[2px] bg-white pl-px text-black transition-transform duration-300 ease-out group-hover:scale-110">
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden>
-                  <path d="M1.5 0.8v8.4L9 5 1.5 0.8Z" />
-                </svg>
+              {/* Play icon: on hover it slides out to the right while a
+                  second one enters from the left. */}
+              <span className="relative flex size-[26px] items-center justify-center overflow-hidden rounded-[2px] bg-white pl-px text-black">
+                {[0, 1].map((n) => (
+                  <svg
+                    key={n}
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="currentColor"
+                    aria-hidden
+                    className={`absolute transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                      n === 0 ? "group-hover:translate-x-[26px]" : "-translate-x-[26px] group-hover:translate-x-0"
+                    }`}
+                  >
+                    <path d="M1.5 0.8v8.4L9 5 1.5 0.8Z" />
+                  </svg>
+                ))}
               </span>
-              <span className="transition-opacity duration-300 group-hover:opacity-80">See the Showreel</span>
+              <RollText>See the Showreel</RollText>
             </button>
           </Reveal>
         </div>
       </div>
 
-      {reelOpen && <ShowreelModal onClose={() => setReelOpen(false)} />}
+      {/* Portal mounts on first open (client-only), then stays so the
+          overlay can animate out. */}
+      {reelMounted &&
+        createPortal(
+          <AnimatePresence>
+            {reelOpen && <ShowreelModal key="reel" onClose={() => setReelOpen(false)} />}
+          </AnimatePresence>,
+          document.body,
+        )}
     </section>
   );
 }

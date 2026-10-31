@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "@/components/ProgressiveImage";
+import ActionButton from "@/components/ActionButton";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSectionTheme } from "@/hooks/useSectionTheme";
@@ -138,23 +139,17 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* CTA (desktop) — inverse fill sweeps up from the bottom edge. */}
-        <Link
-          href="/contact"
-          className={`group relative hidden h-[52px] items-center justify-center overflow-hidden rounded-[4px] px-5 font-serif text-xl font-medium uppercase tracking-[0.06em] md:flex ${TRANSITION} ${
-            onDark
-              ? "bg-white/90 text-black hover:text-white"
-              : "bg-black/90 text-white hover:text-black"
-          }`}
-        >
-          <span
-            aria-hidden
-            className={`absolute inset-0 translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0 ${
-              onDark ? "bg-black" : "bg-white"
-            }`}
+        {/* CTA (desktop) — the site's shared button, compact. */}
+        <span className="relative z-10 hidden md:block">
+          <ActionButton
+            label="Contact us"
+            href="/contact"
+            size="sm"
+            look="arrow"
+            variant="solid"
+            tone={onDark ? "light" : "dark"}
           />
-          <RollText className="relative z-10">Contact us</RollText>
-        </Link>
+        </span>
 
         {/* Hamburger / close (mobile) */}
         <button
@@ -198,10 +193,10 @@ export default function Navbar() {
             ))}
           </nav>
           <a
-            href="#"
+            href="tel:19172"
             className="mt-auto font-sans text-base font-medium text-black"
           >
-            Hap in WhatsApp
+            Call our hotline 19172
           </a>
         </div>
       </div>

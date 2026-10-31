@@ -9,7 +9,8 @@ import { Reveal } from "@/components/Reveal";
  * lines so each still fits on one line.
  */
 const SIZES = {
-  lg: "[font-size:clamp(2.75rem,11vw,12rem)]",
+  // Phones get a larger share of the width so short lines fill the screen.
+  lg: "[font-size:clamp(2.75rem,20vw,7rem)] md:[font-size:clamp(2.75rem,11vw,12rem)]",
   md: "[font-size:clamp(2.25rem,7.5vw,8.5rem)]",
 };
 

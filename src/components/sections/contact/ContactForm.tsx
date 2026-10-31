@@ -2,28 +2,31 @@
 
 import { useState, type FormEvent } from "react";
 import { TextField, SelectField, TextareaField, type FieldStatus } from "@/components/FormField";
-import RollText from "@/components/RollText";
+import { AnimatePresence, motion } from "framer-motion";
+import ActionButton from "@/components/ActionButton";
+import { MAP_PROJECTS } from "@/data/mapProjects";
 
-const SUBJECTS = [
-  "Real Estate",
-  "Media & Press",
-  "Careers",
-  "Partnerships",
-  "General Inquiry",
-];
+// Each subject decides what the form asks next (see `Followups` below).
+const SUBJECTS = ["Projects", "Resale", "Partnerships", "General Inquiry"] as const;
+type Subject = (typeof SUBJECTS)[number] | "";
 
-const TYPES = [
-  "No Preference",
-  "Residential",
-  "Office Space",
-  "Retail",
-  "Hospitality & Leisure",
-  "Sports & Wellness",
+const PROJECTS = MAP_PROJECTS.map((p) => p.name);
+
+const INDUSTRIES = [
+  "Construction & Engineering",
+  "Architecture & Design",
+  "Hospitality",
+  "Retail & F&B",
+  "Finance & Investment",
+  "Technology",
+  "Other",
 ];
 
 interface FormState {
-  subject: string;
-  type: string;
+  subject: Subject;
+  project: string;
+  industry: string;
+  company: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -31,8 +34,10 @@ interface FormState {
 }
 
 const INITIAL_STATE: FormState = {
-  subject: SUBJECTS[0],
-  type: TYPES[0],
+  subject: "",
+  project: "",
+  industry: "",
+  company: "",
   firstName: "",
   lastName: "",
   email: "",
@@ -58,14 +63,6 @@ function CallIcon() {
   );
 }
 
-function WhatsAppIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M17.472 14.382C17.178 14.233 15.752 13.533 15.482 13.433C15.212 13.333 15.012 13.283 14.812 13.583C14.612 13.883 14.062 14.533 13.892 14.733C13.722 14.933 13.552 14.958 13.258 14.808C12.964 14.658 12.032 14.358 10.932 13.383C10.072 12.618 9.492 11.683 9.322 11.383C9.152 11.083 9.302 10.923 9.452 10.773C9.582 10.643 9.752 10.433 9.902 10.258C10.052 10.083 10.102 9.958 10.202 9.758C10.302 9.558 10.252 9.383 10.177 9.233C10.102 9.083 9.502 7.658 9.252 7.058C9.012 6.478 8.762 6.558 8.582 6.548L8.012 6.533C7.812 6.533 7.492 6.608 7.222 6.908C6.952 7.208 6.202 7.908 6.202 9.333C6.202 10.758 7.252 12.133 7.402 12.333C7.552 12.533 9.492 15.523 12.452 16.758C13.152 17.058 13.702 17.233 14.132 17.368C14.832 17.583 15.472 17.553 15.982 17.478C16.552 17.393 17.722 16.783 17.972 16.108C18.222 15.433 18.222 14.858 18.147 14.733C18.072 14.608 17.872 14.533 17.572 14.383L17.472 14.382ZM12.052 21.788H12.047C10.2438 21.7884 8.47283 21.3059 6.907 20.388L6.547 20.173L2.847 21.143L3.837 17.543L3.597 17.168C2.58912 15.5458 2.05689 13.6834 2.057 11.782C2.06 6.272 6.547 1.788 12.057 1.788C14.722 1.788 17.227 2.828 19.107 4.708C20.987 6.588 22.027 9.093 22.027 11.788C22.023 17.298 17.537 21.788 12.052 21.788ZM20.527 3.288C18.267 1.028 15.257 -0.212 12.052 -0.212C5.462 -0.212 0.072 5.178 0.067 11.778C0.067 13.878 0.617 15.928 1.667 17.738L0 24L6.407 22.368C8.147 23.328 10.082 23.828 12.047 23.828H12.052C18.642 23.828 24.032 18.438 24.037 11.838C24.037 8.608 22.787 5.548 20.527 3.288Z" fill="currentColor" />
-    </svg>
-  );
-}
-
 export default function ContactForm() {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
@@ -75,7 +72,12 @@ export default function ContactForm() {
   const update = (field: keyof FormState) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
   ) => {
-    setForm((f) => ({ ...f, [field]: e.target.value }));
+    setForm((f) =>
+      field === "subject"
+        ? // A new subject starts its follow-up fields fresh.
+          { ...f, subject: e.target.value as Subject, project: "", industry: "", company: "" }
+        : { ...f, [field]: e.target.value },
+    );
     setErrors((prev) => ({ ...prev, [field]: undefined }));
   };
 
@@ -89,6 +91,13 @@ export default function ContactForm() {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const nextErrors: Partial<Record<keyof FormState, string>> = {};
+    if (!form.subject) nextErrors.subject = "Choose what your message is about";
+    if ((form.subject === "Projects" || form.subject === "Resale") && !form.project)
+      nextErrors.project = "Choose a project";
+    if (form.subject === "Partnerships") {
+      if (!form.industry) nextErrors.industry = "Choose your industry";
+      if (!form.company.trim()) nextErrors.company = "Company name is required";
+    }
     if (!form.firstName.trim()) nextErrors.firstName = "First name is required";
     if (!form.lastName.trim()) nextErrors.lastName = "Last name is required";
     if (!form.email.trim()) nextErrors.email = "Email is required";
@@ -118,19 +127,11 @@ export default function ContactForm() {
         </a>
         <div className="h-px w-full bg-brand-black/10" />
         <a
-          href="tel:+2019172"
+          href="tel:19172"
           className="flex items-center gap-3 py-2 font-sans text-base font-medium text-brand-black transition-colors duration-200 hover:text-grey-500"
         >
           <CallIcon />
-          +20 19 172
-        </a>
-        <div className="h-px w-full bg-brand-black/10" />
-        <a
-          href="#"
-          className="flex items-center gap-3 py-2 font-sans text-base font-medium text-brand-black transition-colors duration-200 hover:text-grey-500"
-        >
-          <WhatsAppIcon />
-          Hap on WhatsApp
+          19172
         </a>
         <div className="h-px w-full bg-brand-black/10" />
       </div>
@@ -161,11 +162,15 @@ export default function ContactForm() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-10">
+            {/* Subject, then whatever that subject needs — fields slide in
+                and out as the choice changes. */}
             <div className="flex flex-col gap-10 sm:flex-row sm:gap-10">
               <SelectField
                 label="Subject"
                 value={form.subject}
                 onChange={update("subject")}
+                status={errors.subject ? "error" : "idle"}
+                message={errors.subject}
               >
                 {SUBJECTS.map((s) => (
                   <option key={s} value={s}>
@@ -173,14 +178,67 @@ export default function ContactForm() {
                   </option>
                 ))}
               </SelectField>
-              <SelectField label="Type" value={form.type} onChange={update("type")}>
-                {TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </SelectField>
+              <AnimatePresence mode="popLayout" initial={false}>
+                {(form.subject === "Projects" || form.subject === "Resale") && (
+                  <Followup key="project">
+                    <SelectField
+                      label={form.subject === "Resale" ? "Select project to resell" : "Select project"}
+                      value={form.project}
+                      onChange={update("project")}
+                      status={errors.project ? "error" : "idle"}
+                      message={errors.project}
+                    >
+                      {PROJECTS.map((p) => (
+                        <option key={p} value={p}>
+                          {p}
+                        </option>
+                      ))}
+                    </SelectField>
+                  </Followup>
+                )}
+                {form.subject === "Partnerships" && (
+                  <Followup key="industry">
+                    <SelectField
+                      label="Industry"
+                      value={form.industry}
+                      onChange={update("industry")}
+                      status={errors.industry ? "error" : "idle"}
+                      message={errors.industry}
+                    >
+                      {INDUSTRIES.map((i) => (
+                        <option key={i} value={i}>
+                          {i}
+                        </option>
+                      ))}
+                    </SelectField>
+                  </Followup>
+                )}
+              </AnimatePresence>
             </div>
+
+            <AnimatePresence initial={false}>
+              {form.subject === "Partnerships" && (
+                <motion.div
+                  key="company"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                  className="-mb-10 overflow-hidden"
+                >
+                  <div className="pb-10">
+                    <TextField
+                      label="Company Name"
+                      value={form.company}
+                      onChange={update("company")}
+                      status={errors.company ? "error" : "idle"}
+                      message={errors.company}
+                      autoComplete="organization"
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <div className="flex flex-col gap-10 sm:flex-row sm:gap-10">
               <TextField
@@ -222,29 +280,26 @@ export default function ContactForm() {
               message={errors.message}
             />
 
-            <button
-              type="submit"
-              className="group relative inline-flex w-full items-center justify-center gap-3 overflow-hidden border border-brand-black px-6 py-5 font-serif text-2xl uppercase tracking-[-0.02em] text-brand-black transition-colors duration-500 hover:text-brand-white md:w-fit md:justify-start"
-            >
-              {/* Premium sweep — black fill glides up from the bottom edge. */}
-              <span
-                aria-hidden
-                className="absolute inset-0 translate-y-full bg-brand-black transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0"
-              />
-              <RollText className="relative z-10">Submit Message</RollText>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden className="relative z-10 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1">
-                <path
-                  d="M6 18 18 6M18 6H8M18 6V16"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
+            <ActionButton label="Send message" type="submit" variant="solid" look="arrow" className="self-start" />
           </form>
         )}
       </div>
     </section>
+  );
+}
+
+/** A follow-up field that slides in beside the subject. */
+function Followup({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      layout
+      className="w-full"
+      initial={{ opacity: 0, x: 24 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 24 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
   );
 }

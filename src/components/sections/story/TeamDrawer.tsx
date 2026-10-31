@@ -201,8 +201,8 @@ export default function TeamDrawer({
                 const target = (((index ?? 0) + step) % n + n) % n;
                 const chevron = (
                   <svg
-                    width="12"
-                    height="24"
+                    width="8"
+                    height="16"
                     viewBox="0 0 12 24"
                     fill="none"
                     aria-hidden
@@ -225,16 +225,16 @@ export default function TeamDrawer({
                     key={step}
                     type="button"
                     onClick={() => onIndex(target)}
-                    className={`group flex items-stretch gap-4 px-6 py-5 transition-colors duration-300 hover:bg-black/[0.03] md:gap-5 md:px-12 ${
+                    className={`group flex items-stretch gap-3 px-6 py-3 transition-colors duration-300 hover:bg-black/[0.03] md:px-12 ${
                       step > 0 ? "justify-end border-l border-black/10 text-right" : "text-left"
                     }`}
                   >
                     {step < 0 && chevron}
-                    <span className="flex flex-col gap-1">
-                      <span className="font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-black/45 md:text-xs">
+                    <span className="flex flex-col gap-0.5">
+                      <span className="font-sans text-[10px] font-medium uppercase tracking-[0.14em] text-black/45">
                         {step < 0 ? "Previous" : "Next"}
                       </span>
-                      <span className="font-serif text-lg uppercase text-black/70 transition-colors duration-300 group-hover:text-black md:text-2xl">
+                      <span className="font-serif text-sm uppercase text-black/70 transition-colors duration-300 group-hover:text-black md:text-base">
                         <RollText>{members[target].name}</RollText>
                       </span>
                     </span>

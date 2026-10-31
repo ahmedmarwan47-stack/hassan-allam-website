@@ -1,7 +1,8 @@
 import type { ProjectDetailData } from "@/data/projectDetail";
 import GrowImagePair from "./GrowImagePair";
 import { Reveal } from "@/components/Reveal";
-import ActionButton, { RequestInterest } from "@/components/ActionButton";
+import { RequestInterest } from "@/components/ActionButton";
+import { BrochureButton, NeighborhoodLink } from "./ProjectActions";
 
 export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
   return (
@@ -55,14 +56,9 @@ export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
           <Reveal delay={0.1}>
             <p className="font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1.75rem,4.3vw,3.875rem)]">
             {data.communityHeading.map((segment, i) =>
-              segment.link ? (
-                <a
-                  key={i}
-                  href="#"
-                  className="text-grey-500 underline decoration-1 underline-offset-2 transition-colors duration-200 hover:text-brand-black"
-                >
-                  {segment.text}
-                </a>
+              // Names link to their master plan drawer when the project has one.
+              segment.link && data.masterPlan?.items.some((it) => it.name === segment.text) ? (
+                <NeighborhoodLink key={i} name={segment.text} />
               ) : (
                 <span key={i}>{segment.text}</span>
               ),
@@ -71,7 +67,7 @@ export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
           </Reveal>
           <Reveal delay={0.2} className="flex flex-wrap gap-3">
             <RequestInterest />
-            <ActionButton label={data.brochureLabel} icon="download" />
+            <BrochureButton label={data.brochureLabel} />
           </Reveal>
         </div>
       </div>

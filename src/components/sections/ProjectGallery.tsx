@@ -91,7 +91,7 @@ export default function ProjectGallery() {
         {/* Filter bar — single line on every breakpoint */}
         <div className="flex items-center justify-between gap-3 border-b border-white/20">
           <p className="whitespace-nowrap font-sans text-sm font-medium md:text-2xl">
-            All (11)
+            All ({FILTERS.reduce((n, f) => n + GROUPS[f].length, 0)})
           </p>
           <div className="flex items-center gap-5 md:gap-16">
             {FILTERS.map((filter, i) => (

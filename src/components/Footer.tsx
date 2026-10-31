@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { projectHref } from "@/data/projectDetail";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
@@ -26,6 +27,13 @@ const IN_THE_CITY = [
   "Park Central – Mostakbal City",
   "Keys|52",
 ];
+
+// Footer names → project ids with their own page; the rest open the shared
+// project page (projectHref's fallback), like everywhere else on the site.
+const FOOTER_PROJECT_IDS: Record<string, string> = {
+  "Swanlake Residences - New Cairo": "swanlake-residences",
+  "Swanlake El Gouna": "swanlake-residences-sea",
+};
 
 const BY_THE_SEA = [
   "Swanlake Northcoast",
@@ -169,13 +177,13 @@ function ProjectLinks({ items }: { items: string[] }) {
   return (
     <div className="flex flex-col gap-3 text-base leading-[1.4]">
       {items.map((project) => (
-        <a
+        <Link
           key={project}
-          href="#"
+          href={projectHref(FOOTER_PROJECT_IDS[project] ?? "")}
           className="transition-colors duration-300 hover:text-white/70"
         >
           {project}
-        </a>
+        </Link>
       ))}
     </div>
   );
@@ -284,25 +292,25 @@ export default function Footer() {
                       <MailIcon />
                       info@hap.com.eg
                     </a>
-                    <a href="tel:+2019172" className="flex items-center gap-3 text-base leading-[1.4] transition-colors duration-300 hover:text-white/70">
+                    <a href="tel:19172" className="flex items-center gap-3 text-base leading-[1.4] transition-colors duration-300 hover:text-white/70">
                       <CallIcon />
-                      +20 19 172
+                      19172
                     </a>
                     <p className="flex items-center gap-3 text-base leading-[1.4]">
                       <LocationIcon />
                       67 - Southern Road 90 - New Cairo
                     </p>
                     <div className="flex gap-4 pt-1">
-                      <a href="#" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="Instagram">
+                      <a href="https://www.instagram.com/hassanallamproperties/" target="_blank" rel="noopener noreferrer" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="Instagram">
                         <InstagramIcon />
                       </a>
-                      <a href="#" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="Facebook">
+                      <a href="https://www.facebook.com/HassanAllamProperties/" target="_blank" rel="noopener noreferrer" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="Facebook">
                         <FacebookIcon />
                       </a>
-                      <a href="#" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="YouTube">
+                      <a href="https://www.youtube.com/@hassanallamproperties" target="_blank" rel="noopener noreferrer" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="YouTube">
                         <YouTubeIcon />
                       </a>
-                      <a href="#" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="LinkedIn">
+                      <a href="https://www.linkedin.com/company/hassan-allam-properties/" target="_blank" rel="noopener noreferrer" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="LinkedIn">
                         <LinkedInIcon />
                       </a>
                     </div>
@@ -333,8 +341,8 @@ export default function Footer() {
         <div className="flex flex-col gap-4 font-sans text-xs font-normal leading-[1.4] md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-7">
             <p>&copy; {new Date().getFullYear()} HAP</p>
-            <a href="#" className="transition-colors duration-300 hover:text-white/70">Terms of Use</a>
-            <a href="#" className="transition-colors duration-300 hover:text-white/70">Privacy policy</a>
+            <a href="https://www.hap.com.eg/legals/terms-of-use/" target="_blank" rel="noopener noreferrer" className="transition-colors duration-300 hover:text-white/70">Terms of Use</a>
+            <a href="https://www.hap.com.eg/legals/privacy-policy/" target="_blank" rel="noopener noreferrer" className="transition-colors duration-300 hover:text-white/70">Privacy policy</a>
           </div>
           <p className="uppercase">Web Design &amp; Development by MitchDesigns</p>
         </div>

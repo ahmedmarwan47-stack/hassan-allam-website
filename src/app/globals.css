@@ -89,8 +89,10 @@ html:not(.hydrated) [data-reveal] {
 }
 
 /* ── Typography: no orphans ──────────────────────────────────────────────
-   Headings balance their lines; running text avoids leaving a single word
-   alone on its last line. Utilities (text-wrap-*) can still override. */
+   Running text avoids leaving a single word alone on its last line.
+   Headings do the same on phones — where balancing would squeeze them
+   narrower than the screen — and balance their lines from tablet up.
+   Utilities (text-wrap-*) can still override. */
 @layer base {
   h1,
   h2,
@@ -99,7 +101,18 @@ html:not(.hydrated) [data-reveal] {
   h5,
   h6,
   blockquote {
-    text-wrap: balance;
+    text-wrap: pretty;
+  }
+  @media (min-width: 768px) {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    blockquote {
+      text-wrap: balance;
+    }
   }
   p,
   li,

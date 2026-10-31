@@ -1,8 +1,8 @@
 import Image from "@/components/ProgressiveImage";
+import DownloadPdfButton from "./DownloadPdfButton";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 import type { NewsDetail } from "@/data/newsDetail";
-import RollText from "@/components/RollText";
 
 export default function NewsDetailContent({ detail }: { detail: NewsDetail }) {
   return (
@@ -36,34 +36,9 @@ export default function NewsDetailContent({ detail }: { detail: NewsDetail }) {
             </p>
           </Reveal>
 
-          {/* Download PDF button (mirrors the "Download brochure" button on
-              the project detail template, but on-dark). */}
+          {/* Download PDF — the shared button, on-dark; opens print-to-PDF. */}
           <Reveal delay={0.05}>
-            <button
-              type="button"
-              className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-[4px] border border-grey-500/60 p-2 transition-colors duration-500 hover:border-brand-white md:w-auto md:justify-start"
-            >
-              {/* Premium sweep — white fill glides in; icon well + label invert. */}
-              <span
-                aria-hidden
-                className="absolute inset-0 translate-y-full bg-brand-white transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0"
-              />
-              <span className="relative z-10 flex size-10 items-center justify-center rounded-[2px] bg-brand-white transition-colors duration-500 group-hover:bg-brand-black">
-                <svg width="10" height="15" viewBox="0 0 10 15" fill="none" aria-hidden className="transition-transform duration-500 group-hover:translate-y-0.5">
-                  <path
-                    d="M5 0v10m0 0L1 6m4 4 4-4M0.5 13h9"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-brand-black transition-colors duration-500 group-hover:text-brand-white"
-                  />
-                </svg>
-              </span>
-              <span className="relative z-10 font-sans text-lg font-medium text-brand-white transition-colors duration-500 group-hover:text-brand-black md:text-2xl">
-                <RollText>Download PDF</RollText>
-              </span>
-            </button>
+            <DownloadPdfButton />
           </Reveal>
 
           {/* Two-column body copy */}

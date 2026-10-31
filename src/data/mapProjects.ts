@@ -195,7 +195,7 @@ export const MAP_PROJECTS: MapProject[] = [
 ];
 
 export const MAP_FILTERS: { label: string; value: FilterValue }[] = [
-  { label: "All projects (11)", value: "all" },
+  { label: `All projects (${MAP_PROJECTS.length})`, value: "all" },
   { label: "Residential", value: "Residential" },
   { label: "Office Space", value: "Office Space" },
   { label: "Retail", value: "Retail" },

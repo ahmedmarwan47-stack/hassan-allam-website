@@ -12,7 +12,10 @@ function StoreBadges() {
   return (
     <div className="flex items-center gap-[11px]">
       <a
-        href="#"
+        href="https://apps.apple.com/us/app/hassan-allam-properties-app/id1511697597"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Download on the App Store"
         className="flex h-[47px] items-center gap-2 bg-white px-4 transition-opacity duration-300 hover:opacity-80"
       >
         <svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -25,7 +28,10 @@ function StoreBadges() {
         </div>
       </a>
       <a
-        href="#"
+        href="https://play.google.com/store/apps/details?id=com.moonshot.hap"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Get it on Google Play"
         className="flex h-[47px] items-center gap-2 bg-white px-4 transition-opacity duration-300 hover:opacity-80"
       >
         <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">

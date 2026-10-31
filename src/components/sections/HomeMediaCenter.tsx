@@ -1,8 +1,7 @@
-import Link from "next/link";
+import ActionButton from "@/components/ActionButton";
 import { Reveal } from "@/components/Reveal";
 import NewsCard from "@/components/sections/news/NewsCard";
 import { NEWS } from "@/data/news";
-import RollText from "@/components/RollText";
 
 /**
  * Homepage "HAP Media Center" teaser — Figma 17127:2334. The three latest
@@ -30,19 +29,7 @@ export default function HomeMediaCenter() {
           ))}
         </div>
 
-        <Link
-          href="/news"
-          className="group relative flex items-center gap-2.5 overflow-hidden border border-brand-black px-6 py-5 font-serif text-[1.625rem] uppercase leading-none tracking-[-0.02em] text-brand-black transition-colors duration-500 hover:text-brand-white"
-        >
-          <span
-            aria-hidden
-            className="absolute inset-0 translate-y-full bg-brand-black transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0"
-          />
-          <RollText className="relative z-10">Read all</RollText>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden className="relative z-10">
-            <path d="M6 18 18 6M18 6H8M18 6V16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </Link>
+        <ActionButton label="Read all news" href="/news" />
       </div>
     </section>
   );
