@@ -10,14 +10,10 @@ export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
       data-nav-theme="light"
       className="relative flex flex-col gap-16 bg-brand-white px-6 py-16 text-brand-black md:gap-20 md:px-16 md:py-20"
     >
-      {/* Scroll label + description — paragraphs sit in the right 868 column
+      {/* Description — paragraphs sit in the right 868 column
           (x=444 of the 1312 grid), split 372/424 with a 72px gutter (Figma
           Frame 1092). */}
       <div className="flex flex-col items-start gap-8 md:flex-row md:items-start">
-        <Reveal className="flex shrink-0 items-center gap-3">
-          <span className="size-3 shrink-0 rounded-full border border-brand-black/40" />
-          <p className="font-sans text-base text-brand-black">{data.scrollLabel}</p>
-        </Reveal>
         <div className="grid gap-8 font-sans text-base leading-[1.4] text-brand-black md:ml-auto md:w-[66.16%] md:grid-cols-[372fr_424fr] md:gap-x-[72px]">
           <Reveal delay={0.1}>
             <p>{data.introParagraphs[0]}</p>
