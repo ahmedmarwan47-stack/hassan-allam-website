@@ -1,4 +1,4 @@
-:HL["/hassan-allam-website/_next/static/chunks/2rc64r462kusy.css","style"]
+:HL["/hassan-allam-website/_next/static/chunks/2tslum6r_oq2d.css","style"]
 :HL["/hassan-allam-website/_next/static/media/01e4147cff8141ee-s.p.3huc2loe0ie8a.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/hassan-allam-website/_next/static/media/a343f882a40d2cc9-s.p.0p-wng2nn8o-p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"news","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"swanlake-el-gouna-handover","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"VmrX9N8BbA4Oa9gwmewtt"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"news","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"swanlake-el-gouna-handover","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"4qUbTpvIRT7KisnjlVWLc"}
