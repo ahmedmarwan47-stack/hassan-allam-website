@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Viewport</title>
+<!--
+  /website-viewport crop page. Copied into the project root and git-excluded,
+  so the project's own dev server serves it on the same origin as the site.
+  The site lays out at exactly W x H, then is scaled so the whole viewport
+  fits inside the preview pane (width AND height, never cropped), keeping the
+  W:H aspect ratio, centred. Add &fit=none for 100% scale, cropped instead.
+  Usage: /_viewport.html?w=1512&h=982&page=/index.html
+-->
+<style>
+  html, body { margin: 0; background: #e5e5e5; }
+  /* No scrollbar gutter here, so the pane's full width is used for the fit. */
+  html { scrollbar-width: none; }
+  html::-webkit-scrollbar { display: none; }
+  body.fit { overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; }
+  #box { overflow: hidden; flex: none; }
+  iframe { display: block; border: 0; background: #fff; transform-origin: 0 0; }
+</style>
+</head>
+<body>
+<div id="box"><iframe id="site" title="Site at a fixed viewport"></iframe></div>
+<script>
+  const q = new URLSearchParams(location.search);
+  const W = +q.get('w') || 1512, H = +q.get('h') || 982;
+  const site = document.getElementById('site');
+  site.width = W;
+  site.height = H;
+  site.src = q.get('page') || '/';
+
+  // Contain-fit: scale so both width and height fit the pane, same aspect
+  // ratio, so the viewport is never cropped. The box takes the scaled size.
+  const box = document.getElementById('box');
+  const fit = q.get('fit') !== 'none';
+  document.body.classList.toggle('fit', fit);
+  function scale() {
+    const s = fit ? Math.min(innerWidth / W, innerHeight / H) : 1;
+    site.style.transform = s === 1 ? '' : 'scale(' + s + ')';
+    box.style.width = W * s + 'px';
+    box.style.height = H * s + 'px';
+  }
+  addEventListener('resize', scale);
+  scale();
+
+  site.addEventListener('load', () => {
+    let doc;
+    try { doc = site.contentDocument; } catch (e) { return; }
+    // Overlay scrollbars like a MacBook trackpad, so the layout gets the full W.
+    const s = doc.createElement('style');
+    s.textContent = 'html{scrollbar-width:none}html::-webkit-scrollbar{display:none}';
+    doc.head.appendChild(s);
+    // Keep the current page in the URL so a reload stays on it.
+    q.set('page', site.contentWindow.location.pathname + site.contentWindow.location.search + site.contentWindow.location.hash);
+    history.replaceState(null, '', '?' + q.toString());
+    document.title = doc.title + ' · ' + W + '×' + H;
+  });
+</script>
+</body>
+</html>
