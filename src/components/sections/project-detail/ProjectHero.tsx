@@ -32,10 +32,10 @@ export default function ProjectHero({ data }: { data: ProjectDetailData }) {
         <p className="font-sans text-sm font-medium uppercase leading-[1.4] tracking-[0.12em] text-brand-black/60 md:text-base">
           {data.badgeMain} {data.badgeScript.replace(/\.$/, "")}
         </p>
-        {/* Phones: two lines, sized so the longer one ("Residences New
+        {/* Phones: two uppercase lines, sized so the longer one ("RESIDENCES NEW
             Cairo") fits the width. From tablet up a narrower measure wraps
             the name to 3 lines (SwanLake / Residences / New Cairo). */}
-        <h1 className="mx-auto whitespace-nowrap font-serif md:max-w-[7.5em] md:whitespace-normal font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(1.75rem,9.4vw,4.5rem)] md:[font-size:clamp(2.75rem,8vw,8.25rem)]">
+        <h1 className="mx-auto whitespace-nowrap font-serif uppercase md:max-w-[7.5em] md:whitespace-normal font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(1.5rem,7.8vw,4.5rem)] md:[font-size:clamp(2.75rem,8vw,8.25rem)]">
           <span className="block">{data.name[0]}</span>
           <span className="block">{data.name[1]}</span>
         </h1>

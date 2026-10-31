@@ -48,7 +48,7 @@ function CareerHero({ job }: { job: Job }) {
           <ArrowLeftIcon size={20} />
           All Careers
         </Link>
-        <h1 className="max-w-[1014px] font-serif font-light leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(2.5rem,7vw,5.75rem)]">
+        <h1 className="max-w-[1014px] font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(2.5rem,7vw,5.75rem)]">
           {job.title}
         </h1>
         <ul className="flex flex-wrap justify-center gap-x-8 gap-y-3 font-sans text-base leading-[1.1] text-brand-black md:text-xl">
