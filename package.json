@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "deploy": "DEPLOY_TARGET=gh-pages next build && cd out && git init -q -b gh-pages && git add -A && git commit -qm 'Deploy to GitHub Pages' && git push -f git@github.com:ahmedmarwan47-stack/hassan-allam-website.git gh-pages && cd .. && rm -rf out/.git",
-    "blur": "node scripts/gen-blur-placeholders.mjs"
+    "deploy": "node scripts/optimize-images.mjs && DEPLOY_TARGET=gh-pages next build && cd out && git init -q -b gh-pages && git add -A && git commit -qm 'Deploy to GitHub Pages' && git push -f https://github.com/ahmedmarwan47-stack/hassan-allam-website.git gh-pages && cd .. && rm -rf out/.git",
+    "blur": "node scripts/gen-blur-placeholders.mjs",
+    "images": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.42.0",

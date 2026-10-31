@@ -14,10 +14,14 @@ const nextConfig: NextConfig = {
         trailingSlash: true,
         images: {
           // Custom loader (instead of `unoptimized`) so every next/image src
-          // gets the basePath prefix — `unoptimized` would bypass the loader
-          // and emit root-relative URLs that 404 under /<repo>.
+          // gets the basePath prefix and points at the pre-resized WebP
+          // copies (see image-loader.ts) — `unoptimized` would bypass it.
           loader: "custom" as const,
           loaderFile: "./image-loader.ts",
+          // The only widths the loader can serve — keep in sync with WIDTHS
+          // in scripts/optimize-images.mjs.
+          deviceSizes: [828, 1200, 1600, 2048],
+          imageSizes: [320, 480],
         },
       }
     : {}),

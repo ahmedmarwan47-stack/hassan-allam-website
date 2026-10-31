@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import RollText from "@/components/RollText";
 import { projectHref } from "@/data/projectDetail";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -253,14 +254,16 @@ export default function Footer() {
             {NAV_LINKS.map((link) => {
               const active = isActive(link.href);
               return (
+                // Same masked letter-roll as the navbar links, plus the
+                // dim → white lift.
                 <Link
                   key={link.label}
                   href={link.href}
-                  className={`transition-colors duration-300 hover:text-white ${
+                  className={`group self-start transition-colors duration-300 hover:text-white ${
                     active ? "text-white" : "text-white/30"
                   }`}
                 >
-                  {link.label}
+                  <RollText>{link.label}</RollText>
                 </Link>
               );
             })}

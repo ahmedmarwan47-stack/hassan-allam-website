@@ -117,6 +117,18 @@ export default function Hero() {
   const [canPlay, setCanPlay] = useState(false);
   const [reelOpen, setReelOpen] = useState(false);
   const [reelMounted, setReelMounted] = useState(false);
+  // The 7 MB background film waits until the page has finished loading, so
+  // it doesn't compete with the images; the poster shows until then.
+  const [loadVideo, setLoadVideo] = useState(false);
+  useEffect(() => {
+    const go = () => setLoadVideo(true);
+    if (document.readyState === "complete") {
+      const t = setTimeout(go, 0);
+      return () => clearTimeout(t);
+    }
+    window.addEventListener("load", go, { once: true });
+    return () => window.removeEventListener("load", go);
+  }, []);
 
   // Mobile browsers (esp. iOS Safari) block autoplay unless `muted` is set as a
   // *property* — React only sets the attribute — and they often need an explicit
@@ -131,7 +143,7 @@ export default function Hero() {
     tryPlay();
     video.addEventListener("loadeddata", tryPlay);
     return () => video.removeEventListener("loadeddata", tryPlay);
-  }, []);
+  }, [loadVideo]);
 
   return (
     <section
@@ -149,12 +161,10 @@ export default function Hero() {
         loop
         playsInline
         preload="auto"
-        poster={withBasePath("/images/residential.jpg")}
+        src={loadVideo ? withBasePath("/videos/videocutHAP3.mp4") : undefined}
         onCanPlay={() => setCanPlay(true)}
         aria-hidden
-      >
-        <source src={withBasePath("/videos/videocutHAP3.mp4")} type="video/mp4" />
-      </video>
+      />
 
       {/* Poster fallback — shown until the video starts (or if it's missing). */}
       <Image
