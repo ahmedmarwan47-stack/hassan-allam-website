@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import ProjectsHero from "@/components/sections/ProjectsHero";
 import AllProjects from "@/components/sections/AllProjects";
-import ProjectsCta from "@/components/sections/ProjectsCta";
+import ContactUsSection from "@/components/ContactUsSection";
 import Footer from "@/components/Footer";
 import { MAP_FILTERS, type FilterValue } from "@/data/mapProjects";
 
@@ -27,7 +27,7 @@ export default function ProjectsPageClient({
     <main>
       <ProjectsHero activeFilter={activeFilter} onFilterChange={setActiveFilter} />
       <AllProjects activeFilter={activeFilter} />
-      <ProjectsCta />
+      <ContactUsSection />
       <Footer />
     </main>
   );

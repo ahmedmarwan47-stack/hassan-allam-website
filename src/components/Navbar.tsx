@@ -125,7 +125,7 @@ export default function Navbar() {
 
         {/* Primary links (desktop) */}
         <ul
-          className={`hidden items-center gap-7 md:flex lg:gap-[42px] ${TRANSITION} ${onDark ? "text-white" : "text-black"}`}
+          className={`hidden items-center gap-7 lg:flex xl:gap-[42px] ${TRANSITION} ${onDark ? "text-white" : "text-black"}`}
         >
           {NAV_LINKS.map((link) => (
             <li key={link.label}>
@@ -140,7 +140,7 @@ export default function Navbar() {
         </ul>
 
         {/* CTA (desktop) — the site's shared button, compact. */}
-        <span className="relative z-10 hidden md:block">
+        <span className="relative z-10 hidden lg:block">
           <ActionButton
             label="Contact us"
             href="/contact"
@@ -157,7 +157,7 @@ export default function Navbar() {
           onClick={() => setMenuOpen((v) => !v)}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
-          className={`relative z-10 flex size-11 items-center justify-center md:hidden ${
+          className={`relative z-10 flex size-11 items-center justify-center lg:hidden ${
             menuOpen ? "bg-black text-white" : onDark ? "text-white" : "text-black"
           } transition-colors duration-300`}
         >
@@ -175,7 +175,7 @@ export default function Navbar() {
 
       {/* Mobile menu overlay */}
       <div
-        className={`fixed inset-0 -z-0 bg-white transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 -z-0 bg-white transition-opacity duration-300 lg:hidden ${
           menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
