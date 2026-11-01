@@ -72,7 +72,9 @@ export default function ActionButton({
   const classes = `group relative inline-flex items-center overflow-hidden rounded-[4px] border transition-colors duration-500 ${pad} ${
     dark
       ? `border-brand-black ${solid ? "bg-brand-black" : "border-brand-black/30 hover:border-brand-black"}`
-      : `border-white ${solid ? "bg-white" : "border-white/50 hover:border-white"}`
+      : // Solid on dark: the border darkens with the hover fill, so no white
+        // ring is left around the black button.
+        `border-white ${solid ? "bg-white hover:border-brand-black" : "border-white/50 hover:border-white"}`
   } ${className}`;
 
   const inner = (

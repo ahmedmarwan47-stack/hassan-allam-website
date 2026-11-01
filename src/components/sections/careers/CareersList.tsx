@@ -4,35 +4,11 @@ import { useState } from "react";
 import { Reveal } from "@/components/Reveal";
 import { DEPARTMENTS, JOBS, type Department } from "@/data/careers";
 import JobRow from "./JobRow";
+import FilterButton from "@/components/FilterButton";
 
 type FilterValue = "all" | Department;
 
 // Same secondary-button vocabulary as the FAQs filter bar.
-function FilterButton({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={`h-[46px] shrink-0 whitespace-nowrap rounded-[2px] border px-5 font-sans text-sm font-medium transition-[background-color,border-color,color] duration-300 ease-out md:h-[54px] md:px-6 md:text-base ${
-        active
-          ? "border-brand-black bg-brand-black text-brand-white"
-          : "border-brand-black/20 bg-transparent text-brand-black hover:border-brand-black"
-      }`}
-    >
-      {label}
-    </button>
-  );
-}
-
 export default function CareersList() {
   const [filter, setFilter] = useState<FilterValue>("all");
   const visible = filter === "all" ? JOBS : JOBS.filter((j) => j.department === filter);

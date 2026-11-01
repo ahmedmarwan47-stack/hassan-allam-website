@@ -88,10 +88,15 @@ export default function NewsCard({ article }: { article: NewsArticle }) {
         </GrowReveal>
       </Link>
 
-      {/* Max two lines on every card (homepage teaser + /news), per client. */}
-      <p className={`${TITLE_MAX[article.span]} line-clamp-2 font-sans text-lg font-medium leading-[1.3] text-brand-black md:text-2xl`}>
-        {article.title}
-      </p>
+      <div className="flex flex-col gap-2">
+        <span className="font-sans text-xs font-medium uppercase tracking-[0.12em] text-brand-black/55 md:text-sm">
+          {article.category}
+        </span>
+        {/* Max two lines on every card (homepage teaser + /news), per client. */}
+        <p className={`${TITLE_MAX[article.span]} line-clamp-2 font-sans text-lg font-medium leading-[1.3] text-brand-black md:text-2xl`}>
+          {article.title}
+        </p>
+      </div>
     </div>
   );
 }

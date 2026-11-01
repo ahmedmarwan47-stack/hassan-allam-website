@@ -4,16 +4,19 @@ import FeatureGrid from "./FeatureGrid";
 import type { FeatureItem } from "@/data/projectDetail";
 
 export default function ProductsSection({
+  id,
   images,
   heading,
   items,
 }: {
+  id?: string;
   images: { half: string; wide: string };
   heading: string;
   items: FeatureItem[];
 }) {
   return (
     <section
+      id={id}
       data-nav-theme="light"
       className="flex flex-col gap-10 bg-brand-white px-6 py-16 text-brand-black md:px-16 md:py-16"
     >
@@ -21,7 +24,7 @@ export default function ProductsSection({
       <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between md:gap-0">
         <GrowReveal
           axis="height"
-          className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-[424/540] md:w-[32.24%]"
+          className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-[424/540] md:w-[calc(33.84%-20px)]"
         >
           <Image
             src={images.half}

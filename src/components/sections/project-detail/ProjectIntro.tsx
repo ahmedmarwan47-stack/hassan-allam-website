@@ -4,9 +4,10 @@ import { Reveal } from "@/components/Reveal";
 import { RequestInterest } from "@/components/ActionButton";
 import { BrochureButton, NeighborhoodLink } from "./ProjectActions";
 
-export default function ProjectIntro({ data }: { data: ProjectDetailData }) {
+export default function ProjectIntro({ id, data }: { id?: string; data: ProjectDetailData }) {
   return (
     <section
+      id={id}
       data-nav-theme="light"
       className="relative flex flex-col gap-16 bg-brand-white px-6 py-16 text-brand-black md:gap-20 md:px-16 md:py-20"
     >

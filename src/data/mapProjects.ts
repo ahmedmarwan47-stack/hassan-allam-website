@@ -23,6 +23,16 @@ export type Category =
 
 export type FilterValue = "all" | Category;
 
+/** Longer, card-style wording for each category (Figma Asset classes
+ *  17043:545) — used on the project cards and the project page hero. */
+export const CATEGORY_LABEL: Record<Category, string> = {
+  Residential: "Residential",
+  "Hospitality & Leisure": "Hospitality and Leisure",
+  Retail: "Curated Retail & Dining",
+  "Office Space": "Office Space",
+  "Sports & Wellness": "Sports and Wellness",
+};
+
 /** "In the City" (green pin) or "By the Sea" (blue pin). */
 export type Setting = "city" | "sea";
 

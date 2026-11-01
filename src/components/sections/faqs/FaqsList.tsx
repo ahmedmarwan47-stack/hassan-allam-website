@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Reveal } from "@/components/Reveal";
+import FilterButton from "@/components/FilterButton";
 
 type FaqItem = { question: string; answer: string; category: Category };
 type Category = "General" | "Buying & Payment" | "Handover & Living";
@@ -139,34 +140,6 @@ function FaqRow({ item, delay }: { item: FaqItem; delay: number }) {
         </div>
       </div>
     </Reveal>
-  );
-}
-
-function FilterButton({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  // Secondary buttons — the site's default: white background, thin border,
-  // brand-black hover; when active they invert to black/white. Same shape
-  // vocabulary as the SLR tag pill in ProjectIntro.
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={`h-[46px] shrink-0 whitespace-nowrap rounded-[2px] border px-5 font-sans text-sm font-medium transition-[background-color,border-color,color] duration-300 ease-out md:h-[54px] md:px-6 md:text-base ${
-        active
-          ? "border-brand-black bg-brand-black text-brand-white"
-          : "border-brand-black/20 bg-transparent text-brand-black hover:border-brand-black"
-      }`}
-    >
-      {label}
-    </button>
   );
 }
 

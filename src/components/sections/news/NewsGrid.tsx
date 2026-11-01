@@ -1,13 +1,24 @@
+"use client";
+
+import { useState } from "react";
 import NewsCard from "./NewsCard";
-import { NEWS } from "@/data/news";
+import { NEWS, NEWS_CATEGORIES, type NewsCategory } from "@/data/news";
 import { Reveal } from "@/components/Reveal";
+import FilterButton from "@/components/FilterButton";
+
+// Filter labels (plural for the pills) per category.
+const LABELS: Record<NewsCategory, string> = { News: "News", Event: "Events", Blog: "Blog" };
+type Filter = "All" | NewsCategory;
 
 // No hero — the "Media Center" title sits in the same section as the cards,
-// ~60px above the grid. Top padding clears the fixed navbar. Title is 180px
-// on desktop, centered. The latest story leads as a wide featured card on
-// the left (two columns, same image height as its neighbour); everything
-// after it is the standard one-column card.
+// with the shared category filter between them. Top padding clears the fixed
+// navbar. The first story of the current filter leads as a wide featured
+// card on the left (two columns, same image height as its neighbour);
+// everything after it is the standard one-column card.
 export default function NewsGrid() {
+  const [filter, setFilter] = useState<Filter>("All");
+  const visible = filter === "All" ? NEWS : NEWS.filter((a) => a.category === filter);
+
   return (
     <section
       data-nav-theme="light"
@@ -18,8 +29,25 @@ export default function NewsGrid() {
           Media Center
         </h1>
       </Reveal>
-      <div className="@container mt-[60px] grid grid-cols-1 gap-x-5 gap-y-10 md:grid-cols-3 md:gap-y-16">
-        {NEWS.map((article, i) => (
+
+      {/* Filter bar — the site's shared filter buttons (as on FAQs and
+          Careers); scrolls sideways on mobile so every option fits. */}
+      <Reveal delay={0.08} className="mt-8 md:mt-10">
+        <div className="flex gap-3 overflow-x-auto pb-1 md:flex-wrap md:justify-center md:gap-4 md:pb-0 [-ms-overflow-style:none] [scrollbar-width:none]">
+          {(["All", ...NEWS_CATEGORIES] as Filter[]).map((f) => (
+            <FilterButton
+              key={f}
+              label={f === "All" ? "All" : LABELS[f]}
+              active={filter === f}
+              onClick={() => setFilter(f)}
+            />
+          ))}
+        </div>
+      </Reveal>
+
+      {/* Keyed on the filter so the cards replay their entrance on switch. */}
+      <div key={filter} className="@container mt-10 grid grid-cols-1 gap-x-5 gap-y-10 md:mt-14 md:grid-cols-3 md:gap-y-16">
+        {visible.map((article, i) => (
           <NewsCard
             key={article.id}
             article={{ ...article, span: i === 0 ? "two-thirds" : "third" }}

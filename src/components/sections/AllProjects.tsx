@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { projectHref } from "@/data/projectDetail";
 import { useDiscoverCursor } from "@/components/DiscoverCursor";
 import GrowReveal from "@/components/GrowReveal";
-import type { Category } from "@/data/mapProjects";
+import { CATEGORY_LABEL, type Category } from "@/data/mapProjects";
 
 interface ProjectCard {
   id: string;
@@ -21,15 +21,8 @@ interface ProjectCard {
   group: "city" | "sea";
 }
 
-// Card-tag wording from Figma (Asset classes 17043:545) — longer than the
-// map filter labels.
-const TAG_LABEL: Record<Category, string> = {
-  Residential: "Residential",
-  "Hospitality & Leisure": "Hospitality and Leisure",
-  Retail: "Curated Retail & Dining",
-  "Office Space": "Office Space",
-  "Sports & Wellness": "Sports and Wellness",
-};
+// Card-tag wording lives with the categories (shared with the project hero).
+const TAG_LABEL = CATEGORY_LABEL;
 
 // Tag mix per project mirrors the Figma grid + list variants.
 const PROJECTS: ProjectCard[] = [

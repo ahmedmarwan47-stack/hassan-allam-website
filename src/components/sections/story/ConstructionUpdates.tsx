@@ -127,7 +127,7 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
             <p
               className="-mt-[0.12em] whitespace-nowrap font-serif font-light leading-none tracking-[-0.04em] [font-size:clamp(5rem,9.4vw,9rem)]"
             >
-              <Odometer value={step.year} dir={dir} />
+              <YearWheels value={step.year} />
             </p>
           </div>
 
@@ -317,55 +317,46 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
 }
 
 /**
- * Odometer — the number rolls vertically to its new value (up going
- * forward, down going back): the old number slides out as one piece while
- * the new one's digits ripple in left to right. Both share one grid cell, so
- * they overlap in place and nothing reflows mid-roll even when digit widths
- * differ (a 1 is far narrower than a 9). The cell clips only top and bottom,
- * so wide glyphs overhanging their tight tracking are never sliced at the
- * sides.
+ * YearWheels — the year as four digit wheels, like a mechanical counter.
+ * Only digits that change turn (1961 → 1972 turns the last two; the "19"
+ * stays put), each wheel rolling through the digits between old and new and
+ * settling with a soft ease, the wheels a beat apart from left to right.
+ * The wheel window fades at its top and bottom like a drum, and is tall
+ * enough that old-style numerals (descending 3, 4, 5, 7, 9) are never cut.
+ * Tabular figures keep every wheel the same width.
  */
-function Odometer({ value, dir }: { value: string; dir: 1 | -1 }) {
+const ROW = 1.4; // em — one digit's slot on the wheel (glyph + clear space)
+
+function YearWheels({ value }: { value: string }) {
+  return (
+    <span aria-label={value} className="inline-flex [font-feature-settings:'tnum']">
+      {value.split("").map((d, i) => (
+        <DigitWheel key={i} digit={Number(d)} index={i} />
+      ))}
+    </span>
+  );
+}
+
+function DigitWheel({ digit, index }: { digit: number; index: number }) {
   const reduce = useReducedMotion();
-  const OUT = 110; // % of the line box — clears the old-style descenders
-  const ease = [0.65, 0, 0.35, 1] as const;
-  const timing = (delay = 0) => (reduce ? { duration: 0 } : { duration: 0.7, ease, delay });
   return (
     <span
-      aria-label={value}
-      className="relative -my-[0.25em] inline-grid py-[0.25em] [clip-path:inset(0_-30%)]"
+      aria-hidden
+      className="relative -my-[0.2em] inline-block overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)]"
+      style={{ height: `${ROW}em` }}
     >
-      {/* `custom` here reaches the exiting number too, so it always leaves
-          in the current direction. */}
-      <AnimatePresence initial={false} custom={dir}>
-        <motion.span
-          key={value}
-          aria-hidden
-          className="col-start-1 row-start-1 inline-flex"
-          custom={dir}
-          variants={{
-            enter: {},
-            center: {},
-            exit: (d: 1 | -1) => ({ y: `${d > 0 ? -OUT : OUT}%`, opacity: 0, transition: timing() }),
-          }}
-          initial="enter"
-          animate="center"
-          exit="exit"
-        >
-          {[...value].map((ch, i) => (
-            <motion.span
-              key={i}
-              className="inline-block"
-              variants={{
-                enter: { y: `${dir > 0 ? OUT : -OUT}%`, opacity: 0 },
-                center: { y: "0%", opacity: 1, transition: timing(0.08 + i * 0.05) },
-              }}
-            >
-              {ch === " " ? "\u00A0" : ch}
-            </motion.span>
-          ))}
-        </motion.span>
-      </AnimatePresence>
+      <motion.span
+        className="flex flex-col items-center"
+        initial={false}
+        animate={{ y: `${-digit * ROW}em` }}
+        transition={reduce ? { duration: 0 } : { duration: 1, ease: [0.65, 0, 0.35, 1], delay: index * 0.06 }}
+      >
+        {Array.from({ length: 10 }, (_, n) => (
+          <span key={n} className="flex items-center justify-center" style={{ height: `${ROW}em` }}>
+            {n}
+          </span>
+        ))}
+      </motion.span>
     </span>
   );
 }

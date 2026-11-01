@@ -4,7 +4,7 @@ import Image from "@/components/ProgressiveImage";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
-import { useDiscoverCursor } from "@/components/DiscoverCursor";
+import ActionButton from "@/components/ActionButton";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 
@@ -27,14 +27,11 @@ const FACTS = [
 ];
 
 function StoryCta() {
-  // Same custom "Discover" cursor used on the Asset Classes / projects cards.
-  const { bind, hoverClass, cursor } = useDiscoverCursor("Discover the story");
-
   return (
     <Link
       href="/story"
-      {...bind}
-      className={`group relative block aspect-square w-full max-w-[454px] overflow-hidden ${hoverClass}`}
+      aria-label="Discover the story"
+      className="group relative block aspect-square w-full max-w-[454px] overflow-hidden"
     >
       <GrowReveal axis="height" className="absolute inset-0">
         <Image
@@ -46,14 +43,6 @@ function StoryCta() {
         />
         <div className="absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-black/30" />
       </GrowReveal>
-      {/* Static label for touch / mobile — no cursor to follow there. */}
-      <span className="pointer-events-none absolute inset-0 flex items-center justify-center gap-2 font-sans text-lg font-medium text-white md:hidden">
-        Discover the story
-        <svg width="6" height="7" viewBox="0 0 6 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5.65 3.5L0.35 6.56V0.44L5.65 3.5Z" fill="white" />
-        </svg>
-      </span>
-      {cursor}
     </Link>
   );
 }
@@ -202,6 +191,9 @@ export default function FactsFigures() {
               developer, building intimate communities where families always come
               first.
             </p>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <ActionButton label="Discover the story" href="/story" look="plain" />
           </Reveal>
         </div>
 

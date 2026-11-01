@@ -3,16 +3,19 @@ import GrowReveal from "@/components/GrowReveal";
 import { RequestInterest } from "@/components/ActionButton";
 
 export default function ProjectStory({
+  id,
   images,
   heading,
   paragraphs,
 }: {
+  id?: string;
   images: [string, string];
   heading: string;
   paragraphs: string[];
 }) {
   return (
     <section
+      id={id}
       data-nav-theme="light"
       className="flex flex-col gap-10 bg-brand-white px-6 py-16 text-brand-black md:gap-14 md:px-16 md:py-16"
     >

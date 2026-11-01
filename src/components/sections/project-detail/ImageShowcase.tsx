@@ -2,16 +2,19 @@ import Image from "@/components/ProgressiveImage";
 import GrowReveal from "@/components/GrowReveal";
 
 export default function ImageShowcase({
+  id,
   full,
   half,
   wide,
 }: {
+  id?: string;
   full: string;
   half: string;
   wide: string;
 }) {
   return (
     <section
+      id={id}
       data-nav-theme="light"
       className="flex flex-col gap-5 bg-brand-white px-6 py-16 md:px-16 md:py-16"
     >
@@ -21,10 +24,12 @@ export default function ImageShowcase({
       >
         <Image src={full} alt="" fill sizes="100vw" quality={90} className="object-cover" />
       </GrowReveal>
+      {/* Wide image on the shared 66.16% text column; the narrow one takes
+          the rest minus 20px, so the gap matches the 20px row gap above. */}
       <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between md:gap-0">
         <GrowReveal
           axis="height"
-          className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-[424/540] md:w-[32.24%]"
+          className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-[424/540] md:w-[calc(33.84%-20px)]"
         >
           <Image
             src={half}

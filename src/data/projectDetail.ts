@@ -1,4 +1,5 @@
 import type { FeatureIconName } from "@/components/sections/project-detail/icons";
+import type { Category } from "./mapProjects";
 
 export interface RichSegment {
   text: string;
@@ -40,6 +41,8 @@ export interface ProjectDetailData {
   name: [string, string];
   badgeMain: string;
   badgeScript: string;
+  /** Asset classes shown under the hero headline (same as the project card). */
+  tags: Category[];
 
   scrollLabel: string;
   introParagraphs: [string, string];
@@ -154,6 +157,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     name: ["SwanLake", "Residences New Cairo"],
     badgeMain: "SWANLAKE",
     badgeScript: "residences.",
+    tags: ["Residential", "Hospitality & Leisure", "Retail", "Office Space", "Sports & Wellness"],
 
     scrollLabel: "Scroll",
     introParagraphs: [
@@ -234,6 +238,7 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
     name: ["SwanLake", "Residences El Gouna"],
     badgeMain: "SWANLAKE",
     badgeScript: "residences.",
+    tags: ["Residential", "Hospitality & Leisure"],
 
     scrollLabel: "Scroll",
     introParagraphs: [

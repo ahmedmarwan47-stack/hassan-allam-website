@@ -20,7 +20,7 @@ export default function GrowImagePair({
     <div className="flex flex-col gap-5 md:flex-row md:items-stretch md:justify-between md:gap-0">
       <GrowReveal
         axis="height"
-        className={`relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-auto md:w-[32.24%] ${pairHeight}`}
+        className={`relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-auto md:w-[calc(33.84%-20px)] ${pairHeight}`}
       >
         <Image
           src={narrow}

@@ -26,9 +26,11 @@ const PINS: { left: number; top: number; number: number }[] = [
  * opens the neighborhood's side drawer (image + short description).
  */
 export default function MasterPlan({
+  id,
   items,
   mapImage,
 }: {
+  id?: string;
   items: MasterPlanItem[];
   mapImage: string;
 }) {
@@ -48,6 +50,7 @@ export default function MasterPlan({
 
   return (
     <section
+      id={id}
       data-nav-theme="light"
       className="flex flex-col-reverse gap-8 bg-brand-white px-6 py-16 text-brand-black md:px-16 md:py-16 lg:flex-row lg:items-center lg:justify-between lg:gap-10"
     >

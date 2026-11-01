@@ -26,7 +26,7 @@ export default function SectionNav({ items }: { items: { id: string; label: stri
       const first = document.getElementById(items[0].id);
       const footer = document.querySelector("footer");
       const started = first ? first.getBoundingClientRect().top < vh * 0.6 : window.scrollY > vh * 0.5;
-      const atFooter = footer ? footer.getBoundingClientRect().top < vh * 0.9 : false;
+      const atFooter = footer ? footer.getBoundingClientRect().top < vh * 0.6 : false;
       setVisible(started && !atFooter);
 
       // Active = the last section whose top has passed 40% of the viewport.

@@ -1,4 +1,5 @@
 import Footer from "@/components/Footer";
+import SectionNav from "@/components/SectionNav";
 import type { ProjectDetailData } from "@/data/projectDetail";
 import ProjectHero from "./ProjectHero";
 import ProjectIntro from "./ProjectIntro";
@@ -17,21 +18,35 @@ import RequestInterestForm from "./RequestInterestForm";
  * Every "Request interest" button on the page jumps to the closing form.
  */
 export default function ProjectDetailTemplate({ data }: { data: ProjectDetailData }) {
+  // In-page navigation (same bar as Our Story); Master Plan only when present.
+  const sections = [
+    { id: "overview", label: "Overview" },
+    ...(data.masterPlan ? [{ id: "master-plan", label: "Master Plan" }] : []),
+    { id: "gallery", label: "Gallery" },
+    { id: "amenities", label: "Amenities" },
+    { id: "the-story", label: "The Story" },
+    { id: "homes", label: "Homes" },
+    { id: "construction-updates", label: "Construction" },
+    { id: "request-interest", label: "Request Interest" },
+  ];
+
   return (
     <main>
       <ProjectHero data={data} />
-      <ProjectIntro data={data} />
+      <ProjectIntro id="overview" data={data} />
       {data.masterPlan && (
-        <MasterPlan items={data.masterPlan.items} mapImage={data.masterPlan.mapImage} />
+        <MasterPlan id="master-plan" items={data.masterPlan.items} mapImage={data.masterPlan.mapImage} />
       )}
-      <ImageShowcase {...data.showcase} />
-      <AmenitiesSection heading={data.amenitiesHeading} items={data.amenities} />
+      <ImageShowcase id="gallery" {...data.showcase} />
+      <AmenitiesSection id="amenities" heading={data.amenitiesHeading} items={data.amenities} />
       <ProjectStory
+        id="the-story"
         images={data.storyImages}
         heading={data.storyHeading}
         paragraphs={data.storyParagraphs}
       />
       <ProductsSection
+        id="homes"
         images={data.productsImages}
         heading={data.productsHeading}
         items={data.products}
@@ -39,6 +54,7 @@ export default function ProjectDetailTemplate({ data }: { data: ProjectDetailDat
       <ConstructionTimeline data={data.construction} />
       <RequestInterestForm projectName={data.name.join(" ")} image={data.showcase.full} />
       <Footer />
+      <SectionNav items={sections} />
     </main>
   );
 }

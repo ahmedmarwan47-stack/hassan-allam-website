@@ -24,10 +24,17 @@ export default function StoryHero() {
       />
 
       <Reveal className="relative z-10">
-        {/* Two lines; sized so "INSIDE THE WORLD" (~8.7em wide) always fits. */}
-        <h1 className="text-center font-serif font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(2rem,9.8vw,6rem)] md:[font-size:9vw] xl:[font-size:clamp(2.75rem,10vw,12rem)]">
-          <span className="block whitespace-nowrap">INSIDE THE WORLD</span>
-          <span className="block">OF HAP</span>
+        {/* Phones: two lines (INSIDE THE WORLD / OF HAP), sized so the first
+            (~8.7em wide) fits. From tablet up: three lines (INSIDE THE /
+            WORLD OF / HAP) at the full display size. */}
+        <h1 className="text-center font-serif font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(2rem,9.8vw,6rem)] md:[font-size:clamp(2.75rem,11vw,12rem)]">
+          <span className="block whitespace-nowrap">
+            INSIDE THE<span className="md:hidden"> WORLD</span>
+          </span>
+          <span className="block">
+            <span className="hidden md:inline">WORLD </span>OF<span className="md:hidden"> HAP</span>
+          </span>
+          <span className="hidden md:block">HAP</span>
         </h1>
       </Reveal>
     </section>
