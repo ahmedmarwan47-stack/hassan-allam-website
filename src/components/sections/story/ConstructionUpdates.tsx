@@ -105,6 +105,95 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
   const step = STEPS[index];
   const wipe = reduceMotion ? { duration: 0 } : { duration: 1.1, ease: WIPE_EASE };
 
+  // Milestone timeline: generations above (desktop), nodes on the line,
+  // years below. The solid line reaches the current milestone; a fainter
+  // fill creeps toward the next one as the autoplay timer runs. Phones get a
+  // compact copy right under the image (no generation row).
+  const renderTimeline = (compact: boolean) => (
+          <div className={compact ? "flex flex-col md:hidden" : "hidden flex-col md:flex"}>
+            {!compact && (
+            <div className="grid grid-cols-6 pb-3">
+              {STEPS.map((s, i) => (
+                <span
+                  key={s.year}
+                  className="font-sans text-[10px] font-medium uppercase tracking-[0.08em] text-grey-500 md:text-xs"
+                >
+                  {i === 0 || STEPS[i - 1].eyebrow !== s.eyebrow ? s.eyebrow : ""}
+                </span>
+              ))}
+            </div>
+            )}
+
+            <div className="relative h-4">
+              <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-brand-black/15" />
+              <motion.div
+                className="absolute left-0 top-1/2 h-0.5 -translate-y-1/2 bg-brand-black"
+                animate={{ width: `${nodePct(index)}%` }}
+                transition={{ duration: reduceMotion ? 0 : 0.9, ease: WIPE_EASE }}
+              />
+              {autoplay && index < N - 1 && (
+                <motion.div
+                  key={`timer-${index}`}
+                  className="absolute top-1/2 h-0.5 -translate-y-1/2 bg-brand-black/35"
+                  style={{ left: `${nodePct(index)}%` }}
+                  initial={{ width: "0%" }}
+                  animate={{ width: `${100 / N}%` }}
+                  transition={{ duration: AUTOPLAY_MS / 1000, ease: "linear" }}
+                />
+              )}
+              {STEPS.map((s, i) => {
+                const state = i < index ? "past" : i === index ? "current" : "future";
+                return (
+                  <button
+                    key={s.year}
+                    type="button"
+                    onClick={() => goTo(i)}
+                    aria-label={`${s.year}: ${s.title}`}
+                    aria-current={state === "current" ? "step" : undefined}
+                    className="group absolute top-1/2 flex size-6 -translate-x-[3px] -translate-y-1/2 items-center justify-start"
+                    style={{ left: `${nodePct(i)}%` }}
+                  >
+                    {state === "current" && !reduceMotion && (
+                      <motion.span
+                        aria-hidden
+                        className="absolute left-0 top-1/2 size-3 -translate-y-1/2 rounded-full border border-brand-black"
+                        animate={{ scale: [1, 2.4], opacity: [0.6, 0] }}
+                        transition={{ duration: 1.6, repeat: Infinity, ease: "easeOut" }}
+                      />
+                    )}
+                    <motion.span
+                      aria-hidden
+                      className="relative block rounded-full border border-brand-black"
+                      animate={{
+                        width: state === "current" ? 12 : 8,
+                        height: state === "current" ? 12 : 8,
+                        backgroundColor: state === "future" ? "rgb(255,255,255)" : "rgb(0,0,0)",
+                      }}
+                      transition={{ duration: reduceMotion ? 0 : 0.4, ease: EASE }}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className={`grid grid-cols-6 ${compact ? "pt-2" : "pt-3"}`}>
+              {STEPS.map((s, i) => (
+                <button
+                  key={s.year}
+                  type="button"
+                  onClick={() => goTo(i)}
+                  tabIndex={-1}
+                  className={`py-1 text-left font-sans text-[11px] font-medium uppercase leading-[1.4] tracking-[0.04em] transition-colors duration-300 md:text-sm ${
+                    i <= index ? "text-brand-black" : "text-grey-500 hover:text-brand-black"
+                  }`}
+                >
+                  {s.year}
+                </button>
+              ))}
+            </div>
+          </div>
+  );
+
   return (
     <section
       id={id}
@@ -120,20 +209,26 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
           the left and the navbar CTA on the right. */}
       <div className="flex flex-col gap-10">
         {/* Body: year | wipe-reveal image | caption + arrows */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,0.9fr)_minmax(0,2.2fr)_minmax(0,1fr)] md:gap-10 lg:gap-14">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-[minmax(0,0.9fr)_minmax(0,2.2fr)_minmax(0,1fr)] md:gap-10 lg:gap-14">
           {/* Year column — the year as a large display numeral, top-aligned
               with the image, rolling digit by digit. */}
-          <div className="flex flex-col justify-start">
+          <div className="flex items-end justify-between gap-4 md:flex-col md:items-start md:justify-start">
             <p
-              className="-mt-[0.12em] whitespace-nowrap font-serif font-light leading-none tracking-[-0.04em] [font-size:clamp(5rem,9.4vw,9rem)]"
+              className="-mt-[0.12em] whitespace-nowrap font-serif font-light leading-none tracking-[-0.04em] [font-size:clamp(3.25rem,15vw,4.5rem)] md:[font-size:clamp(5rem,9.4vw,9rem)]"
             >
               <YearWheels value={step.year} />
             </p>
+            {/* Phones: arrows beside the year, so they sit right above the
+                image they change. */}
+            <div className="flex gap-2 md:hidden">
+              <SliderArrow direction="prev" size="sm" onClick={() => goTo(index - 1)} disabled={index === 0} label="Previous update" />
+              <SliderArrow direction="next" size="sm" onClick={() => goTo(index + 1)} disabled={index === N - 1} label="Next update" />
+            </div>
           </div>
 
           <div
             {...bind}
-            className={`relative aspect-[5/4] w-full md:aspect-[16/10] overflow-hidden rounded-[2px] bg-brand-black ${viewportClass}`}
+            className={`relative aspect-[16/10] w-full overflow-hidden rounded-[2px] bg-brand-black ${viewportClass}`}
           >
             <motion.div style={{ x: dragX }} className="absolute inset-0">
               {/* Each new milestone wipes in over the last one (from the right
@@ -185,16 +280,22 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
             </div>
           </div>
 
+          {renderTimeline(true)}
+
           {/* Caption column, with the slider arrows beside the image. */}
           <div className="flex flex-col justify-between gap-8">
-            <div className="relative min-h-[260px]" aria-live="polite">
+            <div className="relative md:min-h-[260px]" aria-live="polite">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={index}
-                  className="flex flex-col gap-6"
+                  className="flex flex-col gap-4 md:gap-6"
                   exit={{ opacity: 0, y: -16, transition: { duration: reduceMotion ? 0 : 0.25, ease: EASE } }}
                 >
-                  <h3 className="font-serif text-[1.75rem] font-light uppercase leading-[1.15] tracking-[-0.02em] md:text-[2rem]">
+                  {/* Phones drop the timeline's generation row — show it here. */}
+                  <span className="-mb-2 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-grey-500 md:hidden">
+                    {step.eyebrow}
+                  </span>
+                  <h3 className="font-serif text-[1.5rem] font-light uppercase leading-[1.15] tracking-[-0.02em] md:text-[2rem]">
                     {step.title.split(" ").map((word, w) => (
                       <span key={w} className="inline-block overflow-hidden pb-[0.08em] align-top">
                         <motion.span
@@ -219,96 +320,14 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
                 </motion.div>
               </AnimatePresence>
             </div>
-            <div className="flex gap-2.5">
+            <div className="hidden gap-2.5 md:flex">
               <SliderArrow direction="prev" onClick={() => goTo(index - 1)} disabled={index === 0} label="Previous update" />
               <SliderArrow direction="next" onClick={() => goTo(index + 1)} disabled={index === N - 1} label="Next update" />
             </div>
           </div>
         </div>
 
-        {/* Milestone timeline: generations above, nodes on the line, years
-            below. The solid line reaches the current milestone; a fainter
-            fill creeps toward the next one as the autoplay timer runs. */}
-        <div className="flex flex-col">
-          <div className="grid grid-cols-6 pb-3">
-            {STEPS.map((s, i) => (
-              <span
-                key={s.year}
-                className="font-sans text-[10px] font-medium uppercase tracking-[0.08em] text-grey-500 md:text-xs"
-              >
-                {i === 0 || STEPS[i - 1].eyebrow !== s.eyebrow ? s.eyebrow : ""}
-              </span>
-            ))}
-          </div>
-
-          <div className="relative h-4">
-            <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-brand-black/15" />
-            <motion.div
-              className="absolute left-0 top-1/2 h-0.5 -translate-y-1/2 bg-brand-black"
-              animate={{ width: `${nodePct(index)}%` }}
-              transition={{ duration: reduceMotion ? 0 : 0.9, ease: WIPE_EASE }}
-            />
-            {autoplay && index < N - 1 && (
-              <motion.div
-                key={`timer-${index}`}
-                className="absolute top-1/2 h-0.5 -translate-y-1/2 bg-brand-black/35"
-                style={{ left: `${nodePct(index)}%` }}
-                initial={{ width: "0%" }}
-                animate={{ width: `${100 / N}%` }}
-                transition={{ duration: AUTOPLAY_MS / 1000, ease: "linear" }}
-              />
-            )}
-            {STEPS.map((s, i) => {
-              const state = i < index ? "past" : i === index ? "current" : "future";
-              return (
-                <button
-                  key={s.year}
-                  type="button"
-                  onClick={() => goTo(i)}
-                  aria-label={`${s.year}: ${s.title}`}
-                  aria-current={state === "current" ? "step" : undefined}
-                  className="group absolute top-1/2 flex size-6 -translate-x-[3px] -translate-y-1/2 items-center justify-start"
-                  style={{ left: `${nodePct(i)}%` }}
-                >
-                  {state === "current" && !reduceMotion && (
-                    <motion.span
-                      aria-hidden
-                      className="absolute left-0 top-1/2 size-3 -translate-y-1/2 rounded-full border border-brand-black"
-                      animate={{ scale: [1, 2.4], opacity: [0.6, 0] }}
-                      transition={{ duration: 1.6, repeat: Infinity, ease: "easeOut" }}
-                    />
-                  )}
-                  <motion.span
-                    aria-hidden
-                    className="relative block rounded-full border border-brand-black"
-                    animate={{
-                      width: state === "current" ? 12 : 8,
-                      height: state === "current" ? 12 : 8,
-                      backgroundColor: state === "future" ? "rgb(255,255,255)" : "rgb(0,0,0)",
-                    }}
-                    transition={{ duration: reduceMotion ? 0 : 0.4, ease: EASE }}
-                  />
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="grid grid-cols-6 pt-3">
-            {STEPS.map((s, i) => (
-              <button
-                key={s.year}
-                type="button"
-                onClick={() => goTo(i)}
-                tabIndex={-1}
-                className={`py-1 text-left font-sans text-[11px] font-medium uppercase leading-[1.4] tracking-[0.04em] transition-colors duration-300 md:text-sm ${
-                  i <= index ? "text-brand-black" : "text-grey-500 hover:text-brand-black"
-                }`}
-              >
-                {s.year}
-              </button>
-            ))}
-          </div>
-        </div>
+        {renderTimeline(false)}
       </div>
 
       {cursor}
