@@ -1,2 +1,2 @@
-:HL["/hassan-allam-website/_next/static/chunks/20d46cl69htwp.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"M856HbKRHCaPPXE58qRKG"}
+:HL["/hassan-allam-website/_next/static/chunks/0natz089sb281.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"Z-PsunJgX7LQQKjWfgKQ2"}
