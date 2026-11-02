@@ -1,3 +1,4 @@
+import MobileCarousel from "@/components/MobileCarousel";
 import ActionButton from "@/components/ActionButton";
 import { Reveal } from "@/components/Reveal";
 import SectionEyebrow from "@/components/SectionEyebrow";
@@ -18,17 +19,23 @@ export default function HomeMediaCenter() {
       data-nav-theme="light"
       className="bg-grey-100 px-6 py-20 text-brand-black md:px-16 md:py-24"
     >
-      <div className="flex flex-col items-center gap-10 md:gap-14">
-        <div className="flex flex-col items-center gap-4">
-          <SectionEyebrow className="[&_p]:text-center">Media Center</SectionEyebrow>
+      <div className="flex flex-col items-start gap-10 md:items-center md:gap-14">
+        <div className="flex w-full flex-col items-start gap-4 md:items-center">
+          <SectionEyebrow className="md:[&_p]:text-center">Media Center</SectionEyebrow>
           <Reveal>
-            <h2 className="text-center font-serif font-light uppercase leading-[1.16] tracking-[-0.02em] [font-size:clamp(2.5rem,4.3vw,3.875rem)]">
+            <h2 className="font-serif md:text-center font-light uppercase leading-[1.16] tracking-[-0.02em] [font-size:clamp(2.5rem,4.3vw,3.875rem)]">
               Stay Updated
             </h2>
           </Reveal>
         </div>
 
-        <div className="grid w-full grid-cols-1 gap-x-5 gap-y-10 md:grid-cols-3">
+        {/* Phones: swipe carousel; from tablet up: three columns. */}
+        <MobileCarousel label="stories" className="w-full md:hidden">
+          {latest.map((article) => (
+            <NewsCard key={article.id} article={article} />
+          ))}
+        </MobileCarousel>
+        <div className="hidden w-full grid-cols-3 gap-x-5 gap-y-10 md:grid">
           {latest.map((article) => (
             <NewsCard key={article.id} article={article} />
           ))}

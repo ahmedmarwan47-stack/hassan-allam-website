@@ -43,20 +43,23 @@ const GROUPS: Record<(typeof FILTERS)[number], GalleryProject[]> = {
 export default function ProjectGallery() {
   const [activeFilter, setActiveFilter] = useState(0);
   const [index, setIndex] = useState(0);
-  // Cards shown per view: 1 on mobile, 3 on desktop.
+  // Cards shown per view: 3 on desktop; on phones one card plus the start
+  // of the next, so it reads as a carousel.
   const [visible, setVisible] = useState(3);
 
   const projects = GROUPS[FILTERS[activeFilter]];
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
-    const apply = () => setVisible(mq.matches ? 3 : 1);
+    const apply = () => setVisible(mq.matches ? 3 : 1.18);
     apply();
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
   }, []);
 
-  const maxIndex = Math.max(0, projects.length - visible);
+  const maxIndex = Math.max(0, Math.ceil(projects.length - visible));
+  // The last step lands flush with the end instead of overshooting.
+  const offset = Math.min(index, Math.max(0, projects.length - visible));
 
   // Clamp index when `visible` or the active group changes.
   useEffect(() => {
@@ -132,7 +135,7 @@ export default function ProjectGallery() {
             <motion.div style={{ x: dragX }} className="md:h-full">
             <motion.div
               key={activeFilter}
-              animate={{ x: `-${(index / projects.length) * 100}%` }}
+              animate={{ x: `-${(offset / projects.length) * 100}%` }}
               transition={{ type: "spring", stiffness: 140, damping: 24 }}
               className="flex md:h-full"
               // Each card carries its 20px gap as right padding, so a slot is
@@ -178,7 +181,7 @@ export default function ProjectGallery() {
           <div className="flex shrink-0 items-center gap-6">
             <div className="relative h-[2px] flex-1 bg-white/15">
               <motion.div
-                animate={{ left: `${(index / projects.length) * 100}%` }}
+                animate={{ left: `${(offset / projects.length) * 100}%` }}
                 transition={{ type: "spring", stiffness: 140, damping: 24 }}
                 style={{ width: `${(visible / projects.length) * 100}%` }}
                 className="absolute inset-y-0 bg-brand-white"

@@ -93,7 +93,7 @@ export default function StoryIntro({ id }: { id?: string }) {
             image one at a time, each fading in as it arrives. */}
         <div
           ref={textRef}
-          className="flex w-full flex-col gap-16 font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1.75rem,4.3vw,3.875rem)] md:w-[66.16%] md:gap-[22vh] md:pb-[25vh]"
+          className="flex w-full flex-col gap-16 font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1.5rem,4.3vw,3.875rem)] md:w-[66.16%] md:gap-[22vh] md:pb-[25vh]"
         >
           {SLIDES.map((slide, i) => (
             <Reveal key={slide.src} delay={i === 0 ? 0.05 : 0}>

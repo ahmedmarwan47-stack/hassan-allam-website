@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayoutEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import type { MapProject, Setting } from "@/data/mapProjects";
 
@@ -7,8 +8,8 @@ import type { MapProject, Setting } from "@/data/mapProjects";
 // white pointer below, drawn at 40px to suit the full-Egypt map. Colour marks
 // the setting — green "In the City", blue "By the Sea" — and each pin glows,
 // pulses and gently bobs so it reads as clickable.
-const PIN_W = 40;
-const PIN_H = 45;
+const FULL_W = 40;
+const FULL_H = 45;
 
 export const PIN_COLORS: Record<Setting, string> = {
   city: "var(--color-success-soft)",
@@ -22,6 +23,7 @@ export default function MapPin({
   onEnter,
   onLeave,
   onClick,
+  compact = false,
 }: {
   project: MapProject;
   visible: boolean;
@@ -29,8 +31,12 @@ export default function MapPin({
   onEnter: () => void;
   onLeave: () => void;
   onClick: () => void;
+  /** Phones: a smaller pin and label. */
+  compact?: boolean;
 }) {
   const reduce = useReducedMotion();
+  const PIN_W = compact ? 30 : FULL_W;
+  const PIN_H = compact ? 34 : FULL_H;
   const color = PIN_COLORS[project.setting];
   // Stagger the bob per pin so they don't move in lockstep.
   const phase = (project.mapX * 7 + project.mapY * 3) % 1.6;
@@ -60,18 +66,7 @@ export default function MapPin({
     >
       {/* Hover variant: white name label floating above the pin. */}
       <AnimatePresence>
-        {isHovered && (
-          <motion.div
-            initial={{ opacity: 0, y: 6, x: "-50%" }}
-            animate={{ opacity: 1, y: 0, x: "-50%" }}
-            exit={{ opacity: 0, y: 6, x: "-50%" }}
-            transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
-            className="pointer-events-none absolute left-1/2 whitespace-nowrap bg-brand-white px-3 py-1.5 font-serif text-lg uppercase leading-none tracking-[-0.02em] text-brand-black"
-            style={{ bottom: PIN_H + 10 }}
-          >
-            {project.name}
-          </motion.div>
-        )}
+        {isHovered && <PinLabel name={project.name} bottom={PIN_H + (compact ? 6 : 10)} compact={compact} />}
       </AnimatePresence>
 
       {/* Idle bob — paused while hovered so the hover lift reads cleanly. */}
@@ -117,6 +112,45 @@ export default function MapPin({
           <circle cx="29" cy="29" r="28" fill={color} stroke="#fff" strokeWidth="2" />
         </motion.svg>
       </motion.div>
+    </motion.div>
+  );
+}
+
+/**
+ * The name label floating above a pin. Inside a `[data-map-frame]` (the
+ * phone map) it nudges sideways when it would run past the frame's edge, so
+ * it's never cropped.
+ */
+function PinLabel({ name, bottom, compact }: { name: string; bottom: number; compact: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shift, setShift] = useState(0);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    const frame = el?.closest("[data-map-frame]");
+    if (!el || !frame) return;
+    const f = frame.getBoundingClientRect();
+    const r = el.getBoundingClientRect();
+    // Measured centred (shift 0): the label's natural left/right edges.
+    const left = r.left + r.width / 2 - el.offsetWidth / 2;
+    const right = left + el.offsetWidth;
+    const pad = 12;
+    setShift(left < f.left + pad ? f.left + pad - left : right > f.right - pad ? f.right - pad - right : 0);
+  }, []);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 6, x: "-50%" }}
+      animate={{ opacity: 1, y: 0, x: "-50%" }}
+      exit={{ opacity: 0, y: 6, x: "-50%" }}
+      transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+      className={`pointer-events-none absolute left-1/2 whitespace-nowrap bg-brand-white font-serif uppercase leading-none tracking-[-0.02em] text-brand-black ${
+        compact ? "px-2 py-1 text-xs" : "px-3 py-1.5 text-lg"
+      }`}
+      style={{ bottom, marginLeft: shift }}
+    >
+      {name}
     </motion.div>
   );
 }

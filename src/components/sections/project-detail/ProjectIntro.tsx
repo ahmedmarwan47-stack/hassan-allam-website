@@ -50,15 +50,25 @@ export default function ProjectIntro({ id, data }: { id?: string; data: ProjectD
             </p>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1.75rem,4.3vw,3.875rem)]">
-            {data.communityHeading.map((segment, i) =>
+            <p className="font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1.5rem,4.3vw,3.875rem)]">
+            {data.communityHeading.map((segment, i, all) => {
               // Names link to their master plan drawer when the project has one.
-              segment.link && data.masterPlan?.items.some((it) => it.name === segment.text) ? (
-                <NeighborhoodLink key={i} name={segment.text} />
+              const linked = segment.link && data.masterPlan?.items.some((it) => it.name === segment.text);
+              // Punctuation right after a name stays glued to it, so a line
+              // never starts with ", and".
+              const prev = all[i - 1];
+              const prevLinked = prev?.link && data.masterPlan?.items.some((it) => it.name === prev.text);
+              const text = prevLinked ? segment.text.replace(/^[,.;:]/, "") : segment.text;
+              const glue = linked ? all[i + 1]?.text.match(/^[,.;:]/)?.[0] : undefined;
+              return linked ? (
+                <span key={i} className="whitespace-nowrap">
+                  <NeighborhoodLink name={segment.text} />
+                  {glue}
+                </span>
               ) : (
-                <span key={i}>{segment.text}</span>
-              ),
-            )}
+                <span key={i}>{text}</span>
+              );
+            })}
           </p>
           </Reveal>
           <Reveal delay={0.2} className="flex flex-wrap gap-3">

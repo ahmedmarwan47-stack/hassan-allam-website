@@ -27,10 +27,10 @@ export default function CeoQuote({ id }: { id?: string }) {
     >
       {/* Eyebrow + headline quote; the bottom padding leaves room for the
           portrait's head plus breathing space under the headline. */}
-      <div className="flex flex-col items-center gap-6 px-6 pb-14 pt-16 text-center md:gap-8 md:px-16 md:pb-[calc(var(--rise)+clamp(3rem,4vw,4.5rem))] md:pt-[clamp(4rem,6vw,7rem)]">
-        <SectionEyebrow className="[&_p]:text-center">Chairman Message</SectionEyebrow>
+      <div className="flex flex-col items-start gap-6 px-6 pb-14 pt-16 text-left md:items-center md:gap-8 md:text-center md:px-16 md:pb-[calc(var(--rise)+clamp(3rem,4vw,4.5rem))] md:pt-[clamp(4rem,6vw,7rem)]">
+        <SectionEyebrow className="md:[&_p]:text-center">Chairman Message</SectionEyebrow>
         <Reveal>
-          <h2 className="mx-auto max-w-[1200px] font-serif font-light leading-[1.05] tracking-[-0.02em] [font-size:clamp(2.25rem,4.4vw,5rem)]">
+          <h2 className="max-w-[1200px] font-serif font-light leading-[1.05] tracking-[-0.02em] [font-size:clamp(2rem,4.4vw,5rem)] md:mx-auto">
             &ldquo;Legacy isn&rsquo;t just what we build,
             <br className="hidden md:block" /> it&rsquo;s <em className="italic">who we build it for.</em>&rdquo;
           </h2>

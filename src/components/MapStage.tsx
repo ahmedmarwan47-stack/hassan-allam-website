@@ -28,20 +28,12 @@ const CLOUDS = [
 ] as const;
 
 /**
- * Mobile map: a 1100px-wide strip the visitor scrolls/drags sideways, with the
- * map zoomed so the North Coast, Cairo and El Gouna all fit inside it.
+ * Mobile map framing: zoomed (as % of the phone's width) and centred so all
+ * pins — North Coast to El Gouna — fit on screen at once, clear of the
+ * filter bar at the bottom.
  */
-export const MOBILE_MAP_W_CLASS = "w-[1100px]";
-export const MOBILE_MAP_ZOOM = 170;
-export const MOBILE_MAP_FOCUS = { x: 48, y: 46 };
-
-/** Scroll the mobile strip so Cairo (the city cluster) starts centred. */
-export function centerMobileMapOnCairo(el: HTMLElement) {
-  const CAIRO_X = 50; // % of the map
-  const layerW = (el.scrollWidth * MOBILE_MAP_ZOOM) / 100;
-  const cairo = el.scrollWidth / 2 + ((CAIRO_X - MOBILE_MAP_FOCUS.x) / 100) * layerW;
-  el.scrollLeft = cairo - el.clientWidth / 2;
-}
+export const MOBILE_MAP_ZOOM = 256;
+export const MOBILE_MAP_FOCUS = { x: 45.9, y: 51 };
 
 export default function MapStage({
   zoom,
@@ -51,6 +43,8 @@ export default function MapStage({
   onHover,
   onSelect,
   priority = false,
+  compact = false,
+  smooth = false,
 }: {
   zoom: number;
   focus: { x: number; y: number };
@@ -59,6 +53,10 @@ export default function MapStage({
   onHover: (id: string | null) => void;
   onSelect: (id: string) => void;
   priority?: boolean;
+  /** Smaller pins and labels (phones). */
+  compact?: boolean;
+  /** Ease zoom/focus changes (phone zoom buttons) instead of jumping. */
+  smooth?: boolean;
 }) {
   return (
     <div
@@ -70,6 +68,7 @@ export default function MapStage({
         top: "50%",
         // Own-size translate puts `focus` on the container's centre.
         transform: `translate(${-focus.x}%, ${-focus.y}%)`,
+        transition: smooth ? "width 0.6s cubic-bezier(0.32,0.72,0,1), transform 0.6s cubic-bezier(0.32,0.72,0,1)" : undefined,
       }}
     >
       <Image
@@ -105,6 +104,7 @@ export default function MapStage({
           onEnter={() => onHover(project.id)}
           onLeave={() => onHover(null)}
           onClick={() => onSelect(project.id)}
+          compact={compact}
         />
       ))}
     </div>

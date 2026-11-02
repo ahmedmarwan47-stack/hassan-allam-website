@@ -151,50 +151,63 @@ export default function Navbar() {
           />
         </span>
 
-        {/* Hamburger / close (mobile) */}
+        {/* Hamburger / close (mobile) — the three bars morph into the X in
+            place: the top and bottom bars meet in the middle and turn, the
+            middle one fades out. */}
         <button
           type="button"
           onClick={() => setMenuOpen((v) => !v)}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
           className={`relative z-10 flex size-11 items-center justify-center lg:hidden ${
-            menuOpen ? "bg-black text-white" : onDark ? "text-white" : "text-black"
+            menuOpen ? "text-black" : onDark ? "text-white" : "text-black"
           } transition-colors duration-300`}
         >
-          {menuOpen ? (
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
-              <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" strokeWidth="1.5" />
-            </svg>
-          ) : (
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="1.5" />
-            </svg>
-          )}
+          <span aria-hidden className="relative block h-3 w-[18px]">
+            {[
+              menuOpen ? "top-1/2 -translate-y-1/2 rotate-45" : "top-0",
+              `top-1/2 -translate-y-1/2 ${menuOpen ? "scale-x-0 opacity-0" : ""}`,
+              menuOpen ? "top-1/2 -translate-y-1/2 -rotate-45" : "top-full -translate-y-full",
+            ].map((pos, n) => (
+              <span
+                key={n}
+                className={`absolute inset-x-0 h-[1.5px] bg-current transition-[top,translate,rotate,scale,opacity] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${pos}`}
+              />
+            ))}
+          </span>
         </button>
       </nav>
 
-      {/* Mobile menu overlay */}
+      {/* Mobile menu overlay — the white panel unrolls from the top, then
+          the links rise in one after another; it rolls back up on close. */}
       <div
-        className={`fixed inset-0 -z-0 bg-white transition-opacity duration-300 lg:hidden ${
-          menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        className={`fixed inset-0 -z-0 bg-white transition-[clip-path] duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] lg:hidden ${
+          menuOpen
+            ? "pointer-events-auto [clip-path:inset(0_0_0_0)]"
+            : "pointer-events-none [clip-path:inset(0_0_100%_0)] delay-150"
         }`}
       >
         <div className="flex h-full flex-col px-6 pb-10 pt-28">
           <nav className="flex flex-col font-serif font-light uppercase leading-[1.05] tracking-[-0.02em] text-black [font-size:clamp(2.75rem,14vw,3.5rem)]">
-            {MOBILE_LINKS.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className="transition-opacity duration-200 hover:opacity-60"
-              >
-                {link.label}
-              </Link>
+            {MOBILE_LINKS.map((link, i) => (
+              <span key={link.label} className="block overflow-hidden py-[0.06em]">
+                <Link
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  style={{ transitionDelay: menuOpen ? `${280 + i * 55}ms` : "0ms" }}
+                  className={`block transition-[translate,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] hover:opacity-60 ${
+                    menuOpen ? "translate-y-0 opacity-100 duration-700" : "translate-y-full opacity-0 duration-300"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              </span>
             ))}
           </nav>
           <a
             href="tel:19172"
-            className="mt-auto font-sans text-base font-medium text-black"
+            style={{ transitionDelay: menuOpen ? "700ms" : "0ms" }}
+            className={`mt-auto font-sans text-base font-medium text-black transition-opacity duration-500 ${menuOpen ? "opacity-100" : "opacity-0"}`}
           >
             Call our hotline 19172
           </a>

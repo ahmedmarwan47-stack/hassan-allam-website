@@ -26,7 +26,7 @@ export default function PageHero({
   return (
     <section
       data-nav-theme="light"
-      className="relative flex min-h-[720px] items-center justify-center overflow-hidden bg-brand-white px-6 py-32 md:min-h-screen md:px-16"
+      className="relative flex min-h-[560px] items-center justify-center overflow-hidden bg-brand-white px-6 pb-20 pt-28 md:min-h-screen md:py-32 md:px-16"
     >
       <Image
         src="/images/bg-light.jpg"

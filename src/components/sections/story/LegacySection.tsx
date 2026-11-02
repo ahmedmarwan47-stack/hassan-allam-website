@@ -32,7 +32,7 @@ export default function LegacySection({ id }: { id?: string }) {
       <h2
         ref={ref}
         aria-label={STATEMENT}
-        className="max-w-[1480px] text-left font-serif font-light uppercase leading-[1.08] tracking-[-0.01em] [font-size:clamp(1.75rem,3.7vw,4.25rem)]"
+        className="max-w-[1480px] text-left font-serif font-light uppercase leading-[1.08] tracking-[-0.01em] [font-size:clamp(1.5rem,3.7vw,4.25rem)]"
       >
         {words.map((word, i) => (
           <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>

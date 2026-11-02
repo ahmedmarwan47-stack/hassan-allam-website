@@ -8,21 +8,35 @@ import GrowReveal from "@/components/GrowReveal";
 import NeighborhoodDrawer from "./NeighborhoodDrawer";
 import { OPEN_NEIGHBORHOOD } from "./ProjectActions";
 
-// Pin centres as % of the map box (measured from Figma frame 17043-49871 on
-// the clean artwork, masterplan-slr-clean.jpg), keyed to the list's numbers.
+// Pin centres as % of the map box, keyed to the list's numbers — one per
+// list item. 1, 2, 3 and 6 are measured from Figma frame 17043-49871 on
+// the clean artwork (masterplan-slr-clean.jpg); the rest are placed by eye
+// on the matching parts of the plan (apartment clusters, villa areas, the
+// running track) until official positions are supplied.
 const PINS: { left: number; top: number; number: number }[] = [
-  { left: 54.85, top: 25.49, number: 7 },
   { left: 35.05, top: 35.62, number: 6 },
   { left: 57.1, top: 46.06, number: 3 },
   { left: 33.54, top: 61.47, number: 1 },
   { left: 57.1, top: 71.05, number: 2 },
+  { left: 70.68, top: 38.24, number: 4 },
+  { left: 78.86, top: 70.78, number: 5 },
+  { left: 21.96, top: 44.38, number: 7 },
+  { left: 21.0, top: 65.3, number: 8 },
+  { left: 42.06, top: 49.29, number: 9 },
+  { left: 61.92, top: 59.12, number: 10 },
+  { left: 46.73, top: 77.53, number: 11 },
+  { left: 70.09, top: 77.53, number: 12 },
+  { left: 34.46, top: 73.85, number: 13 },
 ];
+const CYCLE_MS = 2600;
 
 /**
- * Master Plan — the neighborhood list beside the plan. Each pin wears a
- * small white name label and breathes with a soft pulse so it reads as
- * clickable; hovering a pin or its list row highlights both. Clicking either
- * opens the neighborhood's side drawer (image + short description).
+ * Master Plan — the neighborhood list beside the plan, one numbered pin per
+ * list item. Pins breathe with a soft pulse so they read as clickable;
+ * hovering a pin or its list row highlights both and shows the pin's name
+ * label. Touch screens have no hover, so there the labels take turns on
+ * their own, in a loop. Clicking a pin or row opens the neighborhood's side
+ * drawer (image + short description).
  */
 export default function MasterPlan({
   id,
@@ -36,6 +50,34 @@ export default function MasterPlan({
   const [active, setActive] = useState<number | null>(null);
   const [open, setOpen] = useState<number | null>(null); // index into items
   const openNumber = (n: number) => setOpen(items.findIndex((it) => it.number === n));
+
+  // Phones/tablets (the stacked layout) and touch screens: step through the
+  // pins' labels in a loop, since there's no hover. Paused while the drawer
+  // is open; follows the breakpoint if the window is resized.
+  const [autoCycle, setAutoCycle] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: none), (max-width: 1023px)");
+    const apply = () => setAutoCycle(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+  useEffect(() => {
+    if (!autoCycle || open !== null) return;
+    const order = PINS.map((p) => p.number).sort((a, b) => a - b);
+    let i = -1;
+    const step = () => {
+      i = (i + 1) % order.length;
+      setActive(order[i]);
+    };
+    const first = setTimeout(step, 600);
+    const loop = setInterval(step, CYCLE_MS);
+    return () => {
+      clearTimeout(first);
+      clearInterval(loop);
+      setActive(null);
+    };
+  }, [autoCycle, open]);
 
   // Neighborhood names elsewhere on the page (the intro) open their drawer.
   useEffect(() => {
@@ -103,60 +145,72 @@ export default function MasterPlan({
 
       {/* Map — the "exceeding photo" column: 66.16% of the content width,
           right-anchored. `data-no-fx` keeps the site-wide parallax off it,
-          so the artwork never drifts out from under its pins. */}
+          so the artwork never drifts out from under its pins. On phones the
+          frame is taller (3:4) so the plan and its pins read bigger: the
+          plan layer keeps the artwork's own ratio at the full height and is
+          cropped at the sides, with the pins positioned inside it. */}
       <div
         data-no-fx=""
-        className="relative aspect-[866/824] w-full overflow-hidden rounded-[2px] lg:ml-auto lg:w-[66.16%]"
+        className="relative aspect-[3/4] w-full overflow-hidden rounded-[2px] md:aspect-[866/824] lg:ml-auto lg:w-[66.16%]"
       >
-        <GrowReveal axis="width" className="absolute inset-0">
-          <Image
-            src={mapImage}
-            alt="SwanLake Residences New Cairo master plan"
-            fill
-            sizes="(min-width: 768px) 62vw, 100vw"
-            quality={95}
-            className="object-cover"
-          />
-        </GrowReveal>
-        {PINS.map((pin, i) => {
-          const item = items.find((it) => it.number === pin.number);
-          if (!item) return null;
-          const isActive = active === pin.number;
-          return (
-            <button
-              type="button"
-              key={pin.number}
-              onClick={() => openNumber(pin.number)}
-              onMouseEnter={() => setActive(pin.number)}
-              onMouseLeave={() => setActive(null)}
-              aria-label={`${item.name} — view details`}
-              className="group absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
-              style={{ left: `${pin.left}%`, top: `${pin.top}%` }}
-            >
-              {/* Name label, floating above the pin. */}
-              <span
-                className={`absolute bottom-full mb-3 whitespace-nowrap rounded-[2px] bg-brand-white px-3 py-1.5 font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-brand-black shadow-[0_6px_20px_rgba(0,0,0,0.18)] transition-[translate,background-color,color] duration-300 md:text-xs ${
-                  isActive ? "-translate-y-1 bg-brand-black text-brand-white" : ""
-                }`}
+        <div className="absolute inset-y-0 left-1/2 aspect-[866/824] h-full -translate-x-1/2">
+          <GrowReveal axis="width" className="absolute inset-0">
+            <Image
+              src={mapImage}
+              alt="SwanLake Residences New Cairo master plan"
+              fill
+              sizes="(min-width: 768px) 62vw, 135vw"
+              quality={95}
+              className="object-cover"
+            />
+          </GrowReveal>
+          {PINS.map((pin, i) => {
+            const item = items.find((it) => it.number === pin.number);
+            if (!item) return null;
+            const isActive = active === pin.number;
+            return (
+              <button
+                type="button"
+                key={pin.number}
+                onClick={() => openNumber(pin.number)}
+                onMouseEnter={() => setActive(pin.number)}
+                onMouseLeave={() => setActive(null)}
+                aria-label={`${item.name} — view details`}
+                className="group absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
+                style={{ left: `${pin.left}%`, top: `${pin.top}%`, zIndex: isActive ? 20 : 10 }}
               >
-                {item.name}
-              </span>
-              {/* Pin: black core in a white ring, with a breathing pulse. */}
-              <span className="relative flex size-6 items-center justify-center md:size-7">
+                {/* Name label — shown while the pin (or its row) is active. */}
+                {/* Pins near the plan's sides anchor their label inward, so
+                    it never runs off the (side-cropped) phone frame. */}
                 <span
-                  aria-hidden
-                  className="absolute inset-0 animate-[plan-pulse_2.4s_cubic-bezier(0.22,1,0.36,1)_infinite] rounded-full bg-brand-white/70"
-                  style={{ animationDelay: `${i * 0.35}s` }}
-                />
-                <span
-                  className={`relative rounded-full border-2 border-brand-white bg-brand-black shadow-[0_2px_10px_rgba(0,0,0,0.35)] transition-[width,height] duration-300 ${
-                    isActive ? "size-6 md:size-7" : "size-4 md:size-[18px]"
+                  className={`pointer-events-none absolute bottom-full mb-2.5 whitespace-nowrap ${
+                    pin.left < 30 ? "left-0" : pin.left > 70 ? "right-0" : ""
+                  } rounded-[2px] bg-brand-black px-3 py-1.5 font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-brand-white shadow-[0_6px_20px_rgba(0,0,0,0.18)] transition-[opacity,translate] duration-300 md:text-xs ${
+                    isActive ? "-translate-y-0.5 opacity-100" : "translate-y-1 opacity-0"
                   }`}
-                />
-              </span>
-            </button>
-          );
-        })}
+                >
+                  {item.name}
+                </span>
+                {/* Pin: the list number in a black disc with a white ring,
+                    with a breathing pulse. */}
+                <span className="relative flex size-7 items-center justify-center md:size-8">
+                  <span
+                    aria-hidden
+                    className="absolute inset-0 animate-[plan-pulse_2.4s_cubic-bezier(0.22,1,0.36,1)_infinite] rounded-full bg-brand-white/70"
+                    style={{ animationDelay: `${(i % 5) * 0.35}s` }}
+                  />
+                  <span
+                    className={`relative flex items-center justify-center rounded-full border-2 border-brand-white font-sans text-[10px] font-semibold tabular-nums text-brand-white shadow-[0_2px_10px_rgba(0,0,0,0.35)] transition-[width,height,background-color] duration-300 md:text-[11px] ${
+                      isActive ? "size-7 bg-brand-black md:size-8" : "size-[22px] bg-brand-black/85 md:size-6"
+                    }`}
+                  >
+                    {pin.number}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <NeighborhoodDrawer items={items} index={open} onClose={() => setOpen(null)} onIndex={setOpen} />

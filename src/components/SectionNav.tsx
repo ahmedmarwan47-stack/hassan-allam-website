@@ -10,8 +10,8 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
  * visitor scrolls past the hero and sinks away again when the footer
  * arrives. It lists the page's sections, evenly spaced; an underline glides
  * to the one currently in view, and clicking an item smooth-scrolls to it.
- * On narrow screens the bar scrolls sideways and keeps the active item in
- * view.
+ * On phones the bar scrolls sideways (edges softly faded to hint at more)
+ * and keeps the active item centred.
  */
 export default function SectionNav({ items }: { items: { id: string; label: string }[] }) {
   const reduce = useReducedMotion();
@@ -76,9 +76,10 @@ export default function SectionNav({ items }: { items: { id: string; label: stri
           exit={{ y: "100%", opacity: 0 }}
           transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 260, damping: 30, mass: 0.9 }}
         >
+          <div className="border-t border-black/[0.08] bg-white/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl">
           <div
             ref={listRef}
-            className="flex items-center overflow-x-auto border-t border-black/[0.08] bg-white/90 px-2 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl [-ms-overflow-style:none] [scrollbar-width:none] md:justify-evenly md:px-6"
+            className="flex items-center overflow-x-auto px-3 [-ms-overflow-style:none] [scrollbar-width:none] [mask-image:linear-gradient(to_right,transparent,black_28px,black_calc(100%-28px),transparent)] md:justify-evenly md:px-6 md:[mask-image:none]"
           >
             {items.map(({ id, label }) => {
               const isActive = id === active;
@@ -89,7 +90,7 @@ export default function SectionNav({ items }: { items: { id: string; label: stri
                   data-id={id}
                   onClick={() => go(id)}
                   aria-current={isActive ? "location" : undefined}
-                  className={`shrink-0 whitespace-nowrap px-4 py-3 font-sans text-[11px] font-medium uppercase tracking-[0.12em] transition-colors duration-300 md:px-3 md:text-xs ${
+                  className={`shrink-0 whitespace-nowrap px-3 py-3.5 font-sans text-[11px] font-medium uppercase tracking-[0.1em] transition-colors duration-300 md:py-3 md:text-xs md:tracking-[0.12em] ${
                     isActive ? "text-brand-black" : "text-brand-black/50 hover:text-brand-black"
                   }`}
                 >
@@ -107,6 +108,7 @@ export default function SectionNav({ items }: { items: { id: string; label: stri
                 </button>
               );
             })}
+          </div>
           </div>
         </motion.nav>
       )}

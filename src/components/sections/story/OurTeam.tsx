@@ -7,6 +7,7 @@ import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 import RollText from "@/components/RollText";
 import SliderArrow from "@/components/SliderArrow";
+import MobileCarousel from "@/components/MobileCarousel";
 import SectionEyebrow from "@/components/SectionEyebrow";
 import { useCarouselCursor } from "@/components/CarouselCursor";
 import TeamDrawer from "./TeamDrawer";
@@ -18,7 +19,7 @@ const GAP = 20; // px between cards
 /**
  * "The People Behind HAP" — the leadership team from hap.com.eg. Desktop is
  * a draggable slider (three cards in view, the fourth peeking in at the
- * right edge); mobile stacks two-up. Each card opens the member's profile
+ * right edge); mobile is the shared swipe carousel. Each card opens the member's profile
  * in the black side drawer.
  */
 export default function OurTeam({ id }: { id?: string }) {
@@ -43,14 +44,14 @@ export default function OurTeam({ id }: { id?: string }) {
     <section
       id={id}
       data-nav-theme="light"
-      className="flex flex-col gap-14 bg-brand-white px-6 pb-20 pt-16 text-brand-black md:gap-16 md:px-16 md:pb-24 md:pt-24"
+      className="flex flex-col gap-10 bg-brand-white px-6 pb-20 pt-16 text-brand-black md:gap-16 md:px-16 md:pb-24 md:pt-24"
     >
       <SectionEyebrow>People Behind HAP</SectionEyebrow>
 
       {/* Title on the eyebrow's left edge; the intro stacked on the right. */}
       <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between md:gap-16">
         <Reveal>
-          <h2 className="text-left font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(4rem,9.2vw,8.25rem)]">
+          <h2 className="text-left font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(2.75rem,9.2vw,8.25rem)]">
             Our Team
           </h2>
         </Reveal>
@@ -94,12 +95,12 @@ export default function OurTeam({ id }: { id?: string }) {
           </motion.div>
         </div>
 
-        {/* Mobile grid */}
-        <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:hidden">
+        {/* Mobile: swipe carousel, the next card peeking in. */}
+        <MobileCarousel label="team members" slideClassName="w-[68%]" className="md:hidden">
           {TEAM.map((member, i) => (
-            <MemberCard key={member.slug} index={i} onOpen={() => setOpen(i)} />
+            <MemberCard key={member.slug} index={i} onOpen={() => setOpen(i)} className="w-full" />
           ))}
-        </div>
+        </MobileCarousel>
 
         {/* Track + arrows (desktop) */}
         <div className="hidden items-center gap-6 md:flex">

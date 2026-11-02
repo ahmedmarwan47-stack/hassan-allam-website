@@ -12,6 +12,11 @@ import { useEffect, useState, type RefObject } from "react";
  *    callbacks and demonstrably drops them during fast continuous scrolling,
  *    so the rect check guarantees the trigger the moment scrolling settles.
  *
+ * Only the vertical position counts: cards waiting off to the side in a
+ * carousel are "seen" with the rest of their row, so they're already
+ * revealed when they slide in (their own entrance would never fire, since
+ * sliding doesn't scroll the page).
+ *
  * Both listeners detach as soon as the element is seen.
  */
 export function useSeenOnce(ref: RefObject<Element | null>): boolean {
@@ -24,16 +29,14 @@ export function useSeenOnce(ref: RefObject<Element | null>): boolean {
 
     const check = () => {
       const r = el.getBoundingClientRect();
-      const vertOk = r.top < window.innerHeight * 0.9 && r.height > 0;
-      const horizOk = r.left < window.innerWidth && r.right > 0;
-      if (vertOk && horizOk) setSeen(true);
+      if (r.top < window.innerHeight * 0.9 && r.height > 0) setSeen(true);
     };
 
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) setSeen(true);
       },
-      { threshold: 0.1, rootMargin: "100000px 0px 0px 0px" },
+      { threshold: 0.1, rootMargin: "100000px 100000px 0px 100000px" },
     );
     io.observe(el);
 

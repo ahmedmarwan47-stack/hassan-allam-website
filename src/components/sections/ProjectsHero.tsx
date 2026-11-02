@@ -1,19 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
 import {
   MAP_PROJECTS,
   MAP_FILTERS,
   type FilterValue,
 } from "@/data/mapProjects";
 import { PIN_COLORS } from "@/components/MapPin";
-import MapStage, {
-  centerMobileMapOnCairo,
-  MOBILE_MAP_FOCUS,
-  MOBILE_MAP_W_CLASS,
-  MOBILE_MAP_ZOOM,
-} from "@/components/MapStage";
+import MapStage from "@/components/MapStage";
+import MobileProjectMap from "@/components/MobileProjectMap";
 import ProjectSidebar from "@/components/ProjectSidebar";
 import MapFilterBarMobile from "@/components/MapFilterBarMobile";
 
@@ -27,13 +22,6 @@ export default function ProjectsHero({
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const mobileMapRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = mobileMapRef.current;
-    if (!el) return;
-    centerMobileMapOnCairo(el);
-  }, []);
-
   // Lock body scroll while the sidebar is open.
   useEffect(() => {
     document.body.style.overflow = selectedId ? "hidden" : "";
@@ -42,7 +30,6 @@ export default function ProjectsHero({
     };
   }, [selectedId]);
 
-  const hoveredProject = MAP_PROJECTS.find((p) => p.id === hoveredId) ?? null;
   const selectedProject = MAP_PROJECTS.find((p) => p.id === selectedId) ?? null;
   const selectedIndex = selectedProject
     ? MAP_PROJECTS.findIndex((p) => p.id === selectedProject.id)
@@ -58,47 +45,12 @@ export default function ProjectsHero({
     <section id="projects-hero" data-nav-theme="dark" className="relative">
       {/* ── Mobile layout ── */}
       <div className="relative h-[600px] overflow-hidden md:hidden">
-        <div
-          ref={mobileMapRef}
-          className="h-full overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none]"
-        >
-          <div className={`relative h-full ${MOBILE_MAP_W_CLASS} overflow-hidden`}>
-            <MapStage
-              zoom={MOBILE_MAP_ZOOM}
-              focus={MOBILE_MAP_FOCUS}
-              visibleIds={visibleIds}
-              hoveredId={hoveredId}
-              onHover={(id) => id && setHoveredId(id)}
-              onSelect={setSelectedId}
-              priority
-            />
-          </div>
-        </div>
-
-        <span className="pointer-events-none absolute right-6 top-1/2 font-sans text-xs font-medium text-white/80 [text-shadow:0_1px_8px_rgba(0,0,0,0.5)]">
-          Drag to navigate →
-        </span>
-
-        <div className="pointer-events-none absolute inset-x-6 bottom-16 min-h-[44px]">
-          <AnimatePresence mode="wait">
-            {hoveredProject && (
-              <motion.div
-                key={hoveredProject.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.18, ease: "easeOut" }}
-              >
-                <p className="font-sans text-lg font-medium leading-tight text-brand-black">
-                  {hoveredProject.name}
-                </p>
-                <p className="font-sans text-sm font-medium leading-tight text-brand-black">
-                  {hoveredProject.category}
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        <MobileProjectMap
+          visibleIds={visibleIds}
+          onSelect={setSelectedId}
+          paused={!!selectedId}
+          priority
+        />
 
         <MapFilterBarMobile
           activeFilter={activeFilter}

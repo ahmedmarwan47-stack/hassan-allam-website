@@ -1,6 +1,12 @@
 import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
-import GrowReveal from "@/components/GrowReveal";
+import ActionButton from "@/components/ActionButton";
+import { withBasePath } from "@/lib/basePath";
+
+// Where "Scan to download" (desktop QR) and "Download app" (mobile) lead.
+// Placeholder until the store link is ready — regenerate the QR with
+// `npm run qr -- "<url>"` when this changes.
+const APP_DOWNLOAD_URL = "https://google.com";
 
 const KEY_BENEFITS = [
   "Effortlessly explore your community",
@@ -71,11 +77,19 @@ function KeyBenefits() {
 export default function AppCta() {
   return (
     <section id="app" data-nav-theme="light" className="relative bg-warm-50">
-      {/* ── Mobile layout: all text stacked on warm-50, phone mockup LAST so it
-           never sits under the copy. The photo's white drapery blends into the
-           warm-50 background above it. ── */}
-      <div className="md:hidden">
-        <div className="flex flex-col gap-8 px-6 pb-10 pt-28">
+      {/* ── Mobile layout: the drapery photo (light, leaf-shadowed top; the
+           phone at the bottom) fills the whole section, with the copy over
+           its light upper part and room below for the phone. ── */}
+      <div className="relative overflow-hidden md:hidden">
+        <Image
+          src="/images/app-bg.jpg"
+          alt="Hand holding phone with the HAP Family App"
+          fill
+          className="-z-0 object-cover"
+          style={{ objectPosition: "53% 100%" }}
+          sizes="100vw"
+        />
+        <div className="relative z-10 flex flex-col gap-8 px-6 pb-10 pt-28">
           <Reveal>
             <h2 className="font-serif text-[2.5rem] font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black">
               Manage your home anytime with HAP Family App
@@ -84,27 +98,20 @@ export default function AppCta() {
           <Reveal delay={0.1}>
             <StoreBadges />
           </Reveal>
-          <Reveal delay={0.15}>
+          <Reveal delay={0.15} className="flex flex-col items-start gap-6">
             <p className="font-serif text-[1.375rem] font-medium capitalize leading-[1.2] tracking-[-0.02em] text-brand-black">
               <span>HAP Family App </span>
               <strong className="font-bold">enables homeowners</strong>
               <span> to seamlessly manage their properties from their phones.</span>
             </p>
+            <ActionButton label="Download app" href={APP_DOWNLOAD_URL} variant="solid" look="arrow" />
           </Reveal>
           <Reveal delay={0.2}>
             <KeyBenefits />
           </Reveal>
         </div>
-        <GrowReveal axis="height" className="relative h-[600px] w-full overflow-hidden">
-          <Image
-            src="/images/app-bg.jpg"
-            alt="Hand holding phone with the HAP Family App"
-            fill
-            className="object-cover"
-            style={{ objectPosition: "53% 58%" }}
-            sizes="100vw"
-          />
-        </GrowReveal>
+        {/* Room for the phone in the photo below the copy. */}
+        <div aria-hidden className="h-[820px]" />
       </div>
 
       {/* ── Desktop layout: viewport-ratio composition ── */}
@@ -144,14 +151,46 @@ export default function AppCta() {
           </p>
         </Reveal>
 
-        {/* Key benefits — bottom left */}
-        <Reveal
-          delay={0.15}
-          className="absolute"
-          style={{ left: "4rem", top: "79.23%", width: "30.9%" }}
+        {/* Soft black gradient in the bottom-right corner, so the white QR
+            reads over the photo. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_40%_at_100%_100%,rgba(0,0,0,0.7),rgba(0,0,0,0.35)_45%,transparent_100%)]"
+        />
+
+        {/* Bottom row — key benefits on the left and "Scan to download" on
+            the right, bottom-aligned with each other. */}
+        <div
+          className="absolute flex items-end justify-between"
+          style={{ left: "4rem", right: "4rem", top: "79.23%" }}
         >
-          <KeyBenefits />
-        </Reveal>
+          <Reveal delay={0.15} style={{ width: "30.9vw" }}>
+            <KeyBenefits />
+          </Reveal>
+          <Reveal delay={0.2}>
+            <a
+              href={APP_DOWNLOAD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex w-max flex-col items-stretch gap-4"
+              aria-label="Scan to download the HAP Family App"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={withBasePath("/app-qr.svg")}
+                alt=""
+                width={160}
+                height={160}
+                className="aspect-square h-auto w-0 min-w-full transition-transform duration-500 group-hover:scale-105"
+              />
+              {/* Sets the block's width, so the QR spans exactly the label;
+                  the negative margin drops the last letter's tracking. */}
+              <span className="-mr-[0.12em] whitespace-nowrap font-sans text-sm font-medium uppercase leading-none tracking-[0.12em] text-white">
+                Scan to download
+              </span>
+            </a>
+          </Reveal>
+        </div>
       </div>
     </section>
   );

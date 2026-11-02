@@ -17,6 +17,7 @@ import { withBasePath } from "@/lib/basePath";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 import SliderArrow from "@/components/SliderArrow";
+import MobileCarousel from "@/components/MobileCarousel";
 
 /**
  * AssetClasses — Figma node 16988-1390.
@@ -26,7 +27,7 @@ import SliderArrow from "@/components/SliderArrow";
  * size; the cards keep their top edge and grow downward to a 3:2 shape (or
  * taller, to fill the screen). When that outgrows the screen, the whole stage
  * slides up so the cards' bottom edge stays in view.
- * Mobile: a plain fixed-height carousel with arrows (no scroll-driven motion).
+ * Mobile: the shared swipe carousel (MobileCarousel), no scroll-driven motion.
  *
  * Each card links to the Projects page pre-filtered by its asset class. The
  * desktop slider uses the shared elastic Drag / Discover cursor and can be
@@ -173,16 +174,11 @@ export default function AssetClasses() {
   });
   const activeCard = index % TOTAL_CARDS;
 
-  /* ─── Mobile carousel (1 card per view, arrow-driven, fixed height) ─── */
-  const [mIndex, setMIndex] = useState(0);
-  const mMax = TOTAL_CARDS - 1;
-  const mPrev = useCallback(() => setMIndex((i) => Math.max(0, i - 1)), []);
-  const mNext = useCallback(() => setMIndex((i) => Math.min(mMax, i + 1)), [mMax]);
 
   return (
     <section ref={ref} id="asset-classes" data-nav-theme="light" className="relative md:h-[220vh]">
-      {/* ── Mobile layout: fixed-height carousel with arrows ── */}
-      <div className="relative flex flex-col overflow-hidden px-6 py-24 md:hidden">
+      {/* ── Mobile layout: swipe carousel ── */}
+      <div className="relative flex flex-col overflow-hidden px-6 py-20 md:hidden">
         <Image
           src={withBasePath("/images/section-bg.jpg")}
           alt=""
@@ -197,62 +193,16 @@ export default function AssetClasses() {
           </h2>
         </Reveal>
 
-        <div className="relative z-10 mt-8 h-[440px] overflow-hidden">
-          <motion.div
-            className="flex h-full"
-            style={{ width: `${TOTAL_CARDS * 100}%` }}
-            animate={{ x: `-${(mIndex / TOTAL_CARDS) * 100}%` }}
-            transition={{ type: "spring", stiffness: 140, damping: 24 }}
-          >
-            {CARDS.map((card) => (
-              <Link
-                key={card.label}
-                href={projectsHref(card.filter)}
-                className="flex h-full flex-col"
-                style={{ width: `${100 / TOTAL_CARDS}%` }}
-              >
-                <GrowReveal axis="height" className="relative min-h-0 flex-1 overflow-hidden rounded-[2px]">
-                  <Image src={card.src} alt={card.label} fill sizes="90vw" className="object-cover" />
-                </GrowReveal>
-                <figcaption className="mt-3 shrink-0 font-sans text-base font-medium leading-[1.3] text-black">
-                  {card.label}
-                </figcaption>
-              </Link>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Track + arrows */}
-        <div className="relative z-10 mt-6 flex items-center gap-6">
-          <div className="relative h-[2px] flex-1 overflow-hidden bg-black/15">
-            <motion.div
-              className="absolute inset-y-0 bg-black"
-              style={{ width: `${100 / TOTAL_CARDS}%` }}
-              animate={{ left: `${(mIndex / mMax) * (100 - 100 / TOTAL_CARDS)}%` }}
-              transition={{ type: "spring", stiffness: 140, damping: 24 }}
-            />
-          </div>
-          <div className="flex items-center gap-5">
-            <button
-              type="button"
-              onClick={mPrev}
-              disabled={mIndex === 0}
-              aria-label="Previous asset class"
-              className="font-sans text-2xl text-black transition-opacity duration-300 disabled:opacity-25"
-            >
-              &#8592;
-            </button>
-            <button
-              type="button"
-              onClick={mNext}
-              disabled={mIndex === mMax}
-              aria-label="Next asset class"
-              className="font-sans text-2xl text-black transition-opacity duration-300 disabled:opacity-25"
-            >
-              &#8594;
-            </button>
-          </div>
-        </div>
+        <MobileCarousel label="asset class" className="relative z-10 mt-8">
+          {CARDS.map((card) => (
+            <Link key={card.label} href={projectsHref(card.filter)} className="flex flex-col gap-3">
+              <GrowReveal axis="height" className="relative aspect-[4/5] w-full overflow-hidden rounded-[2px]">
+                <Image src={card.src} alt={card.label} fill sizes="82vw" className="object-cover" />
+              </GrowReveal>
+              <figcaption className="font-sans text-base font-medium leading-[1.3] text-black">{card.label}</figcaption>
+            </Link>
+          ))}
+        </MobileCarousel>
       </div>
 
       {/* ── Desktop layout: scroll-driven expanding carousel ── */}

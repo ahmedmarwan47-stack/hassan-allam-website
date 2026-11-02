@@ -107,7 +107,7 @@ export default function RequestInterestForm({
 
         {/* Form card */}
         <Reveal delay={0.1} className="w-full md:w-[52%] md:max-w-[720px]">
-          <div className="rounded-[2px] bg-brand-white p-6 text-brand-black shadow-[0_30px_80px_rgba(0,0,0,0.35)] md:p-12">
+          <div className="rounded-[2px] bg-brand-white p-5 text-brand-black shadow-[0_30px_80px_rgba(0,0,0,0.35)] md:p-12">
             <AnimatePresence mode="wait" initial={false}>
               {sent ? (
                 <motion.div
@@ -137,13 +137,15 @@ export default function RequestInterestForm({
                   noValidate
                   onSubmit={submit}
                   exit={{ opacity: 0, y: -12, transition: { duration: 0.3 } }}
-                  className="flex flex-col gap-7"
+                  className="flex flex-col gap-5 md:gap-7"
                 >
-                  <div className="grid gap-6 sm:grid-cols-2 sm:gap-x-8">
+                  {/* Names share a row at every size; phone + email go
+                      full width on phones. */}
+                  <div className="grid grid-cols-2 gap-x-5 gap-y-4 sm:gap-x-8 sm:gap-y-6">
                     <TextField size="md" label="First name" value={values.firstName} onChange={set("firstName")} status={errors.firstName ? "error" : "idle"} message={errors.firstName} autoComplete="given-name" />
                     <TextField size="md" label="Last name" value={values.lastName} onChange={set("lastName")} status={errors.lastName ? "error" : "idle"} message={errors.lastName} autoComplete="family-name" />
-                    <TextField size="md" label="Phone" type="tel" value={values.phone} onChange={set("phone")} status={errors.phone ? "error" : "idle"} message={errors.phone} autoComplete="tel" />
-                    <TextField size="md" label="Email" type="email" value={values.email} onChange={set("email")} status={errors.email ? "error" : "idle"} message={errors.email} autoComplete="email" />
+                    <TextField size="md" wrapperClassName="col-span-2 sm:col-span-1" label="Phone" type="tel" value={values.phone} onChange={set("phone")} status={errors.phone ? "error" : "idle"} message={errors.phone} autoComplete="tel" />
+                    <TextField size="md" wrapperClassName="col-span-2 sm:col-span-1" label="Email" type="email" value={values.email} onChange={set("email")} status={errors.email ? "error" : "idle"} message={errors.email} autoComplete="email" />
                   </div>
 
                   <SelectField
@@ -154,8 +156,8 @@ export default function RequestInterestForm({
                     options={UNIT_TYPES}
                   />
 
-                  <fieldset className="flex flex-col gap-3">
-                    <legend className="mb-3 font-sans text-sm text-brand-black/60">Preferred contact</legend>
+                  <fieldset className="flex flex-col gap-2 md:gap-3">
+                    <legend className="mb-2 font-sans text-sm text-brand-black/60 md:mb-3">Preferred contact</legend>
                     <div className="flex flex-wrap gap-2">
                       {CONTACT_BY.map((c) => (
                         <button
@@ -163,7 +165,7 @@ export default function RequestInterestForm({
                           type="button"
                           onClick={() => setValues((v) => ({ ...v, contactBy: c }))}
                           aria-pressed={values.contactBy === c}
-                          className={`rounded-full border px-4 py-2 font-sans text-sm font-medium transition-colors duration-300 ${
+                          className={`rounded-full border px-4 py-1.5 font-sans md:py-2 text-sm font-medium transition-colors duration-300 ${
                             values.contactBy === c
                               ? "border-brand-black bg-brand-black text-brand-white"
                               : "border-brand-black/15 text-brand-black/70 hover:border-brand-black"
@@ -175,10 +177,10 @@ export default function RequestInterestForm({
                     </div>
                   </fieldset>
 
-                  <TextareaField size="md" label="Message (optional)" rows={4} value={values.message} onChange={set("message")} />
+                  <TextareaField size="md" label="Message (optional)" rows={4} className="max-md:!h-[76px]" value={values.message} onChange={set("message")} />
 
-                  <div className="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
-                    <ActionButton label="Send request" type="submit" variant="solid" look="arrow" />
+                  <div className="flex flex-col items-stretch gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between sm:pt-2">
+                    <ActionButton label="Send request" type="submit" variant="solid" look="arrow" className="w-full justify-center sm:w-auto" />
                     <p className="max-w-[260px] font-sans text-xs leading-[1.4] text-brand-black/50">
                       By sending, you agree to be contacted by Hassan Allam Properties about this project.
                     </p>

@@ -1,5 +1,6 @@
 import Image from "@/components/ProgressiveImage";
 import GrowReveal from "@/components/GrowReveal";
+import MobileCarousel from "@/components/MobileCarousel";
 
 export default function ImageShowcase({
   id,
@@ -18,15 +19,24 @@ export default function ImageShowcase({
       data-nav-theme="light"
       className="flex flex-col gap-5 bg-brand-white px-6 py-16 md:px-16 md:py-16"
     >
+      {/* Phones: the three photos as a swipe carousel. */}
+      <MobileCarousel label="photos" className="md:hidden">
+        {[full, half, wide].map((src) => (
+          <div key={src} className="relative aspect-[4/5] w-full overflow-hidden rounded-[2px]">
+            <Image src={src} alt="" fill sizes="82vw" quality={85} className="object-cover" />
+          </div>
+        ))}
+      </MobileCarousel>
+
       <GrowReveal
         axis="width"
-        className="relative aspect-[16/10] w-full overflow-hidden rounded-[2px] md:aspect-[1312/820]"
+        className="relative hidden aspect-[1312/820] w-full overflow-hidden rounded-[2px] md:block"
       >
         <Image src={full} alt="" fill sizes="100vw" quality={90} className="object-cover" />
       </GrowReveal>
       {/* Wide image on the shared 66.16% text column; the narrow one takes
           the rest minus 20px, so the gap matches the 20px row gap above. */}
-      <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between md:gap-0">
+      <div className="hidden md:flex md:flex-row md:items-start md:justify-between">
         <GrowReveal
           axis="height"
           className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-[424/540] md:w-[calc(33.84%-20px)]"

@@ -12,7 +12,7 @@ export default function FactsList({ id }: { id?: string }) {
       className="flex flex-col items-start gap-10 bg-brand-white px-6 py-20 text-brand-black md:items-center md:gap-[70px] md:px-16 md:py-24"
     >
       <Reveal className="w-full">
-        <h2 className="w-full text-left font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(4rem,9.2vw,8.25rem)] md:text-center">
+        <h2 className="w-full text-left font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(2.75rem,9.2vw,8.25rem)] md:text-center">
           Facts and Figures
         </h2>
       </Reveal>

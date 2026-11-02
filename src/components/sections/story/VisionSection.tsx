@@ -8,8 +8,8 @@ export default function VisionSection() {
       data-nav-theme="dark"
       className="flex flex-col items-center gap-16 bg-brand-black px-6 py-20 text-brand-white md:gap-20 md:px-16 md:py-[180px]"
     >
-      <Reveal className="flex max-w-[1144px] flex-col items-center gap-8 text-center md:gap-10">
-        <p className="font-serif text-3xl leading-[1.1] tracking-[-0.02em] text-brand-white md:text-[3.875rem]">
+      <Reveal className="flex w-full max-w-[1144px] flex-col items-start gap-6 text-left md:items-center md:gap-10 md:text-center">
+        <p className="font-serif text-[2rem] leading-[1.1] tracking-[-0.02em] text-brand-white md:text-[3.875rem]">
           Driven by a community-centric vision and a passion for individuality
         </p>
         <p className="max-w-[644px] font-sans text-base leading-[1.4] text-brand-white/80">

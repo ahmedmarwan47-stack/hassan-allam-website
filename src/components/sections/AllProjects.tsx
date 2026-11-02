@@ -40,13 +40,17 @@ const PROJECTS: ProjectCard[] = [
   { id: "little-venice", name: "Little Venice", tags: ["Residential"], image: "/images/projects/little-venice.jpg", span: "full", group: "sea" },
 ];
 
-/** Grey tag row with hairline dividers — Figma "Frame 2147227667". */
+/** Grey tag row with hairline dividers — Figma "Frame 2147227667". Each
+ *  divider sits just left of its tag; the list is pulled 8px left and
+ *  clipped, so a tag that wraps to the start of a line loses its divider. */
 function TagList({ tags }: { tags: Category[] }) {
   return (
-    <ul className="flex flex-wrap items-center gap-x-[7px] gap-y-0.5 font-sans text-[11px] leading-[1.4] text-grey-500 md:text-xs">
-      {tags.map((tag, i) => (
-        <li key={tag} className="flex items-center gap-[7px]">
-          {i > 0 && <span aria-hidden className="h-3.5 w-px bg-grey-300" />}
+    <ul className="-ml-2 flex flex-wrap items-center gap-y-0.5 overflow-hidden font-sans text-[11px] leading-[1.4] text-grey-500 md:text-xs">
+      {tags.map((tag) => (
+        <li
+          key={tag}
+          className="relative whitespace-nowrap pl-2 pr-[7px] before:absolute before:-left-px before:top-1/2 before:h-3.5 before:w-px before:-translate-y-1/2 before:bg-grey-300"
+        >
           {TAG_LABEL[tag]}
         </li>
       ))}
@@ -149,13 +153,26 @@ export default function AllProjects({
             />
           )}
 
-          {cityProjects.length > 0 && seaProjects.length > 0 && (
-            <hr className="m-0 h-px w-full border-0 bg-grey-300" />
-          )}
-
-          {/* By The Sea — cards reveal by growing in WIDTH on scroll */}
+          {/* By The Sea — titled where the group starts, then the cards
+              reveal by growing in WIDTH on scroll. */}
           {seaProjects.length > 0 && (
             <div ref={seaRef}>
+              {cityProjects.length > 0 && (
+                <div
+                  // List view already has row hairlines — no full-width rule there.
+                  className={`flex items-center gap-3 px-6 pt-10 md:gap-6 md:px-16 md:pt-16 ${
+                    view === "grid" ? "border-t border-grey-300" : ""
+                  }`}
+                >
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-[2px] border border-brand-black/15 font-sans text-sm font-medium text-brand-black md:size-[54px] md:text-xl">
+                    {String(seaProjects.length).padStart(2, "0")}
+                  </span>
+                  <h3 className="font-sans text-base font-normal leading-none text-brand-black md:[font-size:clamp(1.25rem,2.8vw,2.5rem)]">
+                    Our Communities
+                    <span className="block pb-[0.1em]">By The Sea</span>
+                  </h3>
+                </div>
+              )}
               <CommunityBody
                 revealAxis="width"
                 accent="var(--color-info)"
@@ -194,9 +211,9 @@ function CommunitiesBar({
     transition: { duration: 0.35, ease: [0.65, 0, 0.35, 1] as const },
   };
   return (
-    <div className="sticky top-0 z-20 bg-brand-white px-6 py-4 md:px-16 md:py-5">
-      <div className="flex items-center justify-between gap-4 md:gap-6">
-        <span className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-brand-black/15 font-sans text-base font-medium text-brand-black md:size-[54px] md:text-xl">
+    <div className="sticky top-0 z-20 border-b border-brand-black/10 bg-brand-white px-6 py-3 md:border-0 md:px-16 md:py-5">
+      <div className="flex items-center justify-between gap-3 md:gap-6">
+        <span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-brand-black/15 font-sans text-sm font-medium text-brand-black md:size-[54px] md:text-xl">
           <AnimatePresence mode="wait" initial={false}>
             <motion.span key={count} {...swap}>
               {String(count).padStart(2, "0")}
@@ -204,7 +221,7 @@ function CommunitiesBar({
           </AnimatePresence>
         </span>
 
-        <h3 className="min-w-0 flex-1 font-sans font-normal leading-none text-brand-black [font-size:clamp(1.25rem,2.8vw,2.5rem)] md:flex-none">
+        <h3 className="min-w-0 flex-1 font-sans font-normal leading-none text-brand-black text-base md:flex-none md:[font-size:clamp(1.25rem,2.8vw,2.5rem)]">
           Our Communities
           <span className="block overflow-hidden pb-[0.1em]">
             <AnimatePresence mode="wait" initial={false}>
@@ -238,7 +255,7 @@ function CommunityBody({
   hoverClass: string;
 }) {
   return (
-    <div className="px-6 py-12 md:px-16 md:py-16">
+    <div className="px-6 py-8 md:px-16 md:py-16">
       <AnimatePresence mode="wait">
         {view === "grid" ? (
           <motion.div
@@ -278,30 +295,35 @@ function ViewToggle({
   view: View;
   onChange: (v: View) => void;
 }) {
+  const word = (v: View) =>
+    [
+      "relative hidden font-sans text-lg transition-colors duration-200 focus:outline-none focus-visible:underline md:block md:text-2xl",
+      view === v
+        ? "font-bold text-success-dark after:absolute after:-bottom-2 after:left-0 after:right-0 after:h-px after:bg-success-dark"
+        : "font-medium text-brand-black hover:text-success-dark",
+    ].join(" ");
+  // Phones: two compact icon buttons instead of the words.
+  const icon = (v: View) =>
+    `flex size-9 items-center justify-center rounded-[2px] border transition-colors duration-200 focus:outline-none md:hidden ${
+      view === v ? "border-brand-black bg-brand-black text-brand-white" : "border-brand-black/15 text-brand-black"
+    }`;
   return (
-    <div className="flex items-center gap-8 md:gap-10">
-      <button
-        type="button"
-        onClick={() => onChange("grid")}
-        className={[
-          "relative font-sans text-lg transition-colors duration-200 md:text-2xl",
-          view === "grid"
-            ? "font-bold text-success-dark after:absolute after:-bottom-2 after:left-0 after:right-0 after:h-px after:bg-success-dark"
-            : "font-medium text-brand-black hover:text-success-dark",
-        ].join(" ")}
-      >
+    <div className="flex items-center gap-1.5 md:gap-10">
+      {(["grid", "list"] as const).map((v) => (
+        <button key={v} type="button" onClick={() => onChange(v)} aria-pressed={view === v} aria-label={`${v} view`} className={icon(v)}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+            {v === "grid" ? (
+              <path d="M2.5 2.5h4.5v4.5H2.5zM9 2.5h4.5v4.5H9zM2.5 9h4.5v4.5H2.5zM9 9h4.5v4.5H9z" stroke="currentColor" strokeWidth="1.2" />
+            ) : (
+              <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+            )}
+          </svg>
+        </button>
+      ))}
+      <button type="button" onClick={() => onChange("grid")} className={word("grid")}>
         Grid
       </button>
-      <button
-        type="button"
-        onClick={() => onChange("list")}
-        className={[
-          "relative font-sans text-lg transition-colors duration-200 md:text-2xl",
-          view === "list"
-            ? "font-bold text-success-dark after:absolute after:-bottom-2 after:left-0 after:right-0 after:h-px after:bg-success-dark"
-            : "font-medium text-brand-black hover:text-success-dark",
-        ].join(" ")}
-      >
+      <button type="button" onClick={() => onChange("list")} className={word("list")}>
         List
       </button>
     </div>
@@ -309,7 +331,8 @@ function ViewToggle({
 }
 
 // ─── Grid view ───────────────────────────────────────────────────────────────
-// Mobile shows 2 cards per row; desktop keeps the asymmetric 6-col layout.
+// Phones: an even two-up grid (an odd last card takes the full row);
+// desktop keeps the asymmetric 6-col layout.
 function GridView({
   projects,
   revealAxis,
@@ -322,27 +345,25 @@ function GridView({
   hoverClass: string;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-6 md:gap-x-5 md:gap-y-12">
+    <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-6 md:gap-x-5 md:gap-y-12">
       {projects.map((p, i) => {
-        const colSpan =
+        const wideOnPhone = projects.length % 2 === 1 && i === projects.length - 1;
+        const colSpan = `${wideOnPhone ? "col-span-2" : ""} ${
+          p.span === "third" ? "md:col-span-2" : p.span === "half" ? "md:col-span-3" : "md:col-span-6"
+        }`;
+        const desktopAspect =
           p.span === "third"
-            ? "md:col-span-2"
+            ? "md:aspect-[424/500]"
             : p.span === "half"
-              ? "md:col-span-3"
-              : "col-span-2 md:col-span-6";
-        // Slightly shorter than before so the cards stop overshooting the viewport.
-        const aspect =
-          p.span === "third"
-            ? "aspect-[3/4] md:aspect-[424/500]"
-            : p.span === "half"
-              ? "aspect-[3/4] md:aspect-[646/740]"
-              : "aspect-[4/3] md:aspect-[1312/720]";
+              ? "md:aspect-[646/740]"
+              : "md:aspect-[1312/720]";
+        const aspect = `${wideOnPhone ? "aspect-[16/10]" : "aspect-[4/5]"} ${desktopAspect}`;
         const sizes =
           p.span === "third"
             ? "(min-width: 768px) 33vw, 50vw"
             : p.span === "half"
               ? "(min-width: 768px) 50vw, 50vw"
-              : "100vw";
+              : "(min-width: 768px) 100vw, 50vw";
         const href = projectHref(p.id);
         return (
           <Link key={p.id} href={href} className={`group flex flex-col ${colSpan}`}>
@@ -362,7 +383,7 @@ function GridView({
                 />
               </div>
             </GrowReveal>
-            <div className="mt-4 flex flex-col gap-1 md:mt-6">
+            <div className="mt-3 flex flex-col gap-1 md:mt-6">
               <p className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1rem,1.8vw,1.625rem)]">
                 {p.name}
               </p>
@@ -376,81 +397,115 @@ function GridView({
 }
 
 // ─── List view ───────────────────────────────────────────────────────────────
+// Desktop hover: the row's accent colour wipes up from its bottom edge while
+// the name and tags ease inward; one floating photo glides between rows and
+// cross-fades to the hovered project (instead of a new photo per row).
+const LIST_EASE = "cubic-bezier(0.65,0,0.35,1)";
+
 function ListView({ projects, accent }: { projects: ProjectCard[]; accent: string }) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  // Centre (px from the list's top) of the row the photo sits on.
+  const [photoY, setPhotoY] = useState(0);
+  const hovered = projects.find((p) => p.id === hoveredId);
+
+  const enter = (id: string, row: HTMLElement) => {
+    // Taps fire mouseenter too — only real hover pointers get the effect.
+    if (!window.matchMedia("(hover: hover)").matches) return;
+    setPhotoY(row.offsetTop + row.offsetHeight / 2);
+    setHoveredId(id);
+  };
 
   return (
-    <ul className="relative flex flex-col">
+    <ul className="relative flex flex-col" onMouseLeave={() => setHoveredId(null)}>
       {projects.map((p, i) => {
         const isHovered = hoveredId === p.id;
         const href = projectHref(p.id);
+        const ink = `transition-colors duration-500 ${isHovered ? "text-white" : "text-black"}`;
         return (
-          <li
-            key={p.id}
-            onMouseEnter={() => setHoveredId(p.id)}
-            onMouseLeave={() => setHoveredId(null)}
-            className="relative"
-            style={{ zIndex: isHovered ? 30 : 0 }}
-          >
+          <li key={p.id} onMouseEnter={(e) => enter(p.id, e.currentTarget)} className="relative">
             {i === 0 && <div className="h-px w-full bg-brand-black/15" />}
 
-            <Link href={href} className="block">
-              <motion.div
-                animate={{
-                  backgroundColor: isHovered
-                    ? accent
-                    : "rgba(255,255,255,0)",
-                  paddingLeft: isHovered ? 64 : 0,
-                  paddingRight: isHovered ? 64 : 0,
-                }}
-                transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
-                className="relative flex items-center justify-between gap-6 py-8 md:py-10"
-              >
-                <motion.span
-                  animate={{ color: isHovered ? "#ffffff" : "#000000" }}
-                  transition={{ duration: 0.35 }}
-                  className="font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(1.25rem,2.2vw,2rem)]"
-                >
+            {/* Phones: small photo on the left, name + tags beside it. */}
+            <Link href={href} className="flex items-center gap-4 py-4 md:hidden">
+              <div className="relative h-[84px] w-[68px] shrink-0 overflow-hidden rounded-[2px] bg-grey-100">
+                <Image src={p.image} alt="" fill sizes="68px" className="object-cover" />
+              </div>
+              <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                <span className="font-serif text-lg font-light uppercase leading-[1.05] tracking-[-0.02em] text-brand-black">
                   {p.name}
-                </motion.span>
-                <motion.span
-                  animate={{ color: isHovered ? "#ffffff" : "#000000" }}
-                  transition={{ duration: 0.35 }}
-                  className="w-[45%] whitespace-pre-wrap text-right font-sans text-xs font-medium leading-[1.3] md:w-[31.4%] md:max-w-[414px] md:text-sm"
-                >
-                  {p.tags.map((t) => TAG_LABEL[t]).join("  |  ")}
-                </motion.span>
+                </span>
+                <TagList tags={p.tags} />
+              </div>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden className="shrink-0 text-brand-black/50">
+                <path d="M3 11 11 3M11 3H4M11 3v7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
 
-                <AnimatePresence>
-                  {isHovered && (
-                    <motion.div
-                      key="row-photo"
-                      initial={{ opacity: 0, scale: 0.98 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.98 }}
-                      transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
-                      className="pointer-events-none absolute left-1/2 top-1/2 z-40 -translate-x-1/2 -translate-y-1/2"
-                    >
-                      <div className="relative h-[333px] w-[261px] overflow-hidden shadow-2xl">
-                        <Image
-                          src={p.image}
-                          alt={p.name}
-                          fill
-                          sizes="261px"
-                          quality={95}
-                          className="object-cover"
-                        />
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+            <Link href={href} className="relative hidden overflow-hidden md:block">
+              {/* Accent fill — wipes up from the row's bottom edge. */}
+              <span
+                aria-hidden
+                className="absolute inset-0"
+                style={{
+                  backgroundColor: accent,
+                  clipPath: isHovered ? "inset(0% 0% 0% 0%)" : "inset(100% 0% 0% 0%)",
+                  transition: `clip-path 0.6s ${LIST_EASE}`,
+                }}
+              />
+              <div
+                className="relative flex items-center justify-between gap-6 py-10"
+                style={{
+                  transform: `translateX(${isHovered ? 64 : 0}px)`,
+                  width: isHovered ? "calc(100% - 128px)" : "100%",
+                  transition: `transform 0.6s ${LIST_EASE}, width 0.6s ${LIST_EASE}`,
+                }}
+              >
+                <span className={`font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(1.25rem,2.2vw,2rem)] ${ink}`}>
+                  {p.name}
+                </span>
+                <span className={`w-[31.4%] max-w-[414px] whitespace-pre-wrap text-right font-sans text-sm font-medium leading-[1.3] ${ink}`}>
+                  {p.tags.map((t) => TAG_LABEL[t]).join("  |  ")}
+                </span>
+              </div>
             </Link>
 
             <div className="h-px w-full bg-brand-black/15" />
           </li>
         );
       })}
+
+      {/* The floating photo — glides to the hovered row, cross-fading. */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-0 z-40 hidden h-[333px] w-[261px] overflow-hidden shadow-2xl md:block"
+        initial={false}
+        animate={{
+          y: photoY - 333 / 2,
+          x: "-50%",
+          opacity: hovered ? 1 : 0,
+          scale: hovered ? 1 : 0.94,
+        }}
+        transition={{
+          y: { type: "spring", stiffness: 170, damping: 26 },
+          opacity: { duration: 0.35, ease: "easeOut" },
+          scale: { duration: 0.5, ease: [0.32, 0.72, 0, 1] },
+        }}
+      >
+        <AnimatePresence initial={false}>
+          {hovered && (
+            <motion.div
+              key={hovered.id}
+              className="absolute inset-0"
+              initial={{ opacity: 0, scale: 1.08 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Image src={hovered.image} alt="" fill sizes="261px" quality={95} className="object-cover" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </ul>
   );
 }

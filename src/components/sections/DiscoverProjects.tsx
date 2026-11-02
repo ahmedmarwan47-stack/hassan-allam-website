@@ -1,19 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import {
   MAP_PROJECTS,
   MAP_FILTERS,
   type FilterValue,
 } from "@/data/mapProjects";
 import { PIN_COLORS } from "@/components/MapPin";
-import MapStage, {
-  centerMobileMapOnCairo,
-  MOBILE_MAP_FOCUS,
-  MOBILE_MAP_W_CLASS,
-  MOBILE_MAP_ZOOM,
-} from "@/components/MapStage";
+import MapStage from "@/components/MapStage";
+import MobileProjectMap from "@/components/MobileProjectMap";
 import ProjectSidebar from "@/components/ProjectSidebar";
 import MapFilterBarMobile from "@/components/MapFilterBarMobile";
 import { Reveal } from "@/components/Reveal";
@@ -38,14 +34,6 @@ export default function DiscoverProjects() {
   const headingY = useTransform(scrollYProgress, (v) => (v - 0.5) * -160);
   const paragraphY = useTransform(scrollYProgress, (v) => (v - 0.5) * -1200);
 
-  // Centre the (wider-than-viewport) mobile map on the project cluster on mount.
-  const mobileMapRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = mobileMapRef.current;
-    if (!el) return;
-    centerMobileMapOnCairo(el);
-  }, []);
-
   // Lock body scroll while the sidebar is open.
   useEffect(() => {
     document.body.style.overflow = selectedId ? "hidden" : "";
@@ -54,7 +42,6 @@ export default function DiscoverProjects() {
     };
   }, [selectedId]);
 
-  const hoveredProject = MAP_PROJECTS.find((p) => p.id === hoveredId) ?? null;
   const selectedProject = MAP_PROJECTS.find((p) => p.id === selectedId) ?? null;
   const selectedIndex = selectedProject
     ? MAP_PROJECTS.findIndex((p) => p.id === selectedProject.id)
@@ -68,65 +55,27 @@ export default function DiscoverProjects() {
 
   return (
     <section id="discover-projects" data-nav-theme="dark" className="relative">
-      {/* ── Mobile layout: immersive map (scroll/drag to navigate) ── */}
-      <div className="relative h-[600px] overflow-hidden md:hidden">
-        <div
-          ref={mobileMapRef}
-          className="h-full overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none]"
-        >
-          <div className={`relative h-full ${MOBILE_MAP_W_CLASS} overflow-hidden`}>
-            <MapStage
-              zoom={MOBILE_MAP_ZOOM}
-              focus={MOBILE_MAP_FOCUS}
-              visibleIds={visibleIds}
-              hoveredId={hoveredId}
-              onHover={(id) => id && setHoveredId(id)}
-              onSelect={setSelectedId}
-            />
-          </div>
-        </div>
-
-        {/* Heading + subtitle over the blue sky area */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 px-6 pt-20">
-          <Reveal>
-            <h2 className="font-serif text-[1.875rem] font-light uppercase leading-[1.05] tracking-[-0.02em] text-white [text-shadow:0_1px_12px_rgba(0,0,0,0.35)]">
-              Discover our projects in Egypt
-            </h2>
-          </Reveal>
-          <Reveal delay={0.12}>
-            <p className="mt-3 max-w-[260px] font-serif text-[0.8rem] font-medium uppercase leading-tight tracking-[-0.02em] text-white [text-shadow:0_1px_12px_rgba(0,0,0,0.35)]">
-              Choose between In The City and By The Sea to discover current and
-              upcoming projects tailored to your preferences.
-            </p>
-          </Reveal>
-        </div>
-
-        {/* Drag hint */}
-        <span className="pointer-events-none absolute right-6 top-1/2 font-sans text-xs font-medium text-white/80 [text-shadow:0_1px_8px_rgba(0,0,0,0.5)]">
-          Drag to navigate →
-        </span>
-
-        {/* Hovered project label */}
-        <div className="pointer-events-none absolute inset-x-6 bottom-16 min-h-[44px]">
-          <AnimatePresence mode="wait">
-            {hoveredProject && (
-              <motion.div
-                key={hoveredProject.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.18, ease: "easeOut" }}
-              >
-                <p className="font-sans text-lg font-medium leading-tight text-brand-black">
-                  {hoveredProject.name}
-                </p>
-                <p className="font-sans text-sm font-medium leading-tight text-brand-black">
-                  {hoveredProject.category}
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+      {/* ── Mobile layout: heading on a black band, then the immersive map
+           (scroll/drag to navigate) left clear for the pins ── */}
+      <div className="bg-brand-black px-6 pb-8 pt-20 text-white md:hidden">
+        <Reveal>
+          <h2 className="font-serif text-[2rem] font-light uppercase leading-[1.05] tracking-[-0.02em]">
+            Discover our projects in Egypt
+          </h2>
+        </Reveal>
+        <Reveal delay={0.12}>
+          <p className="mt-4 font-sans text-sm leading-[1.5] text-white/70">
+            Choose between In The City and By The Sea to discover current and
+            upcoming projects tailored to your preferences.
+          </p>
+        </Reveal>
+      </div>
+      <div className="relative h-[560px] overflow-hidden md:hidden">
+        <MobileProjectMap
+          visibleIds={visibleIds}
+          onSelect={setSelectedId}
+          paused={!!selectedId}
+        />
 
         <MapFilterBarMobile
           activeFilter={activeFilter}

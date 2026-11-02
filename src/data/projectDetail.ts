@@ -161,8 +161,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
 
     scrollLabel: "Scroll",
     introParagraphs: [
-      "Situated in Cairo's prestigious East side, SwanLake Residences New Cairo (SLR) evokes an ultra-premium lifestyle in close proximity to the capital's prime destinations. Far from the city's noise and crowds, SLR features niche",
-      "settings that spread across lush landscapes and select luxuries. Sprawling over 454 feddans, SLR is home to 12 exclusively gated projects which come together in a high-end centerpoint to ultimately revive Cairo's East side.",
+      "Situated in Cairo's prestigious East side, SwanLake Residences New Cairo (SLR) evokes an ultra-premium lifestyle in close proximity to the capital's prime destinations.",
+      "Far from the city's noise and crowds, SLR features niche settings that spread across lush landscapes and select luxuries. Sprawling over 454 feddans, SLR is home to 12 exclusively gated projects which come together in a high-end centerpoint to ultimately revive Cairo's East side.",
     ],
     introImages: ["/images/image 384.jpg", "/images/image 383.jpg"],
 
@@ -191,14 +191,13 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
         { number: 4, name: "The Amaia", image: "/images/image 386.jpg", blurb: "Elegant duplexes and penthouses with open views across SLR's landscaped spine." },
         { number: 5, name: "The Phoenix", image: "/images/image 384.jpg", blurb: "Refined residences with stone facades and double-height lobbies, a short stroll from the clubhouse." },
         { number: 6, name: "The Iris", image: "/images/image 383.jpg", blurb: "Resort-style living around a sunlit pool deck, with shaded cabanas and gardens between every building." },
-        { number: 7, name: "Am:pm", image: "/images/image 402.jpg", blurb: "SLR's lifestyle centre — cafés, dining and boutiques that keep the community lively from morning to night." },
-        { number: 8, name: "Villas Residence", image: "/images/image 398.jpg", blurb: "Standalone villas on generous plots, each with a private garden and pool." },
-        { number: 9, name: "Villas Residence", image: "/images/image 390.jpg", blurb: "Standalone villas on generous plots, each with a private garden and pool." },
-        { number: 10, name: "Villas Residence", image: "/images/image 391.jpg", blurb: "Twin and town villas facing the green corridors, made for growing families." },
-        { number: 11, name: "Villas Residence", image: "/images/image 392.jpg", blurb: "Twin and town villas facing the green corridors, made for growing families." },
-        { number: 12, name: "Villas Residence", image: "/images/image 398.jpg", blurb: "Signature villas at the edge of the masterplan, with the most private settings in SLR." },
-        { number: 13, name: "Villas Residence", image: "/images/image 390.jpg", blurb: "Signature villas at the edge of the masterplan, with the most private settings in SLR." },
-        { number: 14, name: "Sports Club", image: "/images/image 401.jpg", blurb: "A full sports club with courts, a fitness centre and family pools, at the heart of community life." },
+        { number: 7, name: "Villas Residence", image: "/images/image 398.jpg", blurb: "Standalone villas on generous plots, each with a private garden and pool." },
+        { number: 8, name: "Villas Residence", image: "/images/image 390.jpg", blurb: "Standalone villas on generous plots, each with a private garden and pool." },
+        { number: 9, name: "Villas Residence", image: "/images/image 391.jpg", blurb: "Twin and town villas facing the green corridors, made for growing families." },
+        { number: 10, name: "Villas Residence", image: "/images/image 392.jpg", blurb: "Twin and town villas facing the green corridors, made for growing families." },
+        { number: 11, name: "Villas Residence", image: "/images/image 398.jpg", blurb: "Signature villas at the edge of the masterplan, with the most private settings in SLR." },
+        { number: 12, name: "Villas Residence", image: "/images/image 390.jpg", blurb: "Signature villas at the edge of the masterplan, with the most private settings in SLR." },
+        { number: 13, name: "Sports Club", image: "/images/image 401.jpg", blurb: "A full sports club with courts, a fitness centre and family pools, at the heart of community life." },
       ],
     },
 
@@ -242,8 +241,8 @@ export const PROJECT_DETAILS: Record<string, ProjectDetailData> = {
 
     scrollLabel: "Scroll",
     introParagraphs: [
-      "Nestled on the Red Sea's shoreline, SwanLake Residences El Gouna evokes a laid-back waterfront lifestyle, moments from the marina and the lagoon's turquoise water. Far from the noise and crowds, it features niche",
-      "settings that spread across sun-soaked landscapes and select luxuries. Set across the coastline, it brings together a handful of exclusively gated neighborhoods around a high-end centerpoint overlooking the sea.",
+      "Nestled on the Red Sea's shoreline, SwanLake Residences El Gouna evokes a laid-back waterfront lifestyle, moments from the marina and the lagoon's turquoise water.",
+      "Far from the noise and crowds, it features niche settings that spread across sun-soaked landscapes and select luxuries. Set across the coastline, it brings together a handful of exclusively gated neighborhoods around a high-end centerpoint overlooking the sea.",
     ],
     introImages: ["/images/image 384.jpg", "/images/image 383.jpg"],
 

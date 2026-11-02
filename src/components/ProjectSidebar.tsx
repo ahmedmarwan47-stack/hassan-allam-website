@@ -71,9 +71,6 @@ export default function ProjectSidebar({
               </button>
             </div>
 
-            {/* Divider above the photo, per Figma. */}
-            <div className="mx-[30px] mt-[20px] h-px bg-grey-300" />
-
             {/* Scrollable middle: photo carousel + name + category + description.
                 Children are absolutely stacked + crossfaded so prev/next swaps
                 with no exit-enter "jump". */}

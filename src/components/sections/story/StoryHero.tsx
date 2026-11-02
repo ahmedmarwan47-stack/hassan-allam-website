@@ -5,7 +5,7 @@ export default function StoryHero() {
   return (
     <section
       data-nav-theme="light"
-      className="relative flex min-h-[720px] items-center justify-center overflow-hidden bg-brand-white px-6 py-32 md:min-h-screen md:px-16"
+      className="relative flex min-h-[560px] items-center justify-center overflow-hidden bg-brand-white px-6 pb-20 pt-28 md:min-h-screen md:py-32 md:px-16"
     >
       {/* Light window-light backdrop whose white bottom fades into the white
           intro section below (desktop + mobile). */}
@@ -24,17 +24,12 @@ export default function StoryHero() {
       />
 
       <Reveal className="relative z-10">
-        {/* Phones: two lines (INSIDE THE WORLD / OF HAP), sized so the first
-            (~8.7em wide) fits. From tablet up: three lines (INSIDE THE /
-            WORLD OF / HAP) at the full display size. */}
-        <h1 className="text-center font-serif font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(2rem,9.8vw,6rem)] md:[font-size:clamp(2.75rem,11vw,12rem)]">
-          <span className="block whitespace-nowrap">
-            INSIDE THE<span className="md:hidden"> WORLD</span>
-          </span>
-          <span className="block">
-            <span className="hidden md:inline">WORLD </span>OF<span className="md:hidden"> HAP</span>
-          </span>
-          <span className="hidden md:block">HAP</span>
+        {/* Three lines (INSIDE THE / WORLD OF / HAP) at every size; phones
+            size it so "INSIDE THE" fills most of the width. */}
+        <h1 className="text-center font-serif font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(2.75rem,15vw,6rem)] md:[font-size:clamp(2.75rem,11vw,12rem)]">
+          <span className="block whitespace-nowrap">INSIDE THE</span>
+          <span className="block">WORLD OF</span>
+          <span className="block">HAP</span>
         </h1>
       </Reveal>
     </section>

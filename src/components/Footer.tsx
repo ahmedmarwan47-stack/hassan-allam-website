@@ -250,7 +250,7 @@ export default function Footer() {
               78px Cormorant Light, one line per link from lg up. Both scale down
               below 1440. Below lg the nav stacks above the columns so tablets
               don't overflow; phones may wrap a long link. */}
-          <nav className="flex w-full flex-col font-serif font-light uppercase leading-none tracking-[-0.02em] text-[3.25rem] lg:w-[43.2%] lg:shrink-0 md:[font-size:clamp(2.75rem,5.42vw,4.875rem)] lg:whitespace-nowrap">
+          <nav className="flex w-full flex-col font-serif font-light uppercase leading-none tracking-[-0.02em] text-[2.5rem] lg:w-[43.2%] lg:shrink-0 md:[font-size:clamp(2.75rem,5.42vw,4.875rem)] lg:whitespace-nowrap">
             {NAV_LINKS.map((link) => {
               const active = isActive(link.href);
               return (
@@ -279,17 +279,17 @@ export default function Footer() {
               </div>
               <div className="flex flex-col gap-10 md:flex-row md:items-start md:gap-[66px]">
                 <div className="hidden flex-1 flex-col gap-7 md:flex">
-                  <p className="text-[1.625rem] leading-[1.3]">In the City</p>
+                  <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">In the City</p>
                   <ProjectLinks items={IN_THE_CITY} />
                 </div>
                 <div className="hidden flex-1 flex-col gap-7 md:flex">
-                  <p className="text-[1.625rem] leading-[1.3]">By the Sea</p>
+                  <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">By the Sea</p>
                   <ProjectLinks items={BY_THE_SEA} />
                 </div>
 
                 {/* Get In Touch — contact rows + socials in one stack */}
                 <div className="flex flex-1 flex-col gap-7 pt-10 md:pt-0">
-                  <p className="text-[1.625rem] leading-[1.3]">Get In Touch</p>
+                  <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">Get In Touch</p>
                   <div className="flex flex-col gap-3">
                     <a href="mailto:info@hap.com.eg" className="flex items-center gap-3 text-base leading-[1.4] transition-colors duration-300 hover:text-white/70">
                       <MailIcon />

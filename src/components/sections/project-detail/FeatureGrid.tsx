@@ -44,7 +44,8 @@ export default function FeatureGrid({
           </Reveal>
         ))}
       </div>
-      <Reveal>
+      {/* Centred on phones; aligned with the column from tablet up. */}
+      <Reveal className="flex w-full justify-center md:block">
         <RequestInterest />
       </Reveal>
     </div>

@@ -36,11 +36,11 @@ export default function PortfolioStatement() {
       data-nav-theme="dark"
       className="flex min-h-screen items-center justify-center bg-brand-black px-6 py-24 text-brand-white md:py-16"
     >
-      <div className="flex flex-col items-center gap-16 text-center md:gap-28 lg:gap-32">
+      <div className="flex flex-col items-start gap-12 text-left md:items-center md:gap-28 md:text-center lg:gap-32">
         <h2
           ref={headingRef}
           aria-label={HEADING}
-          className="max-w-[1100px] font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(3rem,6.4vw,5.75rem)]"
+          className="max-w-[1100px] font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(2.5rem,6.4vw,5.75rem)]"
         >
           {words.map((word, i) => (
             <FillWord
@@ -53,7 +53,7 @@ export default function PortfolioStatement() {
         </h2>
         <WritingText
           text={BODY}
-          className="max-w-[465px] font-serif font-light uppercase leading-[1.2] tracking-[-0.02em] [font-size:clamp(0.9rem,1.5vw,1.375rem)]"
+          className="max-w-[465px] font-serif font-light uppercase leading-[1.2] tracking-[-0.02em] [font-size:clamp(1rem,1.5vw,1.375rem)]"
         />
       </div>
     </section>
