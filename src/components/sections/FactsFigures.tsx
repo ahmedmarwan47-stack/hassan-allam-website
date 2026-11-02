@@ -7,24 +7,7 @@ import { AnimatePresence, motion, useInView } from "framer-motion";
 import ActionButton from "@/components/ActionButton";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
-
-const FACTS = [
-  {
-    label: "Developments &\nSub-Developments",
-    value: "25",
-    image: "/images/commercial-real-estate.jpg",
-  },
-  {
-    label: "Employees",
-    value: "320",
-    image: "/images/story-hands.jpg",
-  },
-  {
-    label: "Commercial\nReal Estate",
-    value: "19,521",
-    image: "/images/commercial-real-estate.jpg",
-  },
-];
+import { FACTS } from "@/data/facts";
 
 function StoryCta() {
   return (
@@ -50,10 +33,13 @@ function StoryCta() {
 export function FactRow({
   label,
   value,
+  unit,
   image,
 }: {
   label: string;
   value: string;
+  /** Small unit set beside the figure's top (e.g. "Sqm"). */
+  unit?: string;
   image: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -87,7 +73,7 @@ export function FactRow({
       <div className="h-px w-full bg-grey-300" />
 
       <div
-        className={`flex w-full items-center justify-between transition-[padding] duration-500 md:py-0 ${
+        className={`flex w-full items-center justify-between gap-4 transition-[padding] duration-500 md:py-0 ${
           compact && active ? "py-10" : "py-5"
         }`}
       >
@@ -110,7 +96,7 @@ export function FactRow({
             style={{ paddingLeft: invert ? 60 : 0 }}
           >
             <p
-              className="w-[120px] whitespace-pre-line font-sans text-base font-medium leading-[1.1] transition-colors duration-500 md:w-[184px] md:text-[1.25rem]"
+              className="w-[140px] whitespace-pre-line font-sans text-base font-medium leading-[1.25] transition-colors duration-500 md:w-[280px] md:text-[1.25rem]"
               style={{ color: invert ? "#fff" : "#000" }}
             >
               {label}
@@ -121,10 +107,13 @@ export function FactRow({
         {/* Right side: value */}
         <div className="flex flex-col justify-center transition-all duration-500 md:h-[112px] md:w-[645px]">
           <p
-            className="font-serif text-[2.75rem] font-light leading-none tracking-[-0.02em] transition-colors duration-500 md:text-[7rem]"
+            className="flex items-start gap-1.5 font-serif text-[2.25rem] font-light leading-none tracking-[-0.02em] transition-colors duration-500 md:gap-4 md:text-[7rem]"
             style={{ color: invert ? "#fff" : "#000" }}
           >
             {value}
+            {unit && (
+              <span className="pt-1 font-sans text-sm font-medium tracking-normal md:pt-3 md:text-xl">{unit}</span>
+            )}
           </p>
         </div>
       </div>

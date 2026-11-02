@@ -167,3 +167,31 @@ html:not(.hydrated) [data-reveal] {
     animation: none;
   }
 }
+
+/* ── Form dropdown menus (SelectField): quick fade + zoom from the field. ─ */
+@keyframes fx-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+}
+@keyframes fx-dropdown-out {
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+}
+.fx-dropdown {
+  transform-origin: var(--radix-dropdown-menu-content-transform-origin);
+}
+.fx-dropdown[data-state="open"] {
+  animation: fx-dropdown-in 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-dropdown[data-state="closed"] {
+  animation: fx-dropdown-out 120ms ease-in;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fx-dropdown[data-state] {
+    animation: none;
+  }
+}

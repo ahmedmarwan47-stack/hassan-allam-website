@@ -7,7 +7,6 @@ import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 import NeighborhoodDrawer from "./NeighborhoodDrawer";
 import { OPEN_NEIGHBORHOOD } from "./ProjectActions";
-import { RequestInterest } from "@/components/ActionButton";
 
 // Pin centres as % of the map box (measured from Figma frame 17043-49871 on
 // the clean artwork, masterplan-slr-clean.jpg), keyed to the list's numbers.
@@ -100,9 +99,6 @@ export default function MasterPlan({
             );
           })}
         </ul>
-        <Reveal>
-          <RequestInterest />
-        </Reveal>
       </div>
 
       {/* Map — the "exceeding photo" column: 66.16% of the content width,

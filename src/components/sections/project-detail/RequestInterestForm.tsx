@@ -5,7 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import ParallaxImage from "@/components/ParallaxImage";
 import { Reveal } from "@/components/Reveal";
 import ActionButton from "@/components/ActionButton";
-import { SelectField, TextField, TextareaField } from "@/components/FormField";
+import { SelectField, TextField, TextareaField, type SelectOption } from "@/components/FormField";
+import { FeatureIcon } from "./icons";
 import { PREFILL_INTEREST } from "./ProjectActions";
 
 /**
@@ -14,7 +15,15 @@ import { PREFILL_INTEREST } from "./ProjectActions";
  * (parallax) under a dark wash; the pitch sits on the left and a white form
  * card on the right. No backend yet: a valid submit shows a thank-you state.
  */
-const UNIT_TYPES = ["Apartment", "Duplex", "Penthouse", "Townhouse", "Villa"];
+// Home types, each with its line icon (same set as "Homes to Choose From").
+const UNIT_TYPES: SelectOption[] = [
+  { value: "Apartment", label: "Apartment", icon: <FeatureIcon name="apartment" /> },
+  { value: "Duplex", label: "Duplex", icon: <FeatureIcon name="duplex" /> },
+  { value: "Penthouse", label: "Penthouse", icon: <FeatureIcon name="penthouse" /> },
+  { value: "Townhouse", label: "Townhouse", icon: <FeatureIcon name="townhouse" /> },
+  { value: "Twin House", label: "Twin House", icon: <FeatureIcon name="twinhouse" /> },
+  { value: "Villa", label: "Villa", icon: <FeatureIcon name="villa" /> },
+];
 const CONTACT_BY = ["Phone", "WhatsApp", "Email"] as const;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -50,12 +59,13 @@ export default function RequestInterestForm({
     return () => window.removeEventListener(PREFILL_INTEREST, onPrefill);
   }, []);
 
-  const set = (key: keyof typeof values) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
-  ) => {
-    setValues((v) => ({ ...v, [key]: e.target.value }));
+  const setValue = (key: keyof typeof values, value: string) => {
+    setValues((v) => ({ ...v, [key]: value }));
     setErrors((er) => ({ ...er, [key]: undefined }));
   };
+  const set = (key: keyof typeof values) => (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => setValue(key, e.target.value);
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -136,13 +146,13 @@ export default function RequestInterestForm({
                     <TextField size="md" label="Email" type="email" value={values.email} onChange={set("email")} status={errors.email ? "error" : "idle"} message={errors.email} autoComplete="email" />
                   </div>
 
-                  <SelectField size="md" label="Interested in" value={values.unit} onChange={set("unit")}>
-                    {UNIT_TYPES.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </SelectField>
+                  <SelectField
+                    size="md"
+                    label="Interested in"
+                    value={values.unit}
+                    onValueChange={(v) => setValue("unit", v)}
+                    options={UNIT_TYPES}
+                  />
 
                   <fieldset className="flex flex-col gap-3">
                     <legend className="mb-3 font-sans text-sm text-brand-black/60">Preferred contact</legend>
@@ -165,7 +175,7 @@ export default function RequestInterestForm({
                     </div>
                   </fieldset>
 
-                  <TextareaField size="md" label="Message (optional)" rows={2} value={values.message} onChange={set("message")} />
+                  <TextareaField size="md" label="Message (optional)" rows={4} value={values.message} onChange={set("message")} />
 
                   <div className="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
                     <ActionButton label="Send request" type="submit" variant="solid" look="arrow" />

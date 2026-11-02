@@ -1,11 +1,11 @@
 "use client";
 
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
   useId,
   useState,
   type InputHTMLAttributes,
   type ReactNode,
-  type SelectHTMLAttributes,
   type TextareaHTMLAttributes,
 } from "react";
 
@@ -154,54 +154,89 @@ export function TextField({
   );
 }
 
+export interface SelectOption {
+  value: string;
+  label: string;
+  /** Optional icon shown before the label in the menu. */
+  icon?: ReactNode;
+}
+
+/**
+ * SelectField — same floating-label field as the inputs, but opens a styled
+ * menu instead of the browser's list: a white panel that fades and zooms in
+ * from the field, rows that highlight on hover/keyboard, a check on the
+ * current choice. Built on Radix Dropdown Menu (keyboard support, collision-
+ * aware positioning, scrolls long lists).
+ */
 export function SelectField({
   label,
   status = "idle",
   message,
   wrapperClassName,
-  className,
   value,
+  onValueChange,
+  options,
   size = "lg",
-  children,
-  onFocus,
-  onBlur,
-  ...props
-}: SharedProps &
-  Omit<SelectHTMLAttributes<HTMLSelectElement>, "className" | "size"> & {
-    className?: string;
-  }) {
+}: SharedProps & {
+  value: string;
+  onValueChange: (value: string) => void;
+  options: SelectOption[];
+}) {
   const id = useId();
-  const [focused, setFocused] = useState(false);
-  const filled = String(value ?? "").length > 0;
+  const [open, setOpen] = useState(false);
+  const filled = value.length > 0;
   const s = SIZES[size];
+  const current = options.find((o) => o.value === value);
   return (
-    <Shell id={id} label={label} floated={focused || filled} focused={focused} status={status} message={message} size={size} wrapperClassName={wrapperClassName}>
-      <select
-        {...props}
-        id={id}
-        value={value}
-        aria-invalid={status === "error"}
-        onFocus={(e) => {
-          setFocused(true);
-          onFocus?.(e);
-        }}
-        onBlur={(e) => {
-          setFocused(false);
-          onBlur?.(e);
-        }}
-        className={`${inputBase} ${s.text} ${s.pad} cursor-pointer appearance-none pr-8 ${filled ? "" : "text-transparent"} ${className ?? ""}`}
-      >
-        {/* Empty choice so the label can rest inside until something is picked. */}
-        <option value="" disabled hidden />
-        {children}
-      </select>
+    <Shell id={id} label={label} floated={open || filled} focused={open} status={status} message={message} size={size} wrapperClassName={wrapperClassName}>
+      <DropdownMenu.Root modal={false} open={open} onOpenChange={setOpen}>
+        <DropdownMenu.Trigger asChild>
+          <button
+            id={id}
+            type="button"
+            className={`${inputBase} ${s.text} ${s.pad} flex min-h-[1.3em] cursor-pointer items-center pr-8 text-left`}
+          >
+            {/* Non-breaking space keeps the line height while empty. */}
+            {current?.label ?? "\u00a0"}
+          </button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content
+            align="start"
+            sideOffset={8}
+            className="fx-dropdown z-[95] max-h-[min(340px,var(--radix-dropdown-menu-content-available-height))] w-[var(--radix-dropdown-menu-trigger-width)] overflow-y-auto rounded-[4px] border border-brand-black/10 bg-brand-white p-1.5 shadow-[0_18px_48px_rgba(0,0,0,0.14)]"
+          >
+            <DropdownMenu.RadioGroup value={value} onValueChange={onValueChange}>
+              {options.map((o) => (
+                <DropdownMenu.RadioItem
+                  key={o.value}
+                  value={o.value}
+                  className="flex cursor-pointer select-none items-center gap-3 rounded-[2px] px-3 py-2.5 font-sans text-base text-brand-black outline-none transition-colors duration-150 data-[highlighted]:bg-grey-100"
+                >
+                  {o.icon && (
+                    <span aria-hidden className="flex size-5 shrink-0 items-center justify-center opacity-60 [&_svg]:size-5">
+                      {o.icon}
+                    </span>
+                  )}
+                  <span className="flex-1">{o.label}</span>
+                  <DropdownMenu.ItemIndicator>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+                      <path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </DropdownMenu.ItemIndicator>
+                </DropdownMenu.RadioItem>
+              ))}
+            </DropdownMenu.RadioGroup>
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
       <svg
         width="22"
         height="22"
         viewBox="0 0 24 24"
         fill="none"
         aria-hidden
-        className={`pointer-events-none absolute bottom-3 right-0 text-brand-black transition-transform duration-500 ${EASE} ${focused ? "rotate-180" : ""}`}
+        className={`pointer-events-none absolute bottom-3 right-0 text-brand-black transition-transform duration-500 ${EASE} ${open ? "rotate-180" : ""}`}
       >
         <path d="M5 8.5 12 15.5 19 8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>

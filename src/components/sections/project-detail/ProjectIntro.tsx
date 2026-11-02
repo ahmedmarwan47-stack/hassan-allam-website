@@ -1,7 +1,6 @@
 import type { ProjectDetailData } from "@/data/projectDetail";
 import GrowImagePair from "./GrowImagePair";
 import { Reveal } from "@/components/Reveal";
-import { RequestInterest } from "@/components/ActionButton";
 import { BrochureButton, NeighborhoodLink } from "./ProjectActions";
 
 export default function ProjectIntro({ id, data }: { id?: string; data: ProjectDetailData }) {
@@ -63,7 +62,6 @@ export default function ProjectIntro({ id, data }: { id?: string; data: ProjectD
           </p>
           </Reveal>
           <Reveal delay={0.2} className="flex flex-wrap gap-3">
-            <RequestInterest />
             <BrochureButton label={data.brochureLabel} />
           </Reveal>
         </div>

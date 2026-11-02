@@ -1,31 +1,9 @@
 import { FactRow } from "@/components/sections/FactsFigures";
 import { Reveal } from "@/components/Reveal";
+import { FACTS } from "@/data/facts";
 
-// Reuses the homepage Facts & Figures hover/scroll photo-reveal effect.
-const FACTS = [
-  {
-    label: "Developments &\nSub-Developments",
-    value: "25",
-    image: "/images/commercial-real-estate.jpg",
-  },
-  {
-    label: "Land Plots Under\nDevelopment",
-    value: "23",
-    image: "/images/map/slw.jpg",
-  },
-  { label: "Employees", value: "320", image: "/images/story-hands.jpg" },
-  {
-    label: "Residential Units\nDelivered",
-    value: "8,240",
-    image: "/images/map/slg.jpg",
-  },
-  {
-    label: "Governorates",
-    value: "10",
-    image: "/images/hospitality.jpg",
-  },
-];
-
+// Reuses the homepage Facts & Figures hover/scroll photo-reveal effect and
+// the same figures (src/data/facts.ts).
 export default function FactsList({ id }: { id?: string }) {
   return (
     <section

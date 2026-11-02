@@ -1,6 +1,5 @@
 import Image from "@/components/ProgressiveImage";
 import GrowReveal from "@/components/GrowReveal";
-import { RequestInterest } from "@/components/ActionButton";
 
 export default function ProjectStory({
   id,
@@ -56,13 +55,12 @@ export default function ProjectStory({
             gutter, so the body column starts exactly at the second photo's
             left edge at any viewport width. */}
         <p className="font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black md:w-[calc(50%-22px)] md:max-w-none [font-size:clamp(1.75rem,4.3vw,3.875rem)]">
-          <span className="block max-w-[400px]">{heading}</span>
+          <span className="block md:max-w-[780px]">{heading}</span>
         </p>
         <div className="flex max-w-[445px] flex-1 flex-col gap-4 font-sans text-base leading-[1.4] text-brand-black">
           {paragraphs.map((p, i) => (
             <p key={i}>{p}</p>
           ))}
-          <RequestInterest className="mt-4 self-start" />
         </div>
       </div>
     </section>

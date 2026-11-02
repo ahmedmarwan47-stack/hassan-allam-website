@@ -69,17 +69,20 @@ export default function ContactForm() {
   const [emailTouched, setEmailTouched] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const update = (field: keyof FormState) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
-  ) => {
+  const setField = (field: keyof FormState, value: string) => {
     setForm((f) =>
       field === "subject"
         ? // A new subject starts its follow-up fields fresh.
-          { ...f, subject: e.target.value as Subject, project: "", industry: "", company: "" }
-        : { ...f, [field]: e.target.value },
+          { ...f, subject: value as Subject, project: "", industry: "", company: "" }
+        : { ...f, [field]: value },
     );
     setErrors((prev) => ({ ...prev, [field]: undefined }));
   };
+  const update = (field: keyof FormState) => (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => setField(field, e.target.value);
+  const choose = (field: keyof FormState) => (value: string) => setField(field, value);
+  const toOptions = (list: readonly string[]) => list.map((v) => ({ value: v, label: v }));
 
   const emailStatus: FieldStatus =
     errors.email
@@ -168,32 +171,22 @@ export default function ContactForm() {
               <SelectField
                 label="Subject"
                 value={form.subject}
-                onChange={update("subject")}
+                onValueChange={choose("subject")}
                 status={errors.subject ? "error" : "idle"}
                 message={errors.subject}
-              >
-                {SUBJECTS.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </SelectField>
+                options={toOptions(SUBJECTS)}
+              />
               <AnimatePresence mode="popLayout" initial={false}>
                 {(form.subject === "Projects" || form.subject === "Resale") && (
                   <Followup key="project">
                     <SelectField
                       label={form.subject === "Resale" ? "Select project to resell" : "Select project"}
                       value={form.project}
-                      onChange={update("project")}
+                      onValueChange={choose("project")}
                       status={errors.project ? "error" : "idle"}
                       message={errors.project}
-                    >
-                      {PROJECTS.map((p) => (
-                        <option key={p} value={p}>
-                          {p}
-                        </option>
-                      ))}
-                    </SelectField>
+                      options={toOptions(PROJECTS)}
+                    />
                   </Followup>
                 )}
                 {form.subject === "Partnerships" && (
@@ -201,16 +194,11 @@ export default function ContactForm() {
                     <SelectField
                       label="Industry"
                       value={form.industry}
-                      onChange={update("industry")}
+                      onValueChange={choose("industry")}
                       status={errors.industry ? "error" : "idle"}
                       message={errors.industry}
-                    >
-                      {INDUSTRIES.map((i) => (
-                        <option key={i} value={i}>
-                          {i}
-                        </option>
-                      ))}
-                    </SelectField>
+                      options={toOptions(INDUSTRIES)}
+                    />
                   </Followup>
                 )}
               </AnimatePresence>
