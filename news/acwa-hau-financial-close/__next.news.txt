@@ -2,4 +2,4 @@
 2:I[39756,["/hassan-allam-website/_next/static/chunks/2vr0va2drw3t8.js","/hassan-allam-website/_next/static/chunks/14mrh2-p_w84d.js","/hassan-allam-website/_next/static/chunks/3e38cm0gvza80.js"],"default"]
 3:I[37457,["/hassan-allam-website/_next/static/chunks/2vr0va2drw3t8.js","/hassan-allam-website/_next/static/chunks/14mrh2-p_w84d.js","/hassan-allam-website/_next/static/chunks/3e38cm0gvza80.js"],"default"]
 4:[]
-0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"N_b7m4xK24Hk8nCnGGQ7I"}
+0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"3i4mB5w6rIdyiyh5BGr5V"}
