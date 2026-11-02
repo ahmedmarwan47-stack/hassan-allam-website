@@ -50,15 +50,26 @@ export default function ActionButton({
   // sweep brings it back to the outline look.
   const ink = solid ? !dark : dark; // true → dark text on light fill
   const sm = size === "sm";
-  const pad = sm ? "gap-2 px-4 py-2.5" : "gap-3 px-6 py-[15px]";
+  // Solid bars have no border at all (not even a transparent one — the fill
+  // would show through it as a ring around the hover sweep), so they get
+  // 1px more padding to keep the same size as the outlined bars.
+  const pad = solid
+    ? sm
+      ? "gap-2 px-[17px] py-[11px]"
+      : "gap-3 px-[25px] py-4"
+    : sm
+      ? "gap-2 px-4 py-2.5"
+      : "gap-3 px-6 py-[15px]";
   const fg = ink ? "text-brand-black group-hover:text-brand-white" : "text-white group-hover:text-brand-black";
   const ease = "duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]";
-  const classes = `group relative inline-flex items-center overflow-hidden rounded-[4px] border transition-colors duration-500 ${pad} ${
-    dark
-      ? `border-brand-black ${solid ? "bg-brand-black" : "border-brand-black/30 hover:border-brand-black"}`
-      : // Solid on dark: the border darkens with the hover fill, so no white
-        // ring is left around the black button.
-        `border-white ${solid ? "bg-white hover:border-brand-black" : "border-white/50 hover:border-white"}`
+  const classes = `group relative inline-flex items-center overflow-hidden rounded-[4px] transition-colors duration-500 ${pad} ${
+    solid
+      ? dark
+        ? "bg-brand-black"
+        : "bg-white"
+      : dark
+        ? "border border-brand-black/30 hover:border-brand-black"
+        : "border border-white/50 hover:border-white"
   } ${className}`;
 
   const inner = (

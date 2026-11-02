@@ -98,13 +98,13 @@ export default function AppCta() {
           <Reveal delay={0.1}>
             <StoreBadges />
           </Reveal>
-          <Reveal delay={0.15} className="flex flex-col items-start gap-6">
+          <Reveal delay={0.15} className="flex flex-col items-stretch gap-6">
             <p className="font-serif text-[1.375rem] font-medium capitalize leading-[1.2] tracking-[-0.02em] text-brand-black">
               <span>HAP Family App </span>
               <strong className="font-bold">enables homeowners</strong>
               <span> to seamlessly manage their properties from their phones.</span>
             </p>
-            <ActionButton label="Download app" href={APP_DOWNLOAD_URL} variant="solid" look="arrow" />
+            <ActionButton label="Download app" href={APP_DOWNLOAD_URL} variant="solid" look="arrow" className="w-full justify-center" />
           </Reveal>
           <Reveal delay={0.2}>
             <KeyBenefits />
