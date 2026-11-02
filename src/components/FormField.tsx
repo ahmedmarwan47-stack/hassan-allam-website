@@ -197,7 +197,7 @@ export function SelectField({
             className={`${inputBase} ${s.text} ${s.pad} flex min-h-[1.3em] cursor-pointer items-center pr-8 text-left`}
           >
             {/* Non-breaking space keeps the line height while empty. */}
-            {current?.label ?? "\u00a0"}
+            <span className="truncate">{current?.label ?? "\u00a0"}</span>
           </button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>

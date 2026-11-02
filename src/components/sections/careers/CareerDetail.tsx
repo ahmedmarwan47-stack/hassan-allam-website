@@ -4,9 +4,14 @@ import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
 import { JOBS, OFFER, type Job } from "@/data/careers";
 import JobRow from "./JobRow";
+import CareerStickyBar from "./CareerStickyBar";
+
+// Applications go to the main HAP inbox, subject pre-filled with the role,
+// until a careers inbox / ATS is confirmed.
+const applyHref = (job: Job) =>
+  `mailto:info@hap.com.eg?subject=${encodeURIComponent(`Application: ${job.title}`)}`;
 import {
   ArrowLeftIcon,
-  ArrowUpRightIcon,
   BriefcaseIcon,
   CalendarIcon,
   ClockIcon,
@@ -15,12 +20,6 @@ import {
 } from "./icons";
 
 function CareerHero({ job }: { job: Job }) {
-  const meta = [
-    { Icon: BriefcaseIcon, value: job.department },
-    { Icon: LocationIcon, value: job.location },
-    { Icon: ClockIcon, value: job.type },
-    { Icon: CalendarIcon, value: `Posted ${job.posted}` },
-  ];
   return (
     <section
       data-nav-theme="light"
@@ -51,14 +50,6 @@ function CareerHero({ job }: { job: Job }) {
         <h1 className="max-w-[1014px] font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(2.5rem,7vw,5.75rem)]">
           {job.title}
         </h1>
-        <ul className="flex flex-wrap justify-center gap-x-8 gap-y-3 font-sans text-base leading-[1.1] text-brand-black md:text-xl">
-          {meta.map(({ Icon, value }) => (
-            <li key={value} className="flex items-center gap-2">
-              <Icon size={20} />
-              {value}
-            </li>
-          ))}
-        </ul>
       </Reveal>
     </section>
   );
@@ -99,7 +90,8 @@ function CareerBody({ job }: { job: Job }) {
       className="bg-brand-white px-6 py-16 text-brand-black md:px-16 md:py-20"
     >
       <div className="flex flex-col gap-14 md:flex-row md:items-start md:gap-20">
-        {/* Sidebar — sticks beside the description on desktop. */}
+        {/* Sidebar — sticks beside the description on desktop. On phones,
+            once its Apply button scrolls past, the compact bar takes over. */}
         <aside className="flex w-full flex-col gap-5 md:sticky md:top-28 md:w-[313px] md:shrink-0">
           <h2 className="font-serif text-2xl font-medium leading-[1.2] tracking-[-0.01em] md:text-[1.75rem]">
             Job overview
@@ -118,14 +110,9 @@ function CareerBody({ job }: { job: Job }) {
               </div>
             ))}
           </dl>
-          {/* Applications go to the main HAP inbox, subject pre-filled with
-              the role, until a careers inbox / ATS is confirmed. */}
-          <ActionButton
-            label="Apply now"
-            href={`mailto:info@hap.com.eg?subject=${encodeURIComponent(`Application: ${job.title}`)}`}
-            variant="solid"
-            className="self-start"
-          />
+          <div id="apply-now" className="self-start">
+            <ActionButton label="Apply now" href={applyHref(job)} variant="solid" />
+          </div>
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col gap-12">
@@ -160,23 +147,15 @@ function OtherRoles({ job }: { job: Job }) {
       className="border-t border-brand-black/20 bg-brand-white px-6 pb-20 pt-16 text-brand-black md:px-16 md:pb-[120px] md:pt-20"
     >
       <div className="flex flex-col gap-10">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <h2 className="font-serif font-light leading-[1.1] tracking-[-0.02em] [font-size:clamp(2.5rem,5vw,3.875rem)]">
-            Other open roles
-          </h2>
-          <Link
-            href="/careers"
-            className="flex items-center gap-2 pb-2 font-sans text-base font-medium transition-opacity duration-300 hover:opacity-60"
-          >
-            View all careers
-            <ArrowUpRightIcon size={20} />
-          </Link>
-        </div>
+        <h2 className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] [font-size:clamp(2.5rem,5vw,3.875rem)]">
+          Other open roles
+        </h2>
         <div className="flex flex-col border-t border-brand-black [&>a:last-child]:border-b-0">
           {others.map((o) => (
             <JobRow key={o.slug} job={o} />
           ))}
         </div>
+        <ActionButton label="View all careers" href="/careers" className="self-start" />
       </div>
     </section>
   );
@@ -186,6 +165,11 @@ export default function CareerDetail({ job }: { job: Job }) {
   return (
     <>
       <CareerHero job={job} />
+      <CareerStickyBar
+        title={job.title}
+        applyHref={applyHref(job)}
+        targetId="apply-now"
+      />
       <CareerBody job={job} />
       <OtherRoles job={job} />
     </>
