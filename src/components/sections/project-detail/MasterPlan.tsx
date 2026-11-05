@@ -7,27 +7,8 @@ import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 import NeighborhoodDrawer from "./NeighborhoodDrawer";
 import { OPEN_NEIGHBORHOOD } from "./ProjectActions";
+import { neighborhoodHref } from "@/data/neighborhoods";
 
-// Pin centres as % of the map box, keyed to the list's numbers — one per
-// list item. 1, 2, 3 and 6 are measured from Figma frame 17043-49871 on
-// the clean artwork (masterplan-slr-clean.jpg); the rest are placed by eye
-// on the matching parts of the plan (apartment clusters, villa areas, the
-// running track) until official positions are supplied.
-const PINS: { left: number; top: number; number: number }[] = [
-  { left: 35.05, top: 35.62, number: 6 },
-  { left: 57.1, top: 46.06, number: 3 },
-  { left: 33.54, top: 61.47, number: 1 },
-  { left: 57.1, top: 71.05, number: 2 },
-  { left: 70.68, top: 38.24, number: 4 },
-  { left: 78.86, top: 70.78, number: 5 },
-  { left: 21.96, top: 44.38, number: 7 },
-  { left: 21.0, top: 65.3, number: 8 },
-  { left: 42.06, top: 49.29, number: 9 },
-  { left: 61.92, top: 59.12, number: 10 },
-  { left: 46.73, top: 77.53, number: 11 },
-  { left: 70.09, top: 77.53, number: 12 },
-  { left: 34.46, top: 73.85, number: 13 },
-];
 const CYCLE_MS = 2600;
 
 /**
@@ -40,15 +21,28 @@ const CYCLE_MS = 2600;
  */
 export default function MasterPlan({
   id,
+  projectId,
   items,
   mapImage,
+  aspect,
+  projectName,
 }: {
   id?: string;
+  projectId: string;
   items: MasterPlanItem[];
   mapImage: string;
+  /** Master plan image width / height. */
+  aspect: number;
+  projectName: string;
 }) {
-  const [active, setActive] = useState<number | null>(null);
+  // Pins sit at each item's position (% of the image) — from the live
+  // site's GPS for the neighborhoods.
+  const pins = items.filter((it) => it.left !== undefined && it.top !== undefined);
+  const [hovered, setActive] = useState<number | null>(null);
   const [open, setOpen] = useState<number | null>(null); // index into items
+  // While the drawer is open its neighborhood's pin stays highlighted, and
+  // follows the drawer's prev/next.
+  const active = open !== null ? items[open].number : hovered;
   const openNumber = (n: number) => setOpen(items.findIndex((it) => it.number === n));
 
   // Phones/tablets (the stacked layout) and touch screens: step through the
@@ -64,7 +58,7 @@ export default function MasterPlan({
   }, []);
   useEffect(() => {
     if (!autoCycle || open !== null) return;
-    const order = PINS.map((p) => p.number).sort((a, b) => a - b);
+    const order = pins.map((p) => p.number).sort((a, b) => a - b);
     let i = -1;
     const step = () => {
       i = (i + 1) % order.length;
@@ -77,6 +71,7 @@ export default function MasterPlan({
       clearInterval(loop);
       setActive(null);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pins follow items
   }, [autoCycle, open]);
 
   // Neighborhood names elsewhere on the page (the intro) open their drawer.
@@ -151,22 +146,22 @@ export default function MasterPlan({
           cropped at the sides, with the pins positioned inside it. */}
       <div
         data-no-fx=""
-        className="relative aspect-[3/4] w-full overflow-hidden rounded-[2px] md:aspect-[866/824] lg:ml-auto lg:w-[66.16%]"
+        className="relative aspect-[3/4] w-full overflow-hidden rounded-[2px] md:aspect-[var(--plan-aspect)] lg:ml-auto lg:w-[66.16%]"
+        style={{ "--plan-aspect": aspect } as React.CSSProperties}
       >
-        <div className="absolute inset-y-0 left-1/2 aspect-[866/824] h-full -translate-x-1/2">
+        <div className="absolute inset-y-0 left-1/2 h-full -translate-x-1/2" style={{ aspectRatio: aspect }}>
           <GrowReveal axis="width" className="absolute inset-0">
             <Image
               src={mapImage}
-              alt="SwanLake Residences New Cairo master plan"
+              alt={`${projectName} master plan`}
               fill
               sizes="(min-width: 768px) 62vw, 135vw"
               quality={95}
               className="object-cover"
             />
           </GrowReveal>
-          {PINS.map((pin, i) => {
-            const item = items.find((it) => it.number === pin.number);
-            if (!item) return null;
+          {pins.map((item, i) => {
+            const pin = { left: item.left!, top: item.top!, number: item.number };
             const isActive = active === pin.number;
             return (
               <button
@@ -176,36 +171,39 @@ export default function MasterPlan({
                 onMouseEnter={() => setActive(pin.number)}
                 onMouseLeave={() => setActive(null)}
                 aria-label={`${item.name} — view details`}
-                className="group absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
+                // Anchored at the stem's foot: the ground dot sits on the spot.
+                className="group absolute flex -translate-x-1/2 -translate-y-full flex-col items-center"
                 style={{ left: `${pin.left}%`, top: `${pin.top}%`, zIndex: isActive ? 20 : 10 }}
               >
-                {/* Name label — shown while the pin (or its row) is active. */}
-                {/* Pins near the plan's sides anchor their label inward, so
+                {/* Name label — a sans pill, shown while the pin (or its row)
+                    is active. Pins near the plan's sides anchor it inward, so
                     it never runs off the (side-cropped) phone frame. */}
                 <span
-                  className={`pointer-events-none absolute bottom-full mb-2.5 whitespace-nowrap ${
-                    pin.left < 30 ? "left-0" : pin.left > 70 ? "right-0" : ""
-                  } rounded-[2px] bg-brand-black px-3 py-1.5 font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-brand-white shadow-[0_6px_20px_rgba(0,0,0,0.18)] transition-[opacity,translate] duration-300 md:text-xs ${
-                    isActive ? "-translate-y-0.5 opacity-100" : "translate-y-1 opacity-0"
-                  }`}
+                  className={`pointer-events-none absolute bottom-full mb-2 flex items-center gap-2 whitespace-nowrap rounded-full bg-brand-white py-1 pl-1 pr-3.5 font-sans text-xs font-medium text-brand-black shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-[opacity,translate,scale] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] md:text-[13px] ${
+                    pin.left < 30 ? "left-0 origin-bottom-left" : pin.left > 70 ? "right-0 origin-bottom-right" : "origin-bottom"
+                  } ${isActive ? "translate-y-0 scale-100 opacity-100" : "translate-y-1 scale-95 opacity-0"}`}
                 >
-                  {item.name}
-                </span>
-                {/* Pin: the list number in a black disc with a white ring,
-                    with a breathing pulse. */}
-                <span className="relative flex size-7 items-center justify-center md:size-8">
-                  <span
-                    aria-hidden
-                    className="absolute inset-0 animate-[plan-pulse_2.4s_cubic-bezier(0.22,1,0.36,1)_infinite] rounded-full bg-brand-white/70"
-                    style={{ animationDelay: `${(i % 5) * 0.35}s` }}
-                  />
-                  <span
-                    className={`relative flex items-center justify-center rounded-full border-2 border-brand-white font-sans text-[10px] font-semibold tabular-nums text-brand-white shadow-[0_2px_10px_rgba(0,0,0,0.35)] transition-[width,height,background-color] duration-300 md:text-[11px] ${
-                      isActive ? "size-7 bg-brand-black md:size-8" : "size-[22px] bg-brand-black/85 md:size-6"
-                    }`}
-                  >
+                  <span className="flex size-5 items-center justify-center rounded-full bg-brand-black text-[10px] tabular-nums text-brand-white">
                     {pin.number}
                   </span>
+                  {item.name}
+                </span>
+                {/* Marker: a small numbered head on a hairline stem, standing
+                    on a ground dot that breathes with a soft pulse. */}
+                <span
+                  className={`relative flex size-[18px] items-center justify-center rounded-full font-sans text-[9px] font-semibold tabular-nums shadow-[0_2px_8px_rgba(0,0,0,0.3)] ring-[1.5px] transition-[background-color,color,scale] duration-300 md:size-5 md:text-[10px] ${
+                    isActive ? "scale-110 bg-brand-white text-brand-black ring-brand-black" : "bg-brand-black text-brand-white ring-brand-white"
+                  }`}
+                >
+                  {pin.number}
+                </span>
+                <span aria-hidden className={`h-2.5 w-[1.5px] transition-colors duration-300 md:h-3 ${isActive ? "bg-brand-black" : "bg-brand-white"}`} />
+                <span aria-hidden className="relative size-1.5">
+                  <span
+                    className="absolute -inset-1 animate-[plan-pulse_2.4s_cubic-bezier(0.22,1,0.36,1)_infinite] rounded-full bg-brand-white/70"
+                    style={{ animationDelay: `${(i % 5) * 0.35}s` }}
+                  />
+                  <span className="absolute inset-0 rounded-full bg-brand-black ring-1 ring-brand-white" />
                 </span>
               </button>
             );
@@ -213,7 +211,13 @@ export default function MasterPlan({
         </div>
       </div>
 
-      <NeighborhoodDrawer items={items} index={open} onClose={() => setOpen(null)} onIndex={setOpen} />
+      <NeighborhoodDrawer
+        items={items}
+        index={open}
+        onClose={() => setOpen(null)}
+        onIndex={setOpen}
+        discoverHref={(number) => neighborhoodHref(projectId, number)}
+      />
     </section>
   );
 }

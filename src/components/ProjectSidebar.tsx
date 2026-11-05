@@ -1,5 +1,6 @@
 "use client";
 
+import { CATEGORY_LABEL } from "@/data/mapProjects";
 import ActionButton from "@/components/ActionButton";
 import Image from "@/components/ProgressiveImage";
 import { useEffect, useState } from "react";
@@ -41,8 +42,10 @@ export default function ProjectSidebar({
     <AnimatePresence>
       {project && (
         <>
+          {/* Dim only towards the panel, so the map — and the open project's
+              highlighted pin — stays visible beside it. */}
           <motion.div
-            className="fixed inset-0 z-[60] bg-black/40"
+            className="fixed inset-0 z-[60] bg-black/40 md:bg-transparent md:bg-gradient-to-l md:from-black/45 md:via-black/15 md:to-transparent"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -58,12 +61,12 @@ export default function ProjectSidebar({
             transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
           >
             {/* Close row — just the X icon, on the left. */}
-            <div className="flex items-center px-[30px] pt-[30px]">
+            <div className="flex items-center px-6 pt-5">
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="Close"
-                className="text-brand-black transition-opacity duration-200 hover:opacity-60"
+                className="text-brand-black opacity-70 transition-opacity duration-200 hover:opacity-100"
               >
                 <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
                   <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" strokeWidth="1.5" />
@@ -78,31 +81,41 @@ export default function ProjectSidebar({
               <AnimatePresence initial={false}>
                 <motion.div
                   key={project.id}
-                  className="absolute inset-0 flex flex-col overflow-y-auto px-[30px] pb-[30px] pt-[30px]"
+                  className="absolute inset-0 flex flex-col overflow-y-auto px-6 pb-6 pt-4"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
                 >
                   <SidebarCarousel images={project.images} name={project.name} />
-                  <div className="mt-6">
+                  <div className="mt-5">
                     <h3 className="font-serif text-[2.75rem] font-light leading-[1.1] tracking-[-0.02em] text-brand-black">
                       {project.name}
                     </h3>
-                    <p className="mt-1 font-sans text-base font-medium text-brand-black">
-                      {project.category}
+                    <p className="mt-1.5 font-sans text-sm font-normal leading-[1.45] text-brand-black/70">
+                      {project.categories.map((c) => CATEGORY_LABEL[c]).join(" · ")}
                     </p>
                   </div>
-                  <p className="mt-12 font-sans text-base font-medium leading-[1.4] text-brand-black">
+                  <p className="mt-5 font-sans text-sm font-normal leading-[1.55] text-brand-black/85">
                     {project.description}
                   </p>
-                  <ActionButton label="Discover the project" href={detailHref} look="plain" className="mt-8 self-start" />
+                  {/* Primary: straight to the interest form on the project's
+                      page; secondary: the project page itself. */}
+                  <div className="mt-6 flex flex-wrap gap-2.5">
+                    <ActionButton
+                      label="Request interest"
+                      href={`${detailHref}#request-interest`}
+                      variant="solid"
+                      size="sm"
+                    />
+                    <ActionButton label="Discover the project" href={detailHref} look="plain" size="sm" />
+                  </div>
                 </motion.div>
               </AnimatePresence>
             </div>
 
             {/* Footer: track + arrows — the homepage slider style, compact. */}
-            <div className="flex items-center gap-5 px-[30px] pb-[30px] pt-4">
+            <div className="flex items-center gap-5 px-6 pb-5 pt-3">
               <div className="relative h-[3px] flex-1 overflow-hidden bg-black/20">
                 <motion.div
                   className="absolute inset-y-0 bg-brand-black"
@@ -125,7 +138,7 @@ export default function ProjectSidebar({
 
 /**
  * A smooth photo carousel for the sidebar hero — crossfades between the
- * project's photos, auto-advances, and supports dot navigation + swipe.
+ * project's photos, auto-advances, and supports arrows, dots and swipe.
  */
 function SidebarCarousel({ images, name }: { images: string[]; name: string }) {
   const [i, setI] = useState(0);
@@ -165,6 +178,30 @@ function SidebarCarousel({ images, name }: { images: string[]; name: string }) {
           />
         </motion.div>
       </AnimatePresence>
+
+      {/* Prev / next photo */}
+      {images.length > 1 &&
+        ([-1, 1] as const).map((step) => (
+          <button
+            key={step}
+            type="button"
+            onClick={() => go(step)}
+            aria-label={step < 0 ? "Previous photo" : "Next photo"}
+            className={`absolute top-1/2 z-10 flex size-7 -translate-y-1/2 items-center justify-center rounded-[2px] bg-white/85 text-brand-black shadow-[0_4px_14px_rgba(0,0,0,0.18)] backdrop-blur-sm transition-colors duration-300 hover:bg-white ${
+              step < 0 ? "left-2.5" : "right-2.5"
+            }`}
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path
+                d={step < 0 ? "M15 18l-6-6 6-6" : "M9 6l6 6-6 6"}
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        ))}
 
       {/* Dot indicators */}
       <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2">

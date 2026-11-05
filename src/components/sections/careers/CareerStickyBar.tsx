@@ -7,10 +7,9 @@ import ActionButton from "@/components/ActionButton";
 /**
  * CareerStickyBar — phones only (desktop keeps the sidebar sticky). Once
  * the page's own "Apply now" (the element with `targetId`) has scrolled
- * past the top, a compact bar slides down holding
+ * past the top, a compact bar slides down from under the navbar holding
  * the role and its Apply button, so applying is always one tap away. It
- * takes over the top edge from the navbar (via data-nav-hidden) and steps
- * aside again when the footer arrives.
+ * sits just under the navbar and steps aside again when the footer arrives.
  */
 export default function CareerStickyBar({
   title,
@@ -29,12 +28,12 @@ export default function CareerStickyBar({
     const update = () => {
       const target = document.getElementById(targetId);
       const footer = document.querySelector("footer");
-      const passed = !!target && target.getBoundingClientRect().bottom < 0;
+      // "Passed" = scrolled up behind the 80px navbar.
+      const passed = !!target && target.getBoundingClientRect().bottom < 80;
       const atFooter = !!footer && footer.getBoundingClientRect().top < window.innerHeight * 0.6;
       const phone = window.matchMedia("(max-width: 767px)").matches;
       const next = phone && passed && !atFooter;
       setShow(next);
-      document.documentElement.toggleAttribute("data-nav-hidden", next);
     };
     const onScroll = () => {
       cancelAnimationFrame(frame);
@@ -47,7 +46,6 @@ export default function CareerStickyBar({
       cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
-      document.documentElement.removeAttribute("data-nav-hidden");
     };
   }, [targetId]);
 
@@ -55,7 +53,7 @@ export default function CareerStickyBar({
     <AnimatePresence>
       {show && (
         <motion.div
-          className="fixed inset-x-0 top-0 z-[45] border-b md:hidden border-black/[0.08] bg-white/90 backdrop-blur-xl"
+          className="fixed inset-x-0 top-[var(--nav-h,80px)] z-[45] border-b md:hidden border-black/[0.08] bg-white/90 backdrop-blur-xl"
           initial={{ y: "-100%" }}
           animate={{ y: "0%" }}
           exit={{ y: "-100%" }}

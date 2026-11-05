@@ -32,6 +32,12 @@ export default function ContactHero() {
           Send us a note to get the conversation started, and our team will
           be in touch shortly.
         </p>
+        <a
+          href="tel:19172"
+          className="font-sans text-base font-medium text-brand-black/80 transition-colors duration-200 hover:text-brand-black hover:underline decoration-1 underline-offset-4 md:text-lg"
+        >
+          Or call our hotline <span className="font-semibold">19172</span>
+        </a>
       </Reveal>
     </section>
   );

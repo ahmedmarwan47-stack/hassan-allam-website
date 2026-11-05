@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { projectHref } from "@/data/projectDetail";
-import { useDiscoverCursor } from "@/components/DiscoverCursor";
 import GrowReveal from "@/components/GrowReveal";
 import { CATEGORY_LABEL, type Category } from "@/data/mapProjects";
+import { LIVE_PROJECTS } from "@/data/hapLive";
 
 interface ProjectCard {
   id: string;
@@ -24,21 +24,36 @@ interface ProjectCard {
 // Card-tag wording lives with the categories (shared with the project hero).
 const TAG_LABEL = CATEGORY_LABEL;
 
-// Tag mix per project mirrors the Figma grid + list variants.
-const PROJECTS: ProjectCard[] = [
-  // In The City — 6 projects (3 thirds + 2 halves + 1 full)
-  { id: "swanlake-west", name: "Swanlake West", tags: ["Residential", "Sports & Wellness"], image: "/images/map/slw.jpg", span: "third", group: "city" },
-  { id: "parkview", name: "Parkview", tags: ["Residential"], image: "/images/projects/parkview.jpg", span: "third", group: "city" },
-  { id: "swanlake-katameya", name: "Swanlake Katameya", tags: ["Residential", "Retail", "Sports & Wellness"], image: "/images/map/slk10.jpg", span: "third", group: "city" },
-  { id: "seasons-city", name: "Seasons Residences", tags: ["Residential", "Hospitality & Leisure"], image: "/images/map/seasons.jpg", span: "half", group: "city" },
-  { id: "swanlake-residences", name: "Swanlake Residences", tags: ["Residential", "Hospitality & Leisure", "Retail", "Office Space", "Sports & Wellness"], image: "/images/projects/swanlake-residences.jpg", span: "half", group: "city" },
-  { id: "swanlake-october", name: "Swanlake October", tags: ["Residential", "Office Space"], image: "/images/projects/swanlake-october.jpg", span: "full", group: "city" },
+/** Grid spans for a group of n cards: rows of three thirds, then two
+ *  halves, … ending on a full-width card or a clean row. */
+function spans(n: number): ProjectCard["span"][] {
+  const out: ProjectCard["span"][] = [];
+  while (n - out.length >= 5) out.push("third", "third", "third", "half", "half");
+  const left = n - out.length;
+  const tail: Record<number, ProjectCard["span"][]> = {
+    0: [],
+    1: ["full"],
+    2: ["half", "half"],
+    3: ["third", "third", "third"],
+    4: ["half", "half", "half", "half"],
+  };
+  return [...out, ...tail[left]];
+}
 
-  // By The Sea — 3 projects (2 halves + 1 full)
-  { id: "swanlake-residences-sea", name: "Swanlake El Gouna", tags: ["Residential", "Hospitality & Leisure"], image: "/images/map/slg.jpg", span: "half", group: "sea" },
-  { id: "swanlake-northcoast", name: "Swanlake Northcoast", tags: ["Residential", "Hospitality & Leisure", "Sports & Wellness"], image: "/images/projects/swanlake-northcoast.jpg", span: "half", group: "sea" },
-  { id: "little-venice", name: "Little Venice", tags: ["Residential"], image: "/images/projects/little-venice.jpg", span: "full", group: "sea" },
-];
+// Every live project (src/data/hapLive.ts, from hap.com.eg), grouped as on
+// the live site, with its real card photo and asset classes.
+const PROJECTS: ProjectCard[] = (["city", "sea"] as const).flatMap((group) => {
+  const list = LIVE_PROJECTS.filter((p) => p.group === group);
+  const layout = spans(list.length);
+  return list.map((p, i) => ({
+    id: p.slug,
+    name: p.name,
+    tags: p.types,
+    image: p.thumbnail ?? p.cover ?? "/images/image 385.jpg",
+    span: layout[i],
+    group,
+  }));
+});
 
 /** Grey tag row with hairline dividers — Figma "Frame 2147227667". Each
  *  divider sits just left of its tag; the list is pulled 8px left and
@@ -66,25 +81,22 @@ export default function AllProjects({
   activeFilter?: "all" | Category;
 }) {
   const [view, setView] = useState<View>("grid");
-  const { bind, hoverClass, cursor } = useDiscoverCursor();
   const [activeGroup, setActiveGroup] = useState<"city" | "sea">("city");
   const seaRef = useRef<HTMLDivElement>(null);
-  const groupsRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
 
-  // The sticky bar switches to "By The Sea" once the sea group's top edge
-  // crosses the middle of the viewport — early enough that the short list
-  // view (where the page ends before the group reaches the bar) still flips.
+  // The sticky bar switches to "By The Sea" when the sea group's own heading
+  // slides up under it (so the two never show at once) — or at the very
+  // bottom of the page, for the short list view that ends before that.
   useEffect(() => {
     let raf = 0;
     const update = () => {
       raf = 0;
       const el = seaRef.current;
-      setActiveGroup(el && el.getBoundingClientRect().top <= window.innerHeight * 0.5 ? "sea" : "city");
-      // While the communities bar owns the top edge, hide the navbar (it
-      // reads data-nav-hidden). Released once the groups scroll past.
-      const g = groupsRef.current?.getBoundingClientRect();
-      const stuck = !!g && g.top <= 80 && g.bottom > 160;
-      document.documentElement.toggleAttribute("data-nav-hidden", stuck);
+      const bar = barRef.current;
+      const reached = !!el && !!bar && el.getBoundingClientRect().top <= bar.getBoundingClientRect().bottom;
+      const atEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      setActiveGroup(el && (reached || atEnd) ? "sea" : "city");
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -96,7 +108,6 @@ export default function AllProjects({
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       if (raf) cancelAnimationFrame(raf);
-      document.documentElement.removeAttribute("data-nav-hidden");
     };
   }, []);
 
@@ -131,8 +142,9 @@ export default function AllProjects({
           17043:545): the subtitle and count follow whichever group is under
           the bar, so "In The City" hands over to "By The Sea" while scrolling. ── */}
       {(cityProjects.length > 0 || seaProjects.length > 0) && (
-        <div ref={groupsRef} className="relative">
+        <div className="relative">
           <CommunitiesBar
+            barRef={barRef}
             count={(activeGroup === "sea" ? seaProjects : cityProjects).length || seaProjects.length}
             subtitle={
               cityProjects.length === 0 || activeGroup === "sea" ? "By The Sea" : "In The City"
@@ -148,8 +160,6 @@ export default function AllProjects({
               accent="var(--color-success-soft)"
               view={view}
               projects={cityProjects}
-              bind={bind}
-              hoverClass={hoverClass}
             />
           )}
 
@@ -160,17 +170,20 @@ export default function AllProjects({
               {cityProjects.length > 0 && (
                 <div
                   // List view already has row hairlines — no full-width rule there.
-                  className={`flex items-center gap-3 px-6 pt-10 md:gap-6 md:px-16 md:pt-16 ${
+                  // Same layout as the sticky "In The City" bar: count, then
+                  // the title centred on desktop.
+                  className={`flex items-center gap-3 px-6 pt-10 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-6 md:px-16 md:pt-14 ${
                     view === "grid" ? "border-t border-grey-300" : ""
                   }`}
                 >
                   <span className="flex size-9 shrink-0 items-center justify-center rounded-[2px] border border-brand-black/15 font-sans text-sm font-medium text-brand-black md:size-[54px] md:text-xl">
                     {String(seaProjects.length).padStart(2, "0")}
                   </span>
-                  <h3 className="font-sans text-base font-normal leading-none text-brand-black md:[font-size:clamp(1.25rem,2.8vw,2.5rem)]">
+                  <h3 className="font-sans text-base font-normal leading-none text-brand-black md:text-center md:[font-size:clamp(1.25rem,2.8vw,2.5rem)]">
                     Our Communities
                     <span className="block pb-[0.1em]">By The Sea</span>
                   </h3>
+                  <span aria-hidden className="hidden md:block" />
                 </div>
               )}
               <CommunityBody
@@ -178,27 +191,26 @@ export default function AllProjects({
                 accent="var(--color-info)"
                 view={view}
                 projects={seaProjects}
-                bind={bind}
-                hoverClass={hoverClass}
               />
             </div>
           )}
         </div>
       )}
 
-      {cursor}
     </section>
   );
 }
 
-/** Bar pinned to the top edge while either group scrolls by — the navbar
- *  slides away meanwhile (see data-nav-hidden in AllProjects). */
+/** Bar pinned just under the (always-visible) navbar while either group
+ *  scrolls by. */
 function CommunitiesBar({
+  barRef,
   count,
   subtitle,
   view,
   onViewChange,
 }: {
+  barRef: React.RefObject<HTMLDivElement | null>;
   count: number;
   subtitle: string;
   view: View;
@@ -211,8 +223,10 @@ function CommunitiesBar({
     transition: { duration: 0.35, ease: [0.65, 0, 0.35, 1] as const },
   };
   return (
-    <div className="sticky top-0 z-20 border-b border-brand-black/10 bg-brand-white px-6 py-3 md:border-0 md:px-16 md:py-5">
-      <div className="flex items-center justify-between gap-3 md:gap-6">
+    <div ref={barRef} className="sticky top-[var(--nav-h,80px)] z-20 border-b border-brand-black/10 bg-brand-white px-6 py-3 md:border-0 md:px-16 md:py-5">
+      {/* Desktop: count | centred title | view toggle (equal side columns
+          keep the title exactly centred). */}
+      <div className="flex items-center justify-between gap-3 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-6">
         <span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-[2px] border border-brand-black/15 font-sans text-sm font-medium text-brand-black md:size-[54px] md:text-xl">
           <AnimatePresence mode="wait" initial={false}>
             <motion.span key={count} {...swap}>
@@ -221,7 +235,7 @@ function CommunitiesBar({
           </AnimatePresence>
         </span>
 
-        <h3 className="min-w-0 flex-1 font-sans font-normal leading-none text-brand-black text-base md:flex-none md:[font-size:clamp(1.25rem,2.8vw,2.5rem)]">
+        <h3 className="min-w-0 flex-1 font-sans font-normal leading-none text-brand-black text-base md:flex-none md:text-center md:[font-size:clamp(1.25rem,2.8vw,2.5rem)]">
           Our Communities
           <span className="block overflow-hidden pb-[0.1em]">
             <AnimatePresence mode="wait" initial={false}>
@@ -232,7 +246,9 @@ function CommunitiesBar({
           </span>
         </h3>
 
-        <ViewToggle view={view} onChange={onViewChange} />
+        <div className="md:justify-self-end">
+          <ViewToggle view={view} onChange={onViewChange} />
+        </div>
       </div>
     </div>
   );
@@ -243,16 +259,12 @@ function CommunityBody({
   accent,
   view,
   projects,
-  bind,
-  hoverClass,
 }: {
   revealAxis: "height" | "width";
   /** List-row hover fill — green in the city, blue by the sea. */
   accent: string;
   view: View;
   projects: ProjectCard[];
-  bind: Record<string, unknown>;
-  hoverClass: string;
 }) {
   return (
     <div className="px-6 py-8 md:px-16 md:py-16">
@@ -268,8 +280,6 @@ function CommunityBody({
             <GridView
               projects={projects}
               revealAxis={revealAxis}
-              bind={bind}
-              hoverClass={hoverClass}
             />
           </motion.div>
         ) : (
@@ -336,13 +346,9 @@ function ViewToggle({
 function GridView({
   projects,
   revealAxis,
-  bind,
-  hoverClass,
 }: {
   projects: ProjectCard[];
   revealAxis: "height" | "width";
-  bind: Record<string, unknown>;
-  hoverClass: string;
 }) {
   return (
     <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-6 md:gap-x-5 md:gap-y-12">
@@ -372,7 +378,7 @@ function GridView({
               delay={(i % 3) * 0.12}
               className={`relative w-full overflow-hidden rounded-[2px] ${aspect}`}
             >
-              <div {...bind} className={`absolute inset-0 ${hoverClass}`}>
+              <div className="absolute inset-0">
                 <Image
                   src={p.image}
                   alt={p.name}

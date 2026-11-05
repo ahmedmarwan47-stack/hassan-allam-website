@@ -57,14 +57,18 @@ function ArrowUpRight() {
   );
 }
 
-export default function NewsCard({ article }: { article: NewsArticle }) {
+/** Homepage teaser: a landscape photo whose height is also capped by the
+ *  screen height, so the whole "Stay Updated" section fits in view. */
+const COMPACT_ASPECT = "aspect-[4/3] md:max-h-[max(260px,calc(100svh-520px))]";
+
+export default function NewsCard({ article, compact = false }: { article: NewsArticle; compact?: boolean }) {
   const href = NEWS_DETAILS[article.id] ? `/news/${article.id}` : "#";
   return (
     <div className={`group flex flex-col gap-5 ${SPAN_CLASSES[article.span]}`}>
       <Link
         href={href}
         aria-label={`Read: ${article.title}`}
-        className={`relative block w-full overflow-hidden rounded-[2px] ${ASPECT_CLASSES[article.span]}`}
+        className={`relative block w-full overflow-hidden rounded-[2px] ${compact ? COMPACT_ASPECT : ASPECT_CLASSES[article.span]}`}
       >
         <GrowReveal axis={AXIS[article.span]} className="absolute inset-0">
           <Image

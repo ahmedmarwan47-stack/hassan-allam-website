@@ -5,11 +5,10 @@ import { Reveal } from "@/components/Reveal";
 import { JOBS, OFFER, type Job } from "@/data/careers";
 import JobRow from "./JobRow";
 import CareerStickyBar from "./CareerStickyBar";
+import ApplicationForm from "./ApplicationForm";
 
-// Applications go to the main HAP inbox, subject pre-filled with the role,
-// until a careers inbox / ATS is confirmed.
-const applyHref = (job: Job) =>
-  `mailto:info@hap.com.eg?subject=${encodeURIComponent(`Application: ${job.title}`)}`;
+// Every "Apply now" glides down to the application form on the page.
+const APPLY_HREF = "#apply";
 import {
   ArrowLeftIcon,
   BriefcaseIcon,
@@ -42,7 +41,7 @@ function CareerHero({ job }: { job: Job }) {
       <Reveal className="relative z-10 flex flex-col items-center gap-7">
         <Link
           href="/careers"
-          className="flex items-center gap-2 font-sans text-base font-medium text-brand-black transition-opacity duration-300 hover:opacity-60"
+          className="flex items-center gap-2 font-sans text-base font-medium text-brand-black/75 transition-colors duration-300 hover:text-brand-black hover:underline decoration-1 underline-offset-4"
         >
           <ArrowLeftIcon size={20} />
           All Careers
@@ -111,16 +110,11 @@ function CareerBody({ job }: { job: Job }) {
             ))}
           </dl>
           <div id="apply-now" className="self-start">
-            <ActionButton label="Apply now" href={applyHref(job)} variant="solid" />
+            <ActionButton label="Apply now" href={APPLY_HREF} variant="solid" />
           </div>
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col gap-12">
-          <Reveal>
-            <p className="max-w-[780px] font-serif font-light leading-[1.2] tracking-[-0.02em] [font-size:clamp(1.75rem,3.2vw,2.625rem)]">
-              {job.lead}
-            </p>
-          </Reveal>
           <Section title="About the role">
             <p className="font-sans text-base leading-[1.5] text-brand-black/80">{job.about}</p>
           </Section>
@@ -167,10 +161,11 @@ export default function CareerDetail({ job }: { job: Job }) {
       <CareerHero job={job} />
       <CareerStickyBar
         title={job.title}
-        applyHref={applyHref(job)}
+        applyHref={APPLY_HREF}
         targetId="apply-now"
       />
       <CareerBody job={job} />
+      <ApplicationForm role={job.title} />
       <OtherRoles job={job} />
     </>
   );

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { projectHref } from "@/data/projectDetail";
-import { useCarouselCursor } from "@/components/CarouselCursor";
+import { LIVE_PROJECTS } from "@/data/hapLive";
+import { useCarouselDrag } from "@/components/CarouselDrag";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 import SliderArrow from "@/components/SliderArrow";
@@ -20,24 +21,19 @@ const FILTER_ACCENT: Record<(typeof FILTERS)[number], string> = {
 
 type GalleryProject = { id: string; name: string; src: string };
 
-// The two tabs now drive the content, matching the heading. The first card in
-// each group links to a real project-detail page; the rest follow the site
-// convention of dead links until their pages are built.
+// The two tabs drive the content: the live projects of each group
+// (src/data/hapLive.ts), with their real hero photos.
 const GROUPS: Record<(typeof FILTERS)[number], GalleryProject[]> = {
-  "In The City": [
-    { id: "swanlake-residences", name: "Swanlake Residences", src: "/images/map/slg.jpg" },
-    { id: "swanlake-west", name: "Swanlake West", src: "/images/image 398.jpg" },
-    { id: "parkview", name: "Parkview", src: "/images/image 399.jpg" },
-    { id: "swanlake-katameya", name: "Swanlake Katameya", src: "/images/image 400.jpg" },
-    { id: "seasons-city", name: "Seasons Residences", src: "/images/image 401.jpg" },
-  ],
-  // Matches the live site (hap.com.eg) — covers from its media library.
-  "By The Sea": [
-    { id: "swanlake-residences-sea", name: "SwanLake El Gouna", src: "/images/by-the-sea/swanlake-el-gouna.jpg" },
-    { id: "swanlake-north-coast", name: "SwanLake North Coast", src: "/images/by-the-sea/swanlake-north-coast.jpg" },
-    { id: "little-venice-ain-sokhna", name: "Little Venice Ain Sokhna", src: "/images/by-the-sea/little-venice-ain-sokhna.jpg" },
-    { id: "encore-swanlake-el-gouna", name: "Encore SwanLake El Gouna", src: "/images/by-the-sea/encore-swanlake-el-gouna.jpg" },
-  ],
+  "In The City": LIVE_PROJECTS.filter((p) => p.group === "city").map((p) => ({
+    id: p.slug,
+    name: p.name,
+    src: p.cover ?? p.thumbnail ?? "/images/image 385.jpg",
+  })),
+  "By The Sea": LIVE_PROJECTS.filter((p) => p.group === "sea").map((p) => ({
+    id: p.slug,
+    name: p.name,
+    src: p.cover ?? p.thumbnail ?? "/images/image 385.jpg",
+  })),
 };
 
 export default function ProjectGallery() {
@@ -72,11 +68,13 @@ export default function ProjectGallery() {
     [maxIndex],
   );
 
-  const { bind, viewportClass, dragX, cursor } = useCarouselCursor({
+  const { bind, viewportClass, dragX } = useCarouselDrag({
     onPrev: goPrev,
     onNext: goNext,
     canPrev: index > 0,
     canNext: index < maxIndex,
+    // Free drag: each card carries its 20px gap as padding.
+    stepPx: (vp) => vp.querySelector("a")?.offsetWidth ?? 0,
   });
 
   const handleFilter = (i: number) => {
@@ -195,7 +193,6 @@ export default function ProjectGallery() {
         </div>
       </div>
 
-      {cursor}
     </section>
   );
 }

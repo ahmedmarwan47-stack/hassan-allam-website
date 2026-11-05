@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 /**
@@ -12,8 +13,17 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
  * to the one currently in view, and clicking an item smooth-scrolls to it.
  * On phones the bar scrolls sideways (edges softly faded to hint at more)
  * and keeps the active item centred.
+ *
+ * `back` adds a "‹ Back to …" link at the bar's left (e.g. a neighborhood
+ * page back to its project); phones show just "‹ Back".
  */
-export default function SectionNav({ items }: { items: { id: string; label: string }[] }) {
+export default function SectionNav({
+  items,
+  back,
+}: {
+  items: { id: string; label: string }[];
+  back?: { label: string; href: string };
+}) {
   const reduce = useReducedMotion();
   const [visible, setVisible] = useState(false);
   const [active, setActive] = useState(items[0]?.id);
@@ -76,10 +86,29 @@ export default function SectionNav({ items }: { items: { id: string; label: stri
           exit={{ y: "100%", opacity: 0 }}
           transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 260, damping: 30, mass: 0.9 }}
         >
-          <div className="border-t border-black/[0.08] bg-white/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl">
+          <div className="flex items-stretch border-t border-black/[0.08] bg-white/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl">
+          {back && (
+            <Link
+              href={back.href}
+              className="group flex shrink-0 items-center gap-2 border-r border-black/[0.08] px-4 font-sans text-[11px] font-medium uppercase tracking-[0.1em] text-brand-black transition-colors duration-300 hover:bg-brand-black hover:text-brand-white md:px-6 md:text-xs md:tracking-[0.12em]"
+            >
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 14 14"
+                fill="none"
+                aria-hidden
+                className="transition-transform duration-300 group-hover:-translate-x-0.5"
+              >
+                <path d="M9 2.5 4.5 7 9 11.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span className="md:hidden">Back</span>
+              <span className="hidden md:inline">Back to {back.label}</span>
+            </Link>
+          )}
           <div
             ref={listRef}
-            className="flex items-center overflow-x-auto px-3 [-ms-overflow-style:none] [scrollbar-width:none] [mask-image:linear-gradient(to_right,transparent,black_28px,black_calc(100%-28px),transparent)] md:justify-evenly md:px-6 md:[mask-image:none]"
+            className="flex min-w-0 flex-1 items-center overflow-x-auto px-3 [-ms-overflow-style:none] [scrollbar-width:none] [mask-image:linear-gradient(to_right,transparent,black_28px,black_calc(100%-28px),transparent)] md:justify-evenly md:px-6 md:[mask-image:none]"
           >
             {items.map(({ id, label }) => {
               const isActive = id === active;

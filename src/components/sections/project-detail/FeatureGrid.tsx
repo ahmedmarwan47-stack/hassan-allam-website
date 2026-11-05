@@ -5,24 +5,34 @@ import { RequestInterest } from "@/components/ActionButton";
 
 export default function FeatureGrid({
   heading,
+  intro,
   items,
 }: {
   heading: string[];
+  /** Optional short paragraph under the heading. */
+  intro?: string;
   items: FeatureItem[];
 }) {
   return (
     // 66.16% = the 868px "exceeding" column of the 1312 grid — keeps the text
     // left-aligned with the wide photo's left edge at every viewport width.
-    <div className="flex w-full flex-col items-start gap-10 md:ml-auto md:w-[66.16%] md:gap-10">
-      <Reveal>
-        <h2 className="max-w-[606px] font-sans font-medium leading-none text-brand-black [font-size:clamp(1.75rem,4vw,3rem)]">
+    <div className="@container flex w-full flex-col items-start gap-10 md:ml-auto md:w-[66.16%] md:gap-10">
+      {/* Each heading line stays on one line from tablet up; the size also
+          follows the column's width (≈14em per line) so the lines always fit. */}
+      <Reveal className="w-full">
+        <h2 className="font-serif font-light uppercase leading-[1.05] tracking-[-0.02em] text-brand-black [font-size:clamp(2rem,4.4vw,4.25rem)] md:[font-size:min(4.25rem,6.8cqw)]">
           {heading.map((line, i) => (
-            <span key={i} className="block">
+            <span key={i} className="block md:whitespace-nowrap">
               {line}
             </span>
           ))}
         </h2>
       </Reveal>
+      {intro && (
+        <Reveal delay={0.06}>
+          <p className="max-w-[640px] font-sans text-base leading-[1.6] text-brand-black/75 md:text-lg">{intro}</p>
+        </Reveal>
+      )}
       {/* Two columns only where the 66.16% block is wide enough (≥lg);
           at md the block is ~424px so pairs would cram. */}
       <div className="grid w-full grid-cols-1 gap-x-[70px] gap-y-0 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
@@ -34,7 +44,7 @@ export default function FeatureGrid({
           >
             <FeatureIcon name={item.icon} />
             <div className="flex flex-col gap-3 text-brand-black">
-              <p className="font-serif font-light uppercase leading-none tracking-[-0.02em] text-2xl">
+              <p className="font-sans text-lg font-medium leading-[1.3] md:text-xl">
                 {item.title}
               </p>
               <p className="font-sans text-base leading-[1.4]">

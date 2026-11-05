@@ -9,7 +9,7 @@ import RollText from "@/components/RollText";
 import SliderArrow from "@/components/SliderArrow";
 import MobileCarousel from "@/components/MobileCarousel";
 import SectionEyebrow from "@/components/SectionEyebrow";
-import { useCarouselCursor } from "@/components/CarouselCursor";
+import { useCarouselDrag } from "@/components/CarouselDrag";
 import TeamDrawer from "./TeamDrawer";
 import { TEAM } from "@/data/team";
 
@@ -30,12 +30,13 @@ export default function OurTeam({ id }: { id?: string }) {
 
   const goPrev = useCallback(() => setIndex((i) => Math.max(0, i - 1)), []);
   const goNext = useCallback(() => setIndex((i) => Math.min(maxIndex, i + 1)), [maxIndex]);
-  const { bind, viewportClass, dragX, cursor } = useCarouselCursor({
+  const { bind, viewportClass, dragX } = useCarouselDrag({
     onPrev: goPrev,
     onNext: goNext,
-    discoverLabel: "View bio",
     canPrev: index > 0,
     canNext: index < maxIndex,
+    // Free drag: one card + the gap per step.
+    stepPx: (vp) => (vp.querySelector("button")?.offsetWidth ?? 0) + GAP,
     // Same timing as the track's CSS transition, so a drag glides on.
     settle: { duration: 0.7, ease: [0.65, 0, 0.35, 1] },
   });
@@ -121,7 +122,6 @@ export default function OurTeam({ id }: { id?: string }) {
       </div>
 
       <TeamDrawer members={TEAM} index={open} onClose={() => setOpen(null)} onIndex={setOpen} />
-      {cursor}
     </section>
   );
 }

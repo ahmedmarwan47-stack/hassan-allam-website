@@ -12,7 +12,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { useCarouselCursor } from "@/components/CarouselCursor";
+import { useCarouselDrag } from "@/components/CarouselDrag";
 import { withBasePath } from "@/lib/basePath";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
@@ -30,8 +30,8 @@ import MobileCarousel from "@/components/MobileCarousel";
  * Mobile: the shared swipe carousel (MobileCarousel), no scroll-driven motion.
  *
  * Each card links to the Projects page pre-filtered by its asset class. The
- * desktop slider uses the shared elastic Drag / Discover cursor and can be
- * dragged as well as stepped with the arrows.
+ * desktop slider can be dragged (or trackpad-swiped) as well as stepped
+ * with the arrows.
  */
 
 const CARDS = [
@@ -168,9 +168,11 @@ export default function AssetClasses() {
   );
   const goPrev = useCallback(() => slide(-1), [slide]);
   const goNext = useCallback(() => slide(1), [slide]);
-  const { bind, viewportClass, dragX, cursor } = useCarouselCursor({
+  const { bind, viewportClass, dragX } = useCarouselDrag({
     onPrev: goPrev,
     onNext: goNext,
+    // Free drag: each card carries its gap as padding.
+    stepPx: (vp) => vp.querySelector("a")?.offsetWidth ?? 0,
   });
   const activeCard = index % TOTAL_CARDS;
 
@@ -224,8 +226,11 @@ export default function AssetClasses() {
         >
           {/* Heading top-right, fixed at 4 lines. */}
           <Reveal className="relative z-10 flex justify-end">
-            <h2 className="w-[425px] text-right font-serif text-[62px] font-light uppercase leading-[68px] tracking-[-0.02em] text-black">
-              Asset Classes Designed for Future Lifestyles
+            {/* Three set lines, right-aligned. */}
+            <h2 className="text-right font-serif text-[62px] font-light uppercase leading-[68px] tracking-[-0.02em] text-black">
+              <span className="block whitespace-nowrap">Asset Classes</span>
+              <span className="block whitespace-nowrap">Designed for</span>
+              <span className="block whitespace-nowrap">Future Lifestyles</span>
             </h2>
           </Reveal>
 
@@ -306,7 +311,6 @@ export default function AssetClasses() {
         </motion.div>
       </div>
 
-      {cursor}
     </section>
   );
 }

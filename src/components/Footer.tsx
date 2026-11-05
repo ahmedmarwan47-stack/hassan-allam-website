@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import RollText from "@/components/RollText";
+import { LIVE_PROJECTS } from "@/data/hapLive";
 import { projectHref } from "@/data/projectDetail";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -9,39 +10,19 @@ import { useState } from "react";
 const NAV_LINKS: { label: string; href: string }[] = [
   { label: "Home", href: "/" },
   { label: "Projects", href: "/projects" },
-  { label: "Our Story", href: "/story" },
+  { label: "The Story", href: "/story" },
   { label: "Media Center", href: "/news" },
   { label: "Contact", href: "/contact" },
   { label: "FAQs", href: "/faqs" },
   { label: "Careers", href: "/careers" },
 ];
 
-const IN_THE_CITY = [
-  "Swanlake Katameya",
-  "Seasons Residences",
-  "Parkview Katameya",
-  "Swanlake Residences - New Cairo",
-  "Swanlake October",
-  "Swanlake West",
-  "Haptown - Mostakbal City",
-  "The Valleys - Mostakbal City",
-  "Park Central – Mostakbal City",
-  "Keys|52",
-];
-
-// Footer names → project ids with their own page; the rest open the shared
-// project page (projectHref's fallback), like everywhere else on the site.
-const FOOTER_PROJECT_IDS: Record<string, string> = {
-  "Swanlake Residences - New Cairo": "swanlake-residences",
-  "Swanlake El Gouna": "swanlake-residences-sea",
-};
-
-const BY_THE_SEA = [
-  "Swanlake Northcoast",
-  "Swanlake El Gouna",
-  "Little Venice",
-  "Encore",
-];
+// Every live project (src/data/hapLive.ts), each linking to its own page.
+type FooterProject = { name: string; id: string };
+const byGroup = (group: "city" | "sea"): FooterProject[] =>
+  LIVE_PROJECTS.filter((p) => p.group === group).map((p) => ({ name: p.name, id: p.slug }));
+const IN_THE_CITY = byGroup("city");
+const BY_THE_SEA = byGroup("sea");
 
 function MailIcon() {
   return (
@@ -71,39 +52,41 @@ function LocationIcon() {
   );
 }
 
+// Solid social marks (white, 22px) — the Instagram glyph is cut out of
+// its rounded square with a mask so the page shows through.
 function InstagramIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="2" y="2" width="20" height="20" rx="5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      <circle cx="12" cy="12" r="5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      <circle cx="17.5" cy="6.5" r="1" fill="white"/>
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden>
+      <mask id="ig-cut">
+        <rect width="24" height="24" fill="white" />
+        <circle cx="12" cy="12" r="4.6" fill="none" stroke="black" strokeWidth="1.9" />
+        <circle cx="17.6" cy="6.4" r="1.25" fill="black" />
+      </mask>
+      <rect x="1" y="1" width="22" height="22" rx="6.5" fill="white" mask="url(#ig-cut)" />
     </svg>
   );
 }
 
 function FacebookIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden>
+      <path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z" />
     </svg>
   );
 }
 
 function YouTubeIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M22.54 6.42C22.4212 5.94541 22.1793 5.51057 21.8387 5.15941C21.498 4.80824 21.0708 4.55318 20.6 4.42C18.88 4 12 4 12 4C12 4 5.12 4 3.4 4.46C2.92925 4.59318 2.50198 4.84824 2.16135 5.19941C1.82072 5.55057 1.57879 5.98541 1.46 6.46C1.14521 8.20556 0.991235 9.97631 1 11.75C0.988787 13.537 1.14277 15.3213 1.46 17.08C1.59096 17.5398 1.83831 17.9581 2.17817 18.2945C2.51803 18.6308 2.93882 18.8738 3.4 19C5.12 19.46 12 19.46 12 19.46C12 19.46 18.88 19.46 20.6 19C21.0708 18.8668 21.498 18.6118 21.8387 18.2606C22.1793 17.9094 22.4212 17.4746 22.54 17C22.8524 15.2676 23.0063 13.5103 23 11.75C23.0112 9.96295 22.8573 8.1787 22.54 6.42Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M9.75 15.02L15.5 11.75L9.75 8.48V15.02Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden>
+      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
     </svg>
   );
 }
 
 function LinkedInIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M16 8C17.5913 8 19.1174 8.63214 20.2426 9.75736C21.3679 10.8826 22 12.4087 22 14V21H18V14C18 13.4696 17.7893 12.9609 17.4142 12.5858C17.0391 12.2107 16.5304 12 16 12C15.4696 12 14.9609 12.2107 14.5858 12.5858C14.2107 12.9609 14 13.4696 14 14V21H10V14C10 12.4087 10.6321 10.8826 11.7574 9.75736C12.8826 8.63214 14.4087 8 16 8Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      <rect x="2" y="9" width="4" height="12" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      <circle cx="4" cy="4" r="2" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden>
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
     </svg>
   );
 }
@@ -174,16 +157,16 @@ function NewsletterField() {
   );
 }
 
-function ProjectLinks({ items }: { items: string[] }) {
+function ProjectLinks({ items }: { items: FooterProject[] }) {
   return (
     <div className="flex flex-col gap-3 text-base leading-[1.4]">
       {items.map((project) => (
         <Link
-          key={project}
-          href={projectHref(FOOTER_PROJECT_IDS[project] ?? "")}
-          className="transition-colors duration-300 hover:text-white/70"
+          key={project.id}
+          href={projectHref(project.id)}
+          className="text-white/75 transition-colors duration-300 hover:text-white"
         >
-          {project}
+          {project.name}
         </Link>
       ))}
     </div>
@@ -191,7 +174,7 @@ function ProjectLinks({ items }: { items: string[] }) {
 }
 
 /** Collapsible project list — used on mobile only. */
-function FooterAccordion({ title, items }: { title: string; items: string[] }) {
+function FooterAccordion({ title, items }: { title: string; items: FooterProject[] }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="border-b border-white/16">
@@ -247,15 +230,14 @@ export default function Footer() {
         {/* ── Top section: nav (left) + projects/contact/newsletter (right) ── */}
         <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-10">
           {/* Left column: Nav — Figma Footer 17099:2537: 567px of 1312 (43.2%),
-              78px Cormorant Light, one line per link from lg up. Both scale down
+              78px display serif, one line per link from lg up. Both scale down
               below 1440. Below lg the nav stacks above the columns so tablets
               don't overflow; phones may wrap a long link. */}
           <nav className="flex w-full flex-col font-serif font-light uppercase leading-none tracking-[-0.02em] text-[2.5rem] lg:w-[43.2%] lg:shrink-0 md:[font-size:clamp(2.75rem,5.42vw,4.875rem)] lg:whitespace-nowrap">
             {NAV_LINKS.map((link) => {
               const active = isActive(link.href);
               return (
-                // Same masked letter-roll as the navbar links, plus the
-                // dim → white lift.
+                // Hover: the dim → white lift.
                 <Link
                   key={link.label}
                   href={link.href}
@@ -291,29 +273,38 @@ export default function Footer() {
                 <div className="flex flex-1 flex-col gap-7 pt-10 md:pt-0">
                   <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">Get In Touch</p>
                   <div className="flex flex-col gap-3">
-                    <a href="mailto:info@hap.com.eg" className="flex items-center gap-3 text-base leading-[1.4] transition-colors duration-300 hover:text-white/70">
+                    <a href="mailto:info@hap.com.eg" className="flex items-center gap-3 text-base leading-[1.4] text-white/75 transition-colors duration-300 hover:text-white">
                       <MailIcon />
                       info@hap.com.eg
                     </a>
-                    <a href="tel:19172" className="flex items-center gap-3 text-base leading-[1.4] transition-colors duration-300 hover:text-white/70">
+                    <a href="tel:19172" className="flex items-center gap-3 text-base leading-[1.4] text-white/75 transition-colors duration-300 hover:text-white">
                       <CallIcon />
                       19172
                     </a>
-                    <p className="flex items-center gap-3 text-base leading-[1.4]">
-                      <LocationIcon />
-                      67 - Southern Road 90 - New Cairo
-                    </p>
+                    {/* Opens the head office in Google Maps. */}
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=Hassan+Allam+Properties+Head+Office%2C+Building+67%2C+Southern+Road+90%2C+New+Cairo%2C+Egypt"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/map flex items-start gap-3 text-base leading-[1.4]"
+                    >
+                      <span className="mt-px shrink-0"><LocationIcon /></span>
+                      <span className="flex flex-col gap-0.5">
+                        <span className="decoration-1 underline-offset-4 group-hover/map:underline">HAP Head Office</span>
+                        <span className="text-white/75 transition-colors duration-300 group-hover/map:text-white">Building 67 - Southern Road 90 - New Cairo - Egypt</span>
+                      </span>
+                    </a>
                     <div className="flex gap-4 pt-1">
-                      <a href="https://www.instagram.com/hassanallamproperties/" target="_blank" rel="noopener noreferrer" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="Instagram">
+                      <a href="https://www.instagram.com/hassanallamproperties/" target="_blank" rel="noopener noreferrer" className="opacity-70 transition-opacity duration-300 hover:opacity-100" aria-label="Instagram">
                         <InstagramIcon />
                       </a>
-                      <a href="https://www.facebook.com/HassanAllamProperties/" target="_blank" rel="noopener noreferrer" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="Facebook">
+                      <a href="https://www.facebook.com/HassanAllamProperties/" target="_blank" rel="noopener noreferrer" className="opacity-70 transition-opacity duration-300 hover:opacity-100" aria-label="Facebook">
                         <FacebookIcon />
                       </a>
-                      <a href="https://www.youtube.com/@hassanallamproperties" target="_blank" rel="noopener noreferrer" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="YouTube">
+                      <a href="https://www.youtube.com/@hassanallamproperties" target="_blank" rel="noopener noreferrer" className="opacity-70 transition-opacity duration-300 hover:opacity-100" aria-label="YouTube">
                         <YouTubeIcon />
                       </a>
-                      <a href="https://www.linkedin.com/company/hassan-allam-properties/" target="_blank" rel="noopener noreferrer" className="opacity-100 transition-opacity duration-300 hover:opacity-70" aria-label="LinkedIn">
+                      <a href="https://www.linkedin.com/company/hassan-allam-properties/" target="_blank" rel="noopener noreferrer" className="opacity-70 transition-opacity duration-300 hover:opacity-100" aria-label="LinkedIn">
                         <LinkedInIcon />
                       </a>
                     </div>
@@ -322,8 +313,8 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Newsletter — sits in the right column per the updated design */}
-            <div className="flex flex-col gap-7">
+            {/* Newsletter — title on the left, the field beside it. */}
+            <div className="flex w-full flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-10">
               <div className="flex flex-col gap-1">
                 <p className="font-serif text-[1.625rem] font-normal uppercase leading-none tracking-[-0.02em]">
                   Subscribe to our newsletter
@@ -332,7 +323,9 @@ export default function Footer() {
                   Stay in the know of all the HAP properties
                 </p>
               </div>
-              <NewsletterField />
+              <div className="w-full md:max-w-[600px] md:flex-1">
+                <NewsletterField />
+              </div>
             </div>
           </div>
         </div>
@@ -344,8 +337,8 @@ export default function Footer() {
         <div className="flex flex-col gap-4 font-sans text-xs font-normal leading-[1.4] md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-7">
             <p>&copy; {new Date().getFullYear()} HAP</p>
-            <a href="https://www.hap.com.eg/legals/terms-of-use/" target="_blank" rel="noopener noreferrer" className="transition-colors duration-300 hover:text-white/70">Terms of Use</a>
-            <a href="https://www.hap.com.eg/legals/privacy-policy/" target="_blank" rel="noopener noreferrer" className="transition-colors duration-300 hover:text-white/70">Privacy policy</a>
+            <a href="https://www.hap.com.eg/legals/terms-of-use/" target="_blank" rel="noopener noreferrer" className="text-white/75 transition-colors duration-300 hover:text-white">Terms of Use</a>
+            <a href="https://www.hap.com.eg/legals/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-white/75 transition-colors duration-300 hover:text-white">Privacy policy</a>
           </div>
           <p className="uppercase">Web Design &amp; Development by MitchDesigns</p>
         </div>

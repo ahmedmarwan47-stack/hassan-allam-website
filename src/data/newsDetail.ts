@@ -1,4 +1,5 @@
 import { NEWS, type NewsArticle } from "./news";
+import { LIVE_NEWS } from "./hapLive";
 
 export interface NewsDetail {
   id: string;
@@ -14,7 +15,27 @@ export interface NewsDetail {
 
 /** Every listed article has a detail page. Copy for all but the first two is
  *  placeholder, written to match each headline until real releases arrive. */
+// Detail pages for the live articles, from their published copy and photos.
+const LIVE_DETAILS: Record<string, NewsDetail> = Object.fromEntries(
+  LIVE_NEWS.map((a) => {
+    const img = (i: number) => a.images[i] ?? a.thumbnail ?? "/images/office.jpg";
+    return [
+      a.slug,
+      {
+        id: a.slug,
+        headline: a.title,
+        intro: [a.intro[0] ?? "", a.intro[1] ?? ""],
+        heroImage: img(0),
+        bigIntroParagraph: a.paragraphs[0] ?? "",
+        body: [a.paragraphs[1] ?? "", a.paragraphs[2] ?? ""],
+        bodyImages: [img(1), img(2)],
+      } satisfies NewsDetail,
+    ];
+  }),
+);
+
 export const NEWS_DETAILS: Record<string, NewsDetail> = {
+  ...LIVE_DETAILS,
   "eden-embassy-of-denmark": {
     id: "eden-embassy-of-denmark",
     headline:

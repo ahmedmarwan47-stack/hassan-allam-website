@@ -93,7 +93,7 @@ export default function TeamDrawer({
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute right-4 top-6 z-10 flex size-8 items-center justify-center text-white/70 transition-[color,transform] duration-300 hover:rotate-90 hover:text-white md:right-10 md:top-12"
+              className="absolute right-4 top-6 z-10 flex size-8 items-center justify-center text-white/70 transition-[color,rotate] duration-300 hover:rotate-90 hover:text-white md:right-10 md:top-12"
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
                 <path d="M3 3l14 14M17 3L3 17" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
@@ -111,7 +111,10 @@ export default function TeamDrawer({
                   <div className="flex flex-col gap-8 px-6 pb-12 pt-6 md:flex-row md:items-start md:gap-12 md:px-12 md:pb-16 md:pt-12">
                     {/* Portrait — same 3:4 as the cards; stays put while the
                         bio scrolls. Unveils upward from a soft zoom. */}
-                    <div className="relative aspect-[3/4] w-[70%] max-w-[320px] shrink-0 overflow-hidden rounded-[2px] md:sticky md:top-12 md:w-[38%] md:max-w-none">
+                    {/* Portrait with the name and title under it; the column
+                        stays put while the bio scrolls. */}
+                    <div className="flex w-full shrink-0 flex-col gap-5 md:sticky md:top-12 md:w-[38%]">
+                    <div className="relative aspect-[3/4] w-[70%] max-w-[320px] overflow-hidden rounded-[2px] md:w-full md:max-w-none">
                       <motion.div
                         className="absolute inset-0"
                         initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
@@ -133,12 +136,8 @@ export default function TeamDrawer({
                         </motion.div>
                       </motion.div>
                     </div>
-
-                    {/* Text — name on one line, title under it, bio below,
-                        all on one left edge. Right padding clears the X. */}
-                    <div className="flex min-w-0 flex-1 flex-col gap-8 md:pr-12">
                       <div className="flex flex-col gap-3">
-                        <h3 className="whitespace-nowrap font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(1.75rem,2.4vw,2.75rem)]">
+                        <h3 className="font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(1.75rem,2.2vw,2.5rem)]">
                           {member.name.split(" ").map((word, w) => (
                             <span key={w} className="inline-block overflow-hidden pb-[0.08em] align-top">
                               <motion.span
@@ -161,13 +160,10 @@ export default function TeamDrawer({
                         </motion.span>
                       </div>
 
-                      <motion.div
-                        aria-hidden
-                        className="h-px w-full origin-left bg-white/20"
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: 1, transition: { duration: dur(1.1), ease: EASE, delay: dur(0.8) } }}
-                      />
+                    </div>
 
+                    {/* Bio, on one left edge. Right padding clears the X. */}
+                    <div className="flex min-w-0 flex-1 flex-col gap-8 md:pr-12">
                       <motion.p
                         className="font-serif text-xl leading-[1.35] text-white md:text-2xl"
                         initial={{ opacity: 0, y: 18 }}

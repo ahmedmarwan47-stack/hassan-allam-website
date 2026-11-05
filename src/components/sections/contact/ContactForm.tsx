@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { TextField, SelectField, TextareaField, type FieldStatus } from "@/components/FormField";
+import { TextField, SelectField, TextareaField, PhoneField, type FieldStatus } from "@/components/FormField";
 import { AnimatePresence, motion } from "framer-motion";
 import ActionButton from "@/components/ActionButton";
 import { MAP_PROJECTS } from "@/data/mapProjects";
@@ -29,6 +29,8 @@ interface FormState {
   company: string;
   firstName: string;
   lastName: string;
+  country: string;
+  phone: string;
   email: string;
   message: string;
 }
@@ -40,6 +42,8 @@ const INITIAL_STATE: FormState = {
   company: "",
   firstName: "",
   lastName: "",
+  country: "EG",
+  phone: "",
   email: "",
   message: "",
 };
@@ -51,6 +55,15 @@ function EmailIcon() {
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path d="M2 6C2 4.89543 2.89543 4 4 4H20C21.1046 4 22 4.89543 22 6V18C22 19.1046 21.1046 20 20 20H4C2.89543 20 2 19.1046 2 18V6Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M2 6L12 13L22 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function LocationIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0">
+      <path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="12" cy="10" r="2.5" stroke="currentColor" strokeWidth="1.5" />
     </svg>
   );
 }
@@ -103,6 +116,7 @@ export default function ContactForm() {
     }
     if (!form.firstName.trim()) nextErrors.firstName = "First name is required";
     if (!form.lastName.trim()) nextErrors.lastName = "Last name is required";
+    if (form.phone.replace(/\D/g, "").length < 8) nextErrors.phone = "Enter a valid phone number";
     if (!form.email.trim()) nextErrors.email = "Email is required";
     else if (!EMAIL_RE.test(form.email)) nextErrors.email = "Enter a valid email address";
     if (!form.message.trim()) nextErrors.message = "Tell us a bit about your inquiry";
@@ -118,25 +132,36 @@ export default function ContactForm() {
       data-nav-theme="light"
       className="flex flex-col gap-16 bg-brand-white px-6 py-16 text-brand-black md:flex-row md:gap-20 md:px-16 md:py-20"
     >
-      {/* Contact info */}
-      <div className="flex w-full flex-col gap-4 md:w-[313px] md:shrink-0">
-        <div className="h-px w-full bg-brand-black/10" />
-        <a
-          href="mailto:info@hap.com.eg"
-          className="flex items-center gap-3 py-2 font-sans text-base font-medium text-brand-black transition-colors duration-200 hover:text-grey-500"
-        >
-          <EmailIcon />
-          info@hap.com.eg
-        </a>
-        <div className="h-px w-full bg-brand-black/10" />
-        <a
-          href="tel:19172"
-          className="flex items-center gap-3 py-2 font-sans text-base font-medium text-brand-black transition-colors duration-200 hover:text-grey-500"
-        >
-          <CallIcon />
-          19172
-        </a>
-        <div className="h-px w-full bg-brand-black/10" />
+      {/* Contact info — labelled hotline, email and office address. */}
+      <div className="flex w-full flex-col md:w-[313px] md:shrink-0">
+        {[
+          { label: "Hotline", value: "19172", href: "tel:19172", icon: <CallIcon />, big: true },
+          { label: "Email", value: "info@hap.com.eg", href: "mailto:info@hap.com.eg", icon: <EmailIcon /> },
+          { label: "Head office", value: "67 - Southern Road 90 - New Cairo", icon: <LocationIcon /> },
+        ].map(({ label, value, href, icon, big }) => {
+          const body = (
+            <>
+              <span className="font-sans text-xs font-medium uppercase tracking-[0.12em] text-brand-black/50">{label}</span>
+              <span className={`flex items-center gap-3 font-sans font-medium text-brand-black ${big ? "text-2xl md:text-[1.75rem]" : "text-base"}`}>
+                {icon}
+                {value}
+              </span>
+            </>
+          );
+          return href ? (
+            <a
+              key={label}
+              href={href}
+              className="group flex flex-col gap-2 border-b border-brand-black/10 py-4 first:border-t [&>span:last-child]:decoration-1 [&>span:last-child]:underline-offset-4 hover:[&>span:last-child]:underline"
+            >
+              {body}
+            </a>
+          ) : (
+            <div key={label} className="flex flex-col gap-2 border-b border-brand-black/10 py-4">
+              {body}
+            </div>
+          );
+        })}
       </div>
 
       {/* Form */}
@@ -158,7 +183,7 @@ export default function ContactForm() {
                 setEmailTouched(false);
                 setSubmitted(false);
               }}
-              className="mt-4 font-sans text-base font-medium text-brand-black underline underline-offset-4 transition-opacity duration-200 hover:opacity-60"
+              className="mt-4 font-sans text-base font-medium text-brand-black underline decoration-1 underline-offset-4 transition-[text-decoration-thickness] duration-200 hover:decoration-2"
             >
               Send another message
             </button>
@@ -246,6 +271,18 @@ export default function ContactForm() {
                 message={errors.lastName}
               />
             </div>
+
+            <PhoneField
+              label="Phone"
+              placeholder="10 1234 5678"
+              country={form.country}
+              onCountryChange={choose("country")}
+              value={form.phone}
+              onChange={update("phone")}
+              status={errors.phone ? "error" : "idle"}
+              message={errors.phone}
+              autoComplete="tel-national"
+            />
 
             <TextField
               label="Email"

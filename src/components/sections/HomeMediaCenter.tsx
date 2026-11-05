@@ -17,9 +17,9 @@ export default function HomeMediaCenter() {
   return (
     <section
       data-nav-theme="light"
-      className="bg-grey-100 px-6 py-20 text-brand-black md:px-16 md:py-24"
+      className="bg-grey-100 px-6 py-20 text-brand-black md:px-16 md:py-16"
     >
-      <div className="flex flex-col items-start gap-10 md:items-center md:gap-14">
+      <div className="flex flex-col items-start gap-10 md:items-center md:gap-10">
         <div className="flex w-full flex-col items-start gap-4 md:items-center">
           <SectionEyebrow className="md:[&_p]:text-center">Media Center</SectionEyebrow>
           <Reveal>
@@ -37,7 +37,7 @@ export default function HomeMediaCenter() {
         </MobileCarousel>
         <div className="hidden w-full grid-cols-3 gap-x-5 gap-y-10 md:grid">
           {latest.map((article) => (
-            <NewsCard key={article.id} article={article} />
+            <NewsCard key={article.id} article={article} compact />
           ))}
         </div>
 

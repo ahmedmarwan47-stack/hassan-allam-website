@@ -1,3 +1,5 @@
+import { LIVE_NEWS } from "./hapLive";
+
 export type NewsSpan = "third" | "two-thirds" | "full";
 
 export const NEWS_CATEGORIES = ["News", "Event", "Blog"] as const;
@@ -20,7 +22,22 @@ export interface NewsArticle {
  * management, energy JV, master-planned communities, coastal resorts, industry
  * awards). Images reuse existing renders already in public/images/.
  */
+// The live site's articles (hap.com.eg/news, via src/data/hapLive.ts),
+// newest first, ahead of the placeholder stories below.
+const LIVE: NewsArticle[] = LIVE_NEWS.map((a) => {
+  const [y, m, d] = a.date.split("-");
+  return {
+    id: a.slug,
+    category: /award/i.test(a.title) ? "News" : "Event",
+    date: `${d}.${m}.${y}`,
+    title: a.title,
+    image: a.thumbnail ?? a.images[0] ?? "/images/office.jpg",
+    span: "third",
+  };
+});
+
 export const NEWS: NewsArticle[] = [
+  ...LIVE,
   {
     id: "eden-embassy-of-denmark",
     category: "News",

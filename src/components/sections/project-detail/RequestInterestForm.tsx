@@ -5,9 +5,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import ParallaxImage from "@/components/ParallaxImage";
 import { Reveal } from "@/components/Reveal";
 import ActionButton from "@/components/ActionButton";
-import { SelectField, TextField, TextareaField, type SelectOption } from "@/components/FormField";
+import { MultiSelectField, TextField, TextareaField, type SelectOption, PhoneField } from "@/components/FormField";
 import { FeatureIcon } from "./icons";
-import { PREFILL_INTEREST } from "./ProjectActions";
+import { PREFILL_INTEREST, PREFILL_UNIT } from "./ProjectActions";
 
 /**
  * Request Interest — where every "Request interest" button on the project
@@ -32,19 +32,23 @@ type Field = "firstName" | "lastName" | "phone" | "email";
 export default function RequestInterestForm({
   projectName,
   image,
+  units = [],
 }: {
   projectName: string;
   image: string;
+  /** Unit types ticked to start with (e.g. the unit page's own type). */
+  units?: string[];
 }) {
   const [values, setValues] = useState({
     firstName: "",
     lastName: "",
     phone: "",
     email: "",
-    unit: "",
+    units,
     contactBy: "Phone" as (typeof CONTACT_BY)[number],
     message: "",
   });
+  const [country, setCountry] = useState("EG");
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
   const [sent, setSent] = useState(false);
 
@@ -55,15 +59,25 @@ export default function RequestInterestForm({
       setSent(false);
       setValues((v) => ({ ...v, message }));
     };
+    // A unit card's "Request interest" ticks its type.
+    const onUnit = (e: Event) => {
+      const unit = (e as CustomEvent<string>).detail;
+      setSent(false);
+      setValues((v) => ({ ...v, units: v.units.includes(unit) ? v.units : [...v.units, unit] }));
+    };
     window.addEventListener(PREFILL_INTEREST, onPrefill);
-    return () => window.removeEventListener(PREFILL_INTEREST, onPrefill);
+    window.addEventListener(PREFILL_UNIT, onUnit);
+    return () => {
+      window.removeEventListener(PREFILL_INTEREST, onPrefill);
+      window.removeEventListener(PREFILL_UNIT, onUnit);
+    };
   }, []);
 
-  const setValue = (key: keyof typeof values, value: string) => {
+  const setValue = (key: Exclude<keyof typeof values, "units">, value: string) => {
     setValues((v) => ({ ...v, [key]: value }));
     setErrors((er) => ({ ...er, [key]: undefined }));
   };
-  const set = (key: keyof typeof values) => (
+  const set = (key: Exclude<keyof typeof values, "units">) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => setValue(key, e.target.value);
 
@@ -144,15 +158,15 @@ export default function RequestInterestForm({
                   <div className="grid grid-cols-2 gap-x-5 gap-y-4 sm:gap-x-8 sm:gap-y-6">
                     <TextField size="md" label="First name" value={values.firstName} onChange={set("firstName")} status={errors.firstName ? "error" : "idle"} message={errors.firstName} autoComplete="given-name" />
                     <TextField size="md" label="Last name" value={values.lastName} onChange={set("lastName")} status={errors.lastName ? "error" : "idle"} message={errors.lastName} autoComplete="family-name" />
-                    <TextField size="md" wrapperClassName="col-span-2 sm:col-span-1" label="Phone" type="tel" value={values.phone} onChange={set("phone")} status={errors.phone ? "error" : "idle"} message={errors.phone} autoComplete="tel" />
+                    <PhoneField size="md" wrapperClassName="col-span-2 sm:col-span-1" label="Phone" country={country} onCountryChange={setCountry} value={values.phone} onChange={set("phone")} status={errors.phone ? "error" : "idle"} message={errors.phone} autoComplete="tel-national" />
                     <TextField size="md" wrapperClassName="col-span-2 sm:col-span-1" label="Email" type="email" value={values.email} onChange={set("email")} status={errors.email ? "error" : "idle"} message={errors.email} autoComplete="email" />
                   </div>
 
-                  <SelectField
+                  <MultiSelectField
                     size="md"
                     label="Interested in"
-                    value={values.unit}
-                    onValueChange={(v) => setValue("unit", v)}
+                    value={values.units}
+                    onValueChange={(v) => setValues((s) => ({ ...s, units: v }))}
                     options={UNIT_TYPES}
                   />
 
@@ -181,7 +195,7 @@ export default function RequestInterestForm({
 
                   <div className="flex flex-col items-stretch gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between sm:pt-2">
                     <ActionButton label="Send request" type="submit" variant="solid" look="arrow" className="w-full justify-center sm:w-auto" />
-                    <p className="max-w-[260px] font-sans text-xs leading-[1.4] text-brand-black/50">
+                    <p className="max-w-[260px] font-sans text-xs leading-[1.4] text-brand-black/50 sm:text-right">
                       By sending, you agree to be contacted by Hassan Allam Properties about this project.
                     </p>
                   </div>

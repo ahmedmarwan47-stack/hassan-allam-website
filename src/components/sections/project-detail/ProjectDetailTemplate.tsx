@@ -7,7 +7,8 @@ import MasterPlan from "./MasterPlan";
 import ImageShowcase from "./ImageShowcase";
 import AmenitiesSection from "./AmenitiesSection";
 import ProjectStory from "./ProjectStory";
-import ProductsSection from "./ProductsSection";
+import UnitTypesSection from "./UnitTypesSection";
+import { UNIT_TYPES } from "@/data/units";
 import ConstructionTimeline from "./ConstructionTimeline";
 import RequestInterestForm from "./RequestInterestForm";
 
@@ -26,7 +27,7 @@ export default function ProjectDetailTemplate({ data }: { data: ProjectDetailDat
     { id: "amenities", label: "Amenities" },
     { id: "the-story", label: "The Story" },
     { id: "homes", label: "Homes" },
-    { id: "construction-updates", label: "Construction" },
+    { id: "construction-updates", label: "Construction Updates" },
     { id: "request-interest", label: "Request Interest" },
   ];
 
@@ -35,7 +36,14 @@ export default function ProjectDetailTemplate({ data }: { data: ProjectDetailDat
       <ProjectHero data={data} />
       <ProjectIntro id="overview" data={data} />
       {data.masterPlan && (
-        <MasterPlan id="master-plan" items={data.masterPlan.items} mapImage={data.masterPlan.mapImage} />
+        <MasterPlan
+          id="master-plan"
+          projectId={data.id}
+          projectName={data.name.join(" ")}
+          items={data.masterPlan.items}
+          mapImage={data.masterPlan.mapImage}
+          aspect={data.masterPlan.aspect}
+        />
       )}
       <ImageShowcase id="gallery" {...data.showcase} />
       <AmenitiesSection id="amenities" heading={data.amenitiesHeading} items={data.amenities} />
@@ -45,11 +53,12 @@ export default function ProjectDetailTemplate({ data }: { data: ProjectDetailDat
         heading={data.storyHeading}
         paragraphs={data.storyParagraphs}
       />
-      <ProductsSection
+      <UnitTypesSection
         id="homes"
-        images={data.productsImages}
+        projectId={data.id}
         heading={data.productsHeading}
-        items={data.products}
+        intro="From garden apartments to standalone villas — every home is designed around light, privacy and outdoor living."
+        units={UNIT_TYPES}
       />
       <ConstructionTimeline data={data.construction} />
       <RequestInterestForm projectName={data.name.join(" ")} image={data.showcase.full} />

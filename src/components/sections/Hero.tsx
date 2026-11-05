@@ -73,7 +73,7 @@ function ShowreelModal({ onClose }: { onClose: () => void }) {
         type="button"
         onClick={onClose}
         aria-label="Close showreel"
-        className="absolute right-4 top-4 z-10 flex size-11 items-center justify-center text-white transition-[opacity,transform] duration-300 hover:rotate-90 hover:opacity-70 md:right-8 md:top-8"
+        className="absolute right-4 top-4 z-10 flex size-11 items-center justify-center text-white opacity-80 transition-[opacity,rotate] duration-300 hover:rotate-90 hover:opacity-100 md:right-8 md:top-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.3, delay: reduce ? 0 : 0.25 } }}
         exit={{ opacity: 0, transition: { duration: 0.2 } }}
@@ -164,7 +164,7 @@ export default function Hero() {
       <div className="relative z-10 flex h-full w-full flex-col">
         <div className="mt-auto flex w-full flex-col items-start gap-6 px-6 pb-12 md:flex-row md:items-end md:justify-between md:px-12 md:pb-16 lg:px-16">
           <Reveal delay={0.3}>
-            <h1 className="max-w-[20ch] font-serif text-[clamp(2rem,3.5vw,2.625rem)] font-normal uppercase leading-none tracking-[-0.02em] text-white">
+            <h1 className="max-w-[20ch] font-serif text-[clamp(2.5rem,4.2vw,3.5rem)] font-normal uppercase leading-none tracking-[-0.02em] text-white">
               From Our
               <br />
               Family, to Yours.
@@ -177,7 +177,8 @@ export default function Hero() {
                 setReelMounted(true);
                 setReelOpen(true);
               }}
-              className="group flex items-center gap-2 font-sans text-base font-medium uppercase text-white"
+              // Rests at 85% and lights up to full on hover.
+              className="group flex items-center gap-2 font-sans text-base font-medium uppercase text-white opacity-85 transition-opacity duration-500 ease-out hover:opacity-100 focus-visible:opacity-100"
             >
               {/* Play icon: on hover it slides out to the right while a
                   second one enters from the left. */}

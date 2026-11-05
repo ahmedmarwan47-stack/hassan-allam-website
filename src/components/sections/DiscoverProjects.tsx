@@ -12,7 +12,7 @@ import MapStage from "@/components/MapStage";
 import MobileProjectMap from "@/components/MobileProjectMap";
 import ProjectSidebar from "@/components/ProjectSidebar";
 import MapFilterBarMobile from "@/components/MapFilterBarMobile";
-import { Reveal } from "@/components/Reveal";
+import RiseWords from "@/components/RiseWords";
 
 // Homepage "Discover our projects in Egypt" — the interactive map. Shares its
 // pins, sidebar and mobile filter bar with the Projects page hero.
@@ -49,7 +49,7 @@ export default function DiscoverProjects() {
 
   const visibleIds = new Set(
     MAP_PROJECTS.filter(
-      (p) => activeFilter === "all" || p.category === activeFilter,
+      (p) => activeFilter === "all" || p.categories.includes(activeFilter),
     ).map((p) => p.id),
   );
 
@@ -58,17 +58,17 @@ export default function DiscoverProjects() {
       {/* ── Mobile layout: heading on a black band, then the immersive map
            (scroll/drag to navigate) left clear for the pins ── */}
       <div className="bg-brand-black px-6 pb-8 pt-20 text-white md:hidden">
-        <Reveal>
-          <h2 className="font-serif text-[2rem] font-light uppercase leading-[1.05] tracking-[-0.02em]">
-            Discover our projects in Egypt
-          </h2>
-        </Reveal>
-        <Reveal delay={0.12}>
-          <p className="mt-4 font-sans text-sm leading-[1.5] text-white/70">
-            Choose between In The City and By The Sea to discover current and
-            upcoming projects tailored to your preferences.
-          </p>
-        </Reveal>
+        <h2 data-no-fx="" className="font-serif text-[2rem] font-light uppercase leading-[1.05] tracking-[-0.02em]">
+          <RiseWords text="Discover our projects in Egypt" />
+        </h2>
+        <p data-no-fx="" className="mt-4 font-sans text-sm leading-[1.5] text-white/70">
+          <RiseWords
+            text="Choose between In The City and By The Sea to discover current and upcoming projects tailored to your preferences."
+            delay={350}
+            stagger={18}
+            duration={800}
+          />
+        </p>
       </div>
       <div className="relative h-[560px] overflow-hidden md:hidden">
         <MobileProjectMap
@@ -93,7 +93,8 @@ export default function DiscoverProjects() {
             // Coast sits below the heading and paragraph, El Gouna still in view.
             focus={{ x: 50, y: 41 }}
             visibleIds={visibleIds}
-            hoveredId={hoveredId}
+            // The open project's pin stays highlighted (and follows prev/next).
+            hoveredId={selectedId ?? hoveredId}
             onHover={setHoveredId}
             onSelect={setSelectedId}
             priority
@@ -105,14 +106,13 @@ export default function DiscoverProjects() {
           className="pointer-events-none absolute"
           style={{ left: "50.4%", top: "14.3%", width: "32%", y: headingY }}
         >
-        <Reveal>
-          <h2
-            className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-white"
-            style={{ fontSize: "clamp(2rem, 4.3vw, 3.875rem)" }}
-          >
-            Discover our projects in Egypt
-          </h2>
-        </Reveal>
+        <h2
+          data-no-fx=""
+          className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-white"
+          style={{ fontSize: "clamp(2rem, 4.3vw, 3.875rem)" }}
+        >
+          <RiseWords text="Discover our projects in Egypt" stagger={60} duration={1000} />
+        </h2>
         </motion.div>
 
         {/* Subtitle — scrolls up over the map faster than the page. */}
@@ -120,16 +120,18 @@ export default function DiscoverProjects() {
           className="pointer-events-none absolute z-20"
           style={{ left: "4rem", top: "28%", width: "26%", y: paragraphY }}
         >
-        <Reveal delay={0.12}>
-          <p
-            className="font-serif font-medium uppercase leading-none tracking-[-0.02em] text-white"
-            style={{ fontSize: "clamp(0.875rem, 1.5vw, 1.375rem)" }}
-          >
-            Choose between In The City and By The Sea to discover current and
-            upcoming projects tailored to your preferences using two intuitive
-            filters.
-          </p>
-        </Reveal>
+        <p
+          data-no-fx=""
+          className="font-serif font-medium uppercase leading-[1.15] tracking-[-0.02em] text-white"
+          style={{ fontSize: "clamp(0.875rem, 1.5vw, 1.375rem)" }}
+        >
+          <RiseWords
+            text="Choose between In The City and By The Sea to discover current and upcoming projects tailored to your preferences using two intuitive filters."
+            delay={400}
+            stagger={22}
+            duration={850}
+          />
+        </p>
         </motion.div>
 
         {/* Bottom bar */}

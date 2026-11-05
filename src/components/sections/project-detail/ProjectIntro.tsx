@@ -72,7 +72,7 @@ export default function ProjectIntro({ id, data }: { id?: string; data: ProjectD
           </p>
           </Reveal>
           <Reveal delay={0.2} className="flex flex-wrap gap-3">
-            <BrochureButton label={data.brochureLabel} />
+            <BrochureButton label={data.brochureLabel} url={data.brochureUrl} />
           </Reveal>
         </div>
       </div>

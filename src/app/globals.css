@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
+/* Display serif: Eirlys Light — loaded by the vendor's own stylesheet
+   (public/fonts/eirlys/eirlys-light.css, linked in layout.tsx), kept
+   unaltered so its license header stays visible as the license requires.
+   It ships one (light) cut, so weights never fake a bold (see below). */
+
 /*
   Hassan Allam Properties — design tokens (from Figma variables).
-  Brand fonts in the Figma file are Cormorant Garamond (display serif),
-  Avenir Next & Aeonik (sans). Cormorant is loaded exactly via next/font;
+  Display serif: Eirlys Light (licensed webfont, public/fonts/eirlys).
+  Sans: Avenir Next & Aeonik in the Figma file;
   Manrope stands in for the licensed Avenir/Aeonik until the real .woff2
   files are dropped into src/app/fonts and wired up in layout.tsx.
 */
@@ -23,7 +28,7 @@
 }
 
 @theme inline {
-  --font-serif: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --font-serif: "Eirlys-Light", Georgia, "Times New Roman", serif;
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -194,4 +199,13 @@ html:not(.hydrated) [data-reveal] {
   .fx-dropdown[data-state] {
     animation: none;
   }
+}
+
+/* Eirlys has a single light cut — never synthesise a bold from it.
+   font-size-adjust scales every serif headline uniformly: Eirlys's own
+   x-height is 0.5em, so 0.45 renders it 10% smaller than its set size —
+   one site-wide dial instead of touching each heading's size. */
+.font-serif {
+  font-synthesis-weight: none;
+  font-size-adjust: 0.45;
 }

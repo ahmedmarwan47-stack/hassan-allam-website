@@ -22,7 +22,7 @@ function StoreBadges() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Download on the App Store"
-        className="flex h-[47px] items-center gap-2 bg-white px-4 transition-opacity duration-300 hover:opacity-80"
+        className="flex h-[47px] items-center gap-2 bg-white px-4 transition-[translate,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.14)]"
       >
         <svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M14.94 11.66C14.96 9.94 15.84 8.33 17.28 7.38C16.36 6.08 14.88 5.26 13.32 5.18C11.68 5.01 10.09 6.15 9.25 6.15C8.4 6.15 7.09 5.2 5.71 5.23C3.88 5.29 2.22 6.31 1.34 7.9C-0.52 11.16 0.87 16.01 2.64 18.65C3.53 19.95 4.57 21.39 5.94 21.34C7.29 21.28 7.8 20.47 9.42 20.47C11.03 20.47 11.51 21.34 12.92 21.31C14.37 21.28 15.27 19.99 16.13 18.68C16.78 17.75 17.27 16.72 17.6 15.63C15.87 14.9 14.94 13.32 14.94 11.66Z" fill="black"/>
@@ -38,7 +38,7 @@ function StoreBadges() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Get it on Google Play"
-        className="flex h-[47px] items-center gap-2 bg-white px-4 transition-opacity duration-300 hover:opacity-80"
+        className="flex h-[47px] items-center gap-2 bg-white px-4 transition-[translate,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.14)]"
       >
         <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M1.22 0.447L11.35 5.92L8.53 8.87L0.57 0.657C0.73 0.477 0.96 0.417 1.22 0.447Z" fill="#00C853"/>

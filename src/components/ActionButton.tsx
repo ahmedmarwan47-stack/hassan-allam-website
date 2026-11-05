@@ -4,11 +4,14 @@ import RollText from "@/components/RollText";
 /**
  * ActionButton — the site's one call-to-action style: a bar with the label
  * (and, by default, a ↗ after it). On hover a fill sweeps up from the
- * bottom, the colours invert and the label rolls.
+ * bottom.
  *
- * `tone="light"` is for dark backgrounds (white outline, white well).
+ * `tone="light"` is for dark backgrounds (white outline / white bar).
  * `variant="solid"` is the primary action (Request interest): a filled bar
- * (black, or white on dark backgrounds) whose hover sweep inverts it.
+ * (black, or white on dark backgrounds) that rests slightly see-through
+ * and turns fully solid on hover — it never takes the page's colour, so it
+ * can't vanish into its background. Outline bars sweep in the contrasting
+ * colour on hover.
  * `size="sm"` is the compact version for tight spots (the navbar).
  * `look` sets the icon treatment:
  *   - "arrow" (default): a ↗ after the label that turns to → on hover;
@@ -46,9 +49,8 @@ export default function ActionButton({
 }) {
   const dark = tone === "dark";
   const solid = variant === "solid";
-  // Solid = the outline style already "inverted": a filled bar whose hover
-  // sweep brings it back to the outline look.
-  const ink = solid ? !dark : dark; // true → dark text on light fill
+  // true → dark text (a white solid bar, or an outline bar on light).
+  const ink = solid ? !dark : dark;
   const sm = size === "sm";
   // Solid bars have no border at all (not even a transparent one — the fill
   // would show through it as a ring around the hover sweep), so they get
@@ -60,13 +62,22 @@ export default function ActionButton({
     : sm
       ? "gap-2 px-4 py-2.5"
       : "gap-3 px-6 py-[15px]";
-  const fg = ink ? "text-brand-black group-hover:text-brand-white" : "text-white group-hover:text-brand-black";
+  // Solid bars keep their text colour; outline bars swap it as they fill.
+  const fg = solid
+    ? ink
+      ? "text-brand-black"
+      : "text-white"
+    : ink
+      ? "text-brand-black group-hover:text-brand-white"
+      : "text-white group-hover:text-brand-black";
+  // Outline bars' hover sweep: the contrasting colour.
+  const sweep = ink ? "bg-brand-black" : "bg-white";
   const ease = "duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]";
   const classes = `group relative inline-flex items-center overflow-hidden rounded-[4px] transition-colors duration-500 ${pad} ${
     solid
       ? dark
-        ? "bg-brand-black"
-        : "bg-white"
+        ? "bg-brand-black/85 hover:bg-brand-black"
+        : "bg-white/85 hover:bg-white"
       : dark
         ? "border border-brand-black/30 hover:border-brand-black"
         : "border border-white/50 hover:border-white"
@@ -74,13 +85,13 @@ export default function ActionButton({
 
   const inner = (
     <>
-      {/* Fill sweeps up from the bottom edge. */}
-      <span
-        aria-hidden
-        className={`absolute inset-0 translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0 ${
-          ink ? "bg-brand-black" : "bg-white"
-        }`}
-      />
+      {/* Outline bars: a fill sweeps up from the bottom edge. */}
+      {!solid && (
+        <span
+          aria-hidden
+          className={`absolute inset-0 translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-y-0 ${sweep}`}
+        />
+      )}
       {look === "download" && (
         // Two icons stacked in a clip: on hover the first drops out of view
         // while the second slides in from above.
@@ -114,7 +125,7 @@ export default function ActionButton({
           viewBox="0 0 14 14"
           fill="none"
           aria-hidden
-          className={`relative z-10 shrink-0 transition-[transform,color] ${ease} group-hover:rotate-45 ${fg}`}
+          className={`relative z-10 shrink-0 transition-[rotate,color] ${ease} group-hover:rotate-45 ${fg}`}
         >
           <path d={PATHS.arrow} stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
         </svg>

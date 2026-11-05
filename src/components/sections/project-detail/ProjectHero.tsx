@@ -29,14 +29,10 @@ export default function ProjectHero({ data }: { data: ProjectDetailData }) {
       />
 
       <Reveal className="relative z-10 flex flex-col items-center gap-6 text-center md:gap-8">
-        {/* Eyebrow — the site's plain uppercase label (no box). */}
-        <p className="font-sans text-sm font-medium uppercase leading-[1.4] tracking-[0.12em] text-brand-black/60 md:text-base">
-          {data.badgeMain} {data.badgeScript.replace(/\.$/, "")}
-        </p>
-        {/* Phones: two uppercase lines, sized so the longer one ("RESIDENCES NEW
+        {/* Phones: two uppercase lines, sized (for Eirlys) so the longer one ("RESIDENCES NEW
             Cairo") fits the width. From tablet up a narrower measure wraps
             the name to 3 lines (SwanLake / Residences / New Cairo). */}
-        <h1 className="mx-auto whitespace-nowrap font-serif uppercase md:max-w-[7.5em] md:whitespace-normal font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(1.5rem,7.8vw,4.5rem)] md:[font-size:clamp(2.75rem,8vw,8.25rem)]">
+        <h1 className="mx-auto whitespace-nowrap font-serif uppercase md:max-w-[7.5em] md:whitespace-normal font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(1.375rem,6.9vw,4.5rem)] md:[font-size:clamp(2.75rem,8vw,8.25rem)]">
           <span className="block">{data.name[0]}</span>
           <span className="block">{data.name[1]}</span>
         </h1>

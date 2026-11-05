@@ -37,7 +37,7 @@ export default function ProjectsHero({
 
   const visibleIds = new Set(
     MAP_PROJECTS.filter(
-      (p) => activeFilter === "all" || p.category === activeFilter,
+      (p) => activeFilter === "all" || p.categories.includes(activeFilter),
     ).map((p) => p.id),
   );
 
@@ -64,7 +64,8 @@ export default function ProjectsHero({
           zoom={120}
           focus={{ x: 48, y: 50 }}
           visibleIds={visibleIds}
-          hoveredId={hoveredId}
+          // The open project's pin stays highlighted (and follows prev/next).
+            hoveredId={selectedId ?? hoveredId}
           onHover={setHoveredId}
           onSelect={setSelectedId}
           priority

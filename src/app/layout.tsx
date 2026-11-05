@@ -1,16 +1,10 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import HydrationMark from "@/components/HydrationMark";
 import ScrollEffects from "@/components/ScrollEffects";
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-cormorant",
-  display: "swap",
-});
+import { withBasePath } from "@/lib/basePath";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -33,8 +27,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${manrope.variable} antialiased`}
+      className={`${manrope.variable} antialiased`}
     >
+      <head>
+        {/* Eirlys Light (display serif) — the vendor's stylesheet, unaltered,
+            so its license header stays visible. */}
+        <link rel="stylesheet" href={withBasePath("/fonts/eirlys/eirlys-light.css")} />
+        <link
+          rel="preload"
+          href={withBasePath("/fonts/eirlys/eirlys-light.woff2")}
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body>
         <HydrationMark />
         <ScrollEffects />

@@ -9,6 +9,8 @@ import ActionButton from "@/components/ActionButton";
  */
 export const OPEN_NEIGHBORHOOD = "hap:open-neighborhood";
 export const PREFILL_INTEREST = "hap:prefill-interest";
+/** Ticks a unit type (event detail) in the form's "Interested in" field. */
+export const PREFILL_UNIT = "hap:prefill-unit";
 
 export function NeighborhoodLink({ name }: { name: string }) {
   return (
@@ -23,12 +25,18 @@ export function NeighborhoodLink({ name }: { name: string }) {
 }
 
 /** No brochure file yet: request it through the interest form instead. */
-export function BrochureButton({ label }: { label: string }) {
+/** Opens the project's brochure (the live hap.com.eg file) when there is
+ *  one; otherwise asks for it through the interest form. */
+export function BrochureButton({ label, url }: { label: string; url?: string }) {
   return (
     <ActionButton
       label={label}
       look="download"
       onClick={() => {
+        if (url) {
+          window.open(url, "_blank", "noopener");
+          return;
+        }
         window.dispatchEvent(
           new CustomEvent(PREFILL_INTEREST, { detail: "Please send me the project brochure." }),
         );

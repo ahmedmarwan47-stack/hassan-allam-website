@@ -44,3 +44,7 @@ next-env.d.ts
 /public/_img/
 # gh-pages checkout used by scripts/deploy.sh
 /.deploy/
+
+# hap.com.eg crawl working files (see scripts/hap-live/README.md)
+scripts/hap-live/data/
+scripts/hap-live/media.json

@@ -4,15 +4,17 @@ import Image from "@/components/ProgressiveImage";
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import SliderArrow from "@/components/SliderArrow";
-import { useCarouselCursor } from "@/components/CarouselCursor";
+import { useCarouselDrag } from "@/components/CarouselDrag";
 import SectionEyebrow from "@/components/SectionEyebrow";
 
 /**
  * "Construction Updates" slider — Figma component set 17149:2642, placed on
- * the Our Story page (17148:3407). Images slide, captions fade + rise, the
+ * the Our Story page (17148:3407). Images cross-fade, captions fade + rise, the
  * timeline fills as you advance; arrows, year labels and a 5s autoplay drive it.
- * Steps 5–6 are placeholder copy until the client supplies the real milestones.
  */
+// 1936–2000: the live site's milestones (hap.com.eg/the-story), titles as
+// published. 2010–2026: generated from the live project content (PLACEHOLDER
+// years and copy, to be confirmed by HAP). Bodies are short supporting copy.
 const STEPS = [
   {
     year: "1936",
@@ -43,18 +45,32 @@ const STEPS = [
     image: "/images/image 383.jpg",
   },
   {
+    year: "2010",
+    eyebrow: "Third Generation",
+    title: "Gated Communities Across East and West Cairo",
+    body: "SwanLake Katameya, Parkview and Seasons Residence set HAP’s signature of intimate, landscaped gated communities on both sides of the capital.",
+    image: "/images/hap/projects/swanlake-katameya/swanlake-katameya-hero-cover.jpg",
+  },
+  {
     year: "2015",
     eyebrow: "Third Generation",
     title: "A Move Toward the Coast",
-    body: "The portfolio expands beyond the capital to the Red Sea and North Coast, bringing HAP’s family-first ethos to seaside living.",
-    image: "/images/image 384.jpg",
+    body: "SwanLake El Gouna and SwanLake North Coast bring HAP’s family-first living to the Red Sea and the Mediterranean, around swimmable crystal lagoons.",
+    image: "/images/hap/projects/swanlake-el-gouna/swanlake-el-gouna-hero-cover.jpg",
+  },
+  {
+    year: "2020",
+    eyebrow: "Third Generation",
+    title: "SwanLake Residences New Cairo",
+    body: "Across 460 acres, twelve gated neighborhoods come together around KODE sports club and am:pm, East Cairo’s retail and commercial promenade.",
+    image: "/images/hap/projects/swanlake-residences-new-cairo/swanlake-residences-new-cairo-hero-cover.jpg",
   },
   {
     year: "2026",
     eyebrow: "Third Generation",
-    title: "Building for the Next Generation",
-    body: "Three generations in, Hassan Allam Properties keeps crafting communities where families come first — now and for decades to come.",
-    image: "/images/image 385.jpg",
+    title: "Mostakbal City and the Next Chapter",
+    body: "With HAPTOWN, The Valleys and the launch of Park Central — unveiled to more than 4,000 partners — HAP shapes its next generation of communities in Mostakbal City.",
+    image: "/images/hap/projects/park-central-mostakbal-city/park-central-mostakbal-city-hero-cover.jpg",
   },
 ];
 
@@ -67,8 +83,6 @@ const nodePct = (i: number) => (i / N) * 100;
 
 export default function ConstructionUpdates({ id }: { id?: string }) {
   const [index, setIndex] = useState(0);
-  // +1 forward, -1 back — picks the side the next image wipes in from.
-  const [dir, setDir] = useState<1 | -1>(1);
   const [paused, setPaused] = useState(false);
   const reduceMotion = useReducedMotion();
 
@@ -76,16 +90,13 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
     (i: number) => {
       const next = Math.max(0, Math.min(N - 1, i));
       if (next === index) return;
-      setDir(next > index ? 1 : -1);
       setIndex(next);
     },
     [index],
   );
-  // Images aren't links, so the cursor stays on "Drag" (no Discover state).
-  const { bind, viewportClass, dragX, cursor } = useCarouselCursor({
+  const { bind, viewportClass, dragX } = useCarouselDrag({
     onPrev: () => goTo(index - 1),
     onNext: () => goTo(index + 1),
-    discoverLabel: null,
     canPrev: index > 0,
     canNext: index < N - 1,
   });
@@ -96,14 +107,13 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
   useEffect(() => {
     if (!autoplay) return;
     const t = setTimeout(() => {
-      setDir(1);
       setIndex((i) => (i + 1) % N);
     }, AUTOPLAY_MS);
     return () => clearTimeout(t);
   }, [index, autoplay]);
 
   const step = STEPS[index];
-  const wipe = reduceMotion ? { duration: 0 } : { duration: 1.1, ease: WIPE_EASE };
+  const fade = reduceMotion ? { duration: 0 } : { duration: 0.9, ease: [0.45, 0, 0.55, 1] as const };
 
   // Milestone timeline: generations above (desktop), nodes on the line,
   // years below. The solid line reaches the current milestone; a fainter
@@ -112,7 +122,7 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
   const renderTimeline = (compact: boolean) => (
           <div className={compact ? "flex flex-col md:hidden" : "hidden flex-col md:flex"}>
             {!compact && (
-            <div className="grid grid-cols-6 pb-3">
+            <div className="grid pb-3" style={{ gridTemplateColumns: `repeat(${N}, minmax(0, 1fr))` }}>
               {STEPS.map((s, i) => (
                 <span
                   key={s.year}
@@ -176,7 +186,10 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
               })}
             </div>
 
-            <div className={`grid grid-cols-6 ${compact ? "pt-2" : "pt-3"}`}>
+            <div
+              className={`grid ${compact ? "pt-2" : "pt-3"}`}
+              style={{ gridTemplateColumns: `repeat(${N}, minmax(0, 1fr))` }}
+            >
               {STEPS.map((s, i) => (
                 <button
                   key={s.year}
@@ -231,43 +244,26 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
             className={`relative aspect-[16/10] w-full overflow-hidden rounded-[2px] bg-brand-black ${viewportClass}`}
           >
             <motion.div style={{ x: dragX }} className="absolute inset-0">
-              {/* Each new milestone wipes in over the last one (from the right
-                  going forward, the left going back) while slowly settling
-                  from a zoom; the outgoing image drifts away underneath. */}
-              <AnimatePresence initial={false} custom={dir}>
+              {/* Milestones cross-fade — the new image fades in over the
+                  last one, which fades out underneath. */}
+              <AnimatePresence initial={false}>
                 <motion.div
                   key={index}
-                  custom={dir}
-                  className="absolute inset-0 overflow-hidden"
-                  variants={{
-                    enter: (d: 1 | -1) => ({
-                      clipPath: d > 0 ? "inset(0% 0% 0% 100%)" : "inset(0% 100% 0% 0%)",
-                      zIndex: 2,
-                    }),
-                    center: { clipPath: "inset(0% 0% 0% 0%)", zIndex: 2, x: "0%" },
-                    exit: (d: 1 | -1) => ({ zIndex: 1, x: d > 0 ? "-14%" : "14%" }),
-                  }}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={wipe}
+                  className="absolute inset-0"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={fade}
                 >
-                  <motion.div
-                    className="absolute inset-0"
-                    initial={reduceMotion ? false : { scale: 1.18 }}
-                    animate={{ scale: 1 }}
-                    transition={reduceMotion ? { duration: 0 } : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <Image
-                      src={step.image}
-                      alt=""
-                      fill
-                      sizes="(min-width: 768px) 45vw, 100vw"
-                      quality={90}
-                      priority={index === 0}
-                      className="object-cover"
-                    />
-                  </motion.div>
+                  <Image
+                    src={step.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 768px) 45vw, 100vw"
+                    quality={90}
+                    priority={index === 0}
+                    className="object-cover"
+                  />
                 </motion.div>
               </AnimatePresence>
             </motion.div>
@@ -330,7 +326,6 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
         {renderTimeline(false)}
       </div>
 
-      {cursor}
     </section>
   );
 }
