@@ -145,7 +145,7 @@ function NewsletterField() {
           type="submit"
           className="shrink-0 bg-white/80 px-4 py-3 font-serif text-sm font-medium uppercase leading-[1.4] text-black transition-colors duration-300 hover:bg-white sm:px-5"
         >
-          Subscribe now
+          Subscribe
         </button>
       </div>
       {status === "error" && (
@@ -228,12 +228,12 @@ export default function Footer() {
     >
       <div className="flex flex-col gap-10 p-6 md:p-16">
         {/* ── Top section: nav (left) + projects/contact/newsletter (right) ── */}
-        <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-10">
+        <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-12 xl:gap-16">
           {/* Left column: Nav — Figma Footer 17099:2537: 567px of 1312 (43.2%),
               78px display serif, one line per link from lg up. Both scale down
               below 1440. Below lg the nav stacks above the columns so tablets
               don't overflow; phones may wrap a long link. */}
-          <nav className="flex w-full flex-col font-serif font-light uppercase leading-none tracking-[-0.02em] text-[2.5rem] lg:w-[43.2%] lg:shrink-0 md:[font-size:clamp(2.75rem,5.42vw,4.875rem)] lg:whitespace-nowrap">
+          <nav className="flex w-full flex-col font-serif font-light uppercase leading-none tracking-[-0.02em] text-[2.5rem] lg:w-auto lg:shrink-0 md:[font-size:clamp(2.75rem,5.42vw,4.875rem)] lg:whitespace-nowrap">
             {NAV_LINKS.map((link) => {
               const active = isActive(link.href);
               return (
@@ -252,7 +252,7 @@ export default function Footer() {
           </nav>
 
           {/* Right column: Projects + Get In Touch, then Newsletter below */}
-          <div className="flex w-full flex-col gap-12 md:gap-[52px] lg:flex-1">
+          <div className="flex w-full min-w-0 flex-col gap-12 md:gap-[52px] lg:flex-1">
             {/* Project listings — accordions on mobile, three columns on desktop */}
             <div className="font-sans font-medium">
               <div className="flex flex-col md:hidden">
@@ -318,7 +318,7 @@ export default function Footer() {
             <div className="flex w-full flex-col gap-5 min-[1440px]:flex-row min-[1440px]:items-center min-[1440px]:justify-between min-[1440px]:gap-10">
               <div className="flex flex-col gap-1">
                 <p className="font-serif text-[1.625rem] font-normal uppercase leading-none tracking-[-0.02em] min-[1440px]:whitespace-nowrap">
-                  Subscribe to our newsletter
+                  Join our Newsletter
                 </p>
                 <p className="font-sans text-base font-medium leading-[1.4]">
                   Stay in the know of all the HAP properties
