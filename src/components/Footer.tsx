@@ -313,17 +313,18 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Newsletter — title on the left, the field beside it. */}
-            <div className="flex w-full flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-10">
+            {/* Newsletter — title with the field beside it on wide screens,
+                stacked below that. */}
+            <div className="flex w-full flex-col gap-5 min-[1440px]:flex-row min-[1440px]:items-center min-[1440px]:justify-between min-[1440px]:gap-10">
               <div className="flex flex-col gap-1">
-                <p className="font-serif text-[1.625rem] font-normal uppercase leading-none tracking-[-0.02em]">
+                <p className="font-serif text-[1.625rem] font-normal uppercase leading-none tracking-[-0.02em] min-[1440px]:whitespace-nowrap">
                   Subscribe to our newsletter
                 </p>
                 <p className="font-sans text-base font-medium leading-[1.4]">
                   Stay in the know of all the HAP properties
                 </p>
               </div>
-              <div className="w-full md:max-w-[600px] md:flex-1">
+              <div className="w-full max-w-[600px] min-[1440px]:min-w-[320px] min-[1440px]:flex-1">
                 <NewsletterField />
               </div>
             </div>
