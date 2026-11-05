@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type RefObject } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Image from "@/components/ProgressiveImage";
 
@@ -16,6 +16,7 @@ export default function ParallaxImage({
   sizes,
   strength = 12,
   quality,
+  track,
 }: {
   src: string;
   alt?: string;
@@ -23,10 +24,13 @@ export default function ParallaxImage({
   /** Travel in % of the frame height, each direction. */
   strength?: number;
   quality?: number;
+  /** Drive the drift from this element's pass through the viewport instead
+   *  of the frame's own — for a frame that's sticky (and so doesn't move). */
+  track?: RefObject<HTMLElement | null>;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const { scrollYProgress } = useScroll({ target: track ?? ref, offset: ["start end", "end start"] });
   // Function form on purpose — keeps framer from handing this to a native
   // ScrollTimeline, which mis-maps element offsets on this site.
   // `y` % is of the oversized layer (100 + 2×strength % of the frame), so
