@@ -1,6 +1,6 @@
 :HL["/hassan-allam-website/_next/static/chunks/3xulqppo17nam.css","style"]
-:HL["/hassan-allam-website/_next/static/chunks/0jln7wjitfz-p.css","style"]
+:HL["/hassan-allam-website/_next/static/chunks/12sel4bn4w2ur.css","style"]
 :HL["/hassan-allam-website/_next/static/media/a343f882a40d2cc9-s.p.0p-wng2nn8o-p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/hassan-allam-website/fonts/eirlys/eirlys-light.css","style"]
 :HL["/hassan-allam-website/fonts/eirlys/eirlys-light.woff2","font",{"crossOrigin":"anonymous","type":"font/woff2"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"projects","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"rQrbT7SvCaaaTHptBAhHV"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"projects","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"BgsBU6qPjiqu5O6OSng8Q"}
