@@ -5,10 +5,11 @@ import { Reveal } from "@/components/Reveal";
 import type { ProjectDetailData } from "@/data/projectDetail";
 import { RequestInterest } from "@/components/ActionButton";
 import { CATEGORY_LABEL } from "@/data/mapProjects";
-import { useT } from "@/i18n/LocaleProvider";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 export default function ProjectHero({ data }: { data: ProjectDetailData }) {
   const t = useT();
+  const rtl = useRtl();
   return (
     <section
       data-nav-theme="light"
@@ -37,8 +38,16 @@ export default function ProjectHero({ data }: { data: ProjectDetailData }) {
             Cairo") fits the width. From tablet up a narrower measure wraps
             the name to 3 lines (SwanLake / Residences / New Cairo). */}
         <h1 className="mx-auto whitespace-nowrap font-serif uppercase md:max-w-[7.5em] md:whitespace-normal font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(1.375rem,6.9vw,4.5rem)] md:[font-size:clamp(2.75rem,8vw,8.25rem)]">
-          <span className="block">{data.name[0]}</span>
-          <span className="block">{data.name[1]}</span>
+          {/* Arabic: the full name in Arabic script on one flowing line;
+              English: the two designed lines. */}
+          {rtl ? (
+            <span className="block">{t(data.name.join(" ").trim())}</span>
+          ) : (
+            <>
+              <span className="block">{data.name[0]}</span>
+              <span className="block">{data.name[1]}</span>
+            </>
+          )}
         </h1>
         {/* Asset classes, compact: a single line with thin dividers (as on
             the project cards); only phones too narrow for it wrap. */}
