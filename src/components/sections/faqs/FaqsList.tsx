@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Reveal } from "@/components/Reveal";
 import FilterButton from "@/components/FilterButton";
+import { useT } from "@/i18n/LocaleProvider";
 
 type FaqItem = { question: string; answer: string; category: Category };
 type Category = "General" | "Buying & Payment" | "Handover & Living";
@@ -103,6 +104,7 @@ function AccordionIcon({ open }: { open: boolean }) {
 }
 
 function FaqRow({ item, delay }: { item: FaqItem; delay: number }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
 
   return (
@@ -111,10 +113,10 @@ function FaqRow({ item, delay }: { item: FaqItem; delay: number }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex w-full items-start justify-between gap-6 py-6 text-left md:items-center md:py-7"
+        className="flex w-full items-start justify-between gap-6 py-6 text-start md:items-center md:py-7"
       >
         <span className="font-serif text-xl font-medium leading-[1.2] tracking-[-0.01em] text-brand-black md:text-[1.75rem]">
-          {item.question}
+          {t(item.question)}
         </span>
         {/* Container flips to dark when the row is open; icon crossfades
             plus ↔ minus. Container itself never rotates. */}
@@ -135,7 +137,7 @@ function FaqRow({ item, delay }: { item: FaqItem; delay: number }) {
       >
         <div className="overflow-hidden">
           <p className="max-w-[720px] font-sans text-base leading-[1.5] text-brand-black/80">
-            {item.answer}
+            {t(item.answer)}
           </p>
         </div>
       </div>
@@ -144,6 +146,7 @@ function FaqRow({ item, delay }: { item: FaqItem; delay: number }) {
 }
 
 export default function FaqsList() {
+  const t = useT();
   const [filter, setFilter] = useState<FilterValue>("all");
   const visible = filter === "all" ? FAQS : FAQS.filter((f) => f.category === filter);
 
@@ -156,11 +159,11 @@ export default function FaqsList() {
         {/* Filter bar — horizontally scrollable on mobile so all pills fit. */}
         <Reveal>
           <div className="flex gap-3 overflow-x-auto pb-1 md:flex-wrap md:justify-center md:gap-4 md:pb-0 [-ms-overflow-style:none] [scrollbar-width:none]">
-            <FilterButton label="All FAQs" active={filter === "all"} onClick={() => setFilter("all")} />
+            <FilterButton label={t("All FAQs")} active={filter === "all"} onClick={() => setFilter("all")} />
             {CATEGORIES.map((cat) => (
               <FilterButton
                 key={cat}
-                label={cat}
+                label={t(cat)}
                 active={filter === cat}
                 onClick={() => setFilter(cat)}
               />

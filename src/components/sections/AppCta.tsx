@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
 import ActionButton from "@/components/ActionButton";
 import { withBasePath } from "@/lib/basePath";
+import { useT } from "@/i18n/LocaleProvider";
 
 // Where "Scan to download" (desktop QR) and "Download app" (mobile) lead.
 // Placeholder until the store link is ready — regenerate the QR with
@@ -15,13 +18,14 @@ const KEY_BENEFITS = [
 ];
 
 function StoreBadges() {
+  const t = useT();
   return (
     <div className="flex items-center gap-[11px]">
       <a
         href="https://apps.apple.com/us/app/hassan-allam-properties-app/id1511697597"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Download on the App Store"
+        aria-label={t("Download on the App Store")}
         className="flex h-[47px] items-center gap-2 bg-white px-4 transition-[translate,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.14)]"
       >
         <svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -29,7 +33,7 @@ function StoreBadges() {
           <path d="M12.27 3.52C13.04 2.59 13.42 1.41 13.35 0.21C12.18 0.33 11.1 0.89 10.32 1.78C9.56 2.65 9.16 3.79 9.22 4.95C10.39 4.96 11.5 4.44 12.27 3.52Z" fill="black"/>
         </svg>
         <div className="flex flex-col">
-          <span className="font-sans text-[8px] font-medium leading-none text-black">Download on the</span>
+          <span className="font-sans text-[8px] font-medium leading-none text-black">{t("Download on the")}</span>
           <span className="font-sans text-[16px] font-semibold leading-tight text-black">App Store</span>
         </div>
       </a>
@@ -37,7 +41,7 @@ function StoreBadges() {
         href="https://play.google.com/store/apps/details?id=com.moonshot.hap"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Get it on Google Play"
+        aria-label={t("Get it on Google Play")}
         className="flex h-[47px] items-center gap-2 bg-white px-4 transition-[translate,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.14)]"
       >
         <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -47,7 +51,7 @@ function StoreBadges() {
           <path d="M18.4 10.04L14.73 7.97L11.62 11L14.73 14.03L18.4 11.96C19.12 11.56 19.12 10.44 18.4 10.04Z" fill="#FFC107"/>
         </svg>
         <div className="flex flex-col">
-          <span className="font-sans text-[8px] font-medium uppercase leading-none tracking-wider text-black">Get it on</span>
+          <span className="font-sans text-[8px] font-medium uppercase leading-none tracking-wider text-black">{t("Get it on")}</span>
           <span className="font-sans text-[16px] font-semibold leading-tight text-black">Google Play</span>
         </div>
       </a>
@@ -56,16 +60,17 @@ function StoreBadges() {
 }
 
 function KeyBenefits() {
+  const t = useT();
   return (
     <div className="flex w-full flex-col gap-5">
       <p className="font-sans text-[1.25rem] font-medium uppercase leading-[1.1] text-brand-black">
-        Key Benefits
+        {t("Key Benefits")}
       </p>
       <div className="h-px w-full bg-black/10" />
       {KEY_BENEFITS.map((benefit) => (
         <div key={benefit} className="flex flex-col gap-5">
           <p className="font-sans text-[1.25rem] font-medium leading-[1.1] text-brand-black">
-            {benefit}
+            {t(benefit)}
           </p>
           <div className="h-px w-full bg-black/10" />
         </div>
@@ -75,6 +80,14 @@ function KeyBenefits() {
 }
 
 export default function AppCta() {
+  const t = useT();
+  const intro = (
+    <>
+      <span>{t("HAP Family App ")}</span>
+      <strong className="font-bold">{t("enables homeowners")}</strong>
+      <span>{t(" to seamlessly manage their properties from their phones.")}</span>
+    </>
+  );
   return (
     <section id="app" data-nav-theme="light" className="relative bg-warm-50">
       {/* ── Mobile layout: the drapery photo (light, leaf-shadowed top; the
@@ -83,7 +96,7 @@ export default function AppCta() {
       <div className="relative overflow-hidden md:hidden">
         <Image
           src="/images/app-bg.jpg"
-          alt="Hand holding phone with the HAP Family App"
+          alt={t("Hand holding phone with the HAP Family App")}
           fill
           className="-z-0 object-cover"
           style={{ objectPosition: "53% 100%" }}
@@ -92,7 +105,7 @@ export default function AppCta() {
         <div className="relative z-10 flex flex-col gap-8 px-6 pb-10 pt-28">
           <Reveal>
             <h2 className="font-serif text-[2.5rem] font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black">
-              Manage your home anytime with HAP Family App
+              {t("Manage your home anytime with HAP Family App")}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
@@ -100,11 +113,9 @@ export default function AppCta() {
           </Reveal>
           <Reveal delay={0.15} className="flex flex-col items-stretch gap-6">
             <p className="font-serif text-[1.375rem] font-medium capitalize leading-[1.2] tracking-[-0.02em] text-brand-black">
-              <span>HAP Family App </span>
-              <strong className="font-bold">enables homeowners</strong>
-              <span> to seamlessly manage their properties from their phones.</span>
+              {intro}
             </p>
-            <ActionButton label="Download app" href={APP_DOWNLOAD_URL} variant="solid" look="arrow" className="w-full justify-center" />
+            <ActionButton label={t("Download app")} href={APP_DOWNLOAD_URL} variant="solid" look="arrow" className="w-full justify-center" />
           </Reveal>
           <Reveal delay={0.2}>
             <KeyBenefits />
@@ -120,7 +131,7 @@ export default function AppCta() {
         <div className="absolute inset-0">
           <Image
             src="/images/app-bg.jpg"
-            alt="Hand holding phone with HAP Family App"
+            alt={t("Hand holding phone with HAP Family App")}
             fill
             className="object-cover"
             sizes="100vw"
@@ -133,7 +144,7 @@ export default function AppCta() {
           style={{ left: "50.7%", top: "17.95%", width: "35.35%" }}
         >
           <h2 className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(2rem,4.3vw,3.875rem)]">
-            Manage your home anytime with HAP Family App
+            {t("Manage your home anytime with HAP Family App")}
           </h2>
           <StoreBadges />
         </Reveal>
@@ -145,9 +156,7 @@ export default function AppCta() {
           style={{ left: "4rem", top: "38.73%", width: "27.85%" }}
         >
           <p className="font-serif text-[1.625rem] font-medium capitalize leading-[1.2] tracking-[-0.02em] text-brand-black">
-            <span>HAP Family App </span>
-            <strong className="font-bold">enables homeowners</strong>
-            <span> to seamlessly manage their properties from their phones.</span>
+            {intro}
           </p>
         </Reveal>
 
@@ -159,9 +168,10 @@ export default function AppCta() {
         />
 
         {/* Bottom row — key benefits on the left and "Scan to download" on
-            the right, bottom-aligned with each other. */}
+            the right, bottom-aligned with each other. The photo isn't
+            mirrored, so on /ar the QR stays on the dark bottom-right corner. */}
         <div
-          className="absolute flex items-end justify-between"
+          className="absolute flex items-end justify-between rtl:flex-row-reverse"
           style={{ left: "4rem", right: "4rem", top: "79.23%" }}
         >
           <Reveal delay={0.15} style={{ width: "30.9vw" }}>
@@ -173,7 +183,7 @@ export default function AppCta() {
               target="_blank"
               rel="noopener noreferrer"
               className="group flex w-max flex-col items-stretch gap-4"
-              aria-label="Scan to download the HAP Family App"
+              aria-label={t("Scan to download the HAP Family App")}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -185,8 +195,8 @@ export default function AppCta() {
               />
               {/* Sets the block's width, so the QR spans exactly the label;
                   the negative margin drops the last letter's tracking. */}
-              <span className="-mr-[0.12em] whitespace-nowrap font-sans text-sm font-medium uppercase leading-none tracking-[0.12em] text-white">
-                Scan to download
+              <span className="-me-[0.12em] whitespace-nowrap rtl:me-0 font-sans text-sm font-medium uppercase leading-none tracking-[0.12em] text-white">
+                {t("Scan to download")}
               </span>
             </a>
           </Reveal>

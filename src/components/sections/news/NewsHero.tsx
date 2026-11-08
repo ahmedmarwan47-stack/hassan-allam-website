@@ -1,6 +1,10 @@
+"use client";
+
 import { Reveal } from "@/components/Reveal";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function NewsHero() {
+  const t = useT();
   return (
     <section
       data-nav-theme="light"
@@ -14,7 +18,7 @@ export default function NewsHero() {
 
       <Reveal className="relative z-10 w-full">
         <h1 className="text-center font-serif font-light leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(3.5rem,15vw,12.625rem)]">
-          HAP NEWS
+          {t("HAP NEWS")}
         </h1>
       </Reveal>
     </section>

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MAP_PROJECTS } from "@/data/mapProjects";
 import MapStage, { MOBILE_MAP_FOCUS, MOBILE_MAP_ZOOM } from "@/components/MapStage";
+import { useT } from "@/i18n/LocaleProvider";
 
 const CYCLE_MS = 2600;
 const MAX_SCALE = 4;
@@ -154,8 +155,9 @@ export default function MobileProjectMap({
         smooth={!dragging}
       />
 
-      {/* Zoom controls — above the filter bar, bottom left (open water). */}
-      <div className="absolute bottom-[72px] left-4 z-40 flex flex-col overflow-hidden rounded-[2px] bg-brand-white shadow-[0_6px_20px_rgba(0,0,0,0.18)]">
+      {/* Zoom controls — above the filter bar, bottom start corner (left in
+          English — open water — right on the Arabic site). */}
+      <div className="absolute bottom-[72px] start-4 z-40 flex flex-col overflow-hidden rounded-[2px] bg-brand-white shadow-[0_6px_20px_rgba(0,0,0,0.18)]">
         <ZoomButton
           label="Zoom in"
           disabled={scale >= MAX_SCALE}
@@ -183,10 +185,11 @@ function ZoomButton({
   onClick: () => void;
   children: React.ReactNode;
 }) {
+  const t = useT();
   return (
     <button
       type="button"
-      aria-label={label}
+      aria-label={t(label)}
       disabled={disabled}
       onClick={onClick}
       onPointerDown={(e) => e.stopPropagation()}

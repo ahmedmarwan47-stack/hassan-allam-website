@@ -1,11 +1,12 @@
 "use client";
 
-import { MAP_FILTERS, type FilterValue } from "@/data/mapProjects";
+import { MAP_FILTERS, MAP_PROJECTS, type FilterValue } from "@/data/mapProjects";
 import { useDragScroll } from "@/hooks/useDragScroll";
+import { useT } from "@/i18n/LocaleProvider";
 
 /**
  * The mobile filter bar under the interactive map. No "Filters" label (to free
- * up space), filters start from the left, and the row is drag-scrollable so all
+ * up space), filters start from the start edge, and the row is drag-scrollable so all
  * categories are reachable on a narrow screen.
  */
 export default function MapFilterBarMobile({
@@ -15,6 +16,7 @@ export default function MapFilterBarMobile({
   activeFilter: FilterValue;
   onFilterChange: (v: FilterValue) => void;
 }) {
+  const t = useT();
   const { ref, dragProps, wasDragged } = useDragScroll<HTMLDivElement>();
 
   return (
@@ -39,7 +41,7 @@ export default function MapFilterBarMobile({
               : "text-grey-500",
           ].join(" ")}
         >
-          {label}
+          {value === "all" ? t("All projects ({count})", { count: MAP_PROJECTS.length }) : t(label)}
         </button>
       ))}
     </div>

@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Reveal } from "@/components/Reveal";
 import ActionButton from "@/components/ActionButton";
 import { TextField, TextareaField, PhoneField } from "@/components/FormField";
+import { useT } from "@/i18n/LocaleProvider";
 
 const MAX_CV_BYTES = 20 * 1024 * 1024;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -17,6 +18,7 @@ type Field = "firstName" | "lastName" | "email" | "phone" | "cv" | "message";
  * thank-you state.
  */
 export default function ApplicationForm({ role }: { role: string }) {
+  const t = useT();
   const [values, setValues] = useState({ firstName: "", lastName: "", email: "", phone: "", linkedin: "", message: "" });
   const [cv, setCv] = useState<File | null>(null);
   const [country, setCountry] = useState("EG");
@@ -32,12 +34,12 @@ export default function ApplicationForm({ role }: { role: string }) {
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const next: Partial<Record<Field, string>> = {};
-    if (!values.firstName.trim()) next.firstName = "Please enter your first name";
-    if (!values.lastName.trim()) next.lastName = "Please enter your last name";
-    if (!EMAIL_RE.test(values.email)) next.email = "Please enter a valid email";
-    if (values.phone.replace(/\D/g, "").length < 8) next.phone = "Please enter a valid phone number";
-    if (!cv) next.cv = "Please attach your CV";
-    if (!values.message.trim()) next.message = "Please tell us a little about yourself";
+    if (!values.firstName.trim()) next.firstName = t("Please enter your first name");
+    if (!values.lastName.trim()) next.lastName = t("Please enter your last name");
+    if (!EMAIL_RE.test(values.email)) next.email = t("Please enter a valid email");
+    if (values.phone.replace(/\D/g, "").length < 8) next.phone = t("Please enter a valid phone number");
+    if (!cv) next.cv = t("Please attach your CV");
+    if (!values.message.trim()) next.message = t("Please tell us a little about yourself");
     setErrors(next);
     if (Object.keys(next).length === 0) setSent(true);
   };
@@ -52,7 +54,7 @@ export default function ApplicationForm({ role }: { role: string }) {
       <div className="mx-auto flex w-full max-w-[880px] flex-col gap-8 md:gap-10">
         <Reveal>
           <h2 className="whitespace-nowrap text-center font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(2.25rem,4vw,3.75rem)]">
-            Apply now
+            {t("Apply now")}
           </h2>
         </Reveal>
 
@@ -73,11 +75,13 @@ export default function ApplicationForm({ role }: { role: string }) {
                     </svg>
                   </span>
                   <h3 className="font-serif text-4xl font-light uppercase leading-none tracking-[-0.02em]">
-                    Thank you, {values.firstName}
+                    {t("Thank you, {name}", { name: values.firstName })}
                   </h3>
                   <p className="max-w-[460px] font-sans text-base leading-[1.5] text-brand-black/70">
-                    Your application for {role} is in. Our talent team reviews every application and will contact
-                    you if your profile is a match.
+                    {t(
+                      "Your application for {role} is in. Our talent team reviews every application and will contact you if your profile is a match.",
+                      { role: t(role) },
+                    )}
                   </p>
                 </motion.div>
               ) : (
@@ -89,12 +93,12 @@ export default function ApplicationForm({ role }: { role: string }) {
                   className="flex flex-col gap-5 md:gap-7"
                 >
                   <div className="grid grid-cols-2 gap-x-5 gap-y-4 sm:gap-x-8 sm:gap-y-6">
-                    <TextField size="md" label="First name" value={values.firstName} onChange={set("firstName")} status={errors.firstName ? "error" : "idle"} message={errors.firstName} autoComplete="given-name" />
-                    <TextField size="md" label="Last name" value={values.lastName} onChange={set("lastName")} status={errors.lastName ? "error" : "idle"} message={errors.lastName} autoComplete="family-name" />
-                    <TextField size="md" wrapperClassName="col-span-2 sm:col-span-1" label="Email" type="email" value={values.email} onChange={set("email")} status={errors.email ? "error" : "idle"} message={errors.email} autoComplete="email" />
-                    <PhoneField size="md" wrapperClassName="col-span-2 sm:col-span-1" label="Phone" country={country} onCountryChange={setCountry} value={values.phone} onChange={set("phone")} status={errors.phone ? "error" : "idle"} message={errors.phone} autoComplete="tel-national" />
+                    <TextField size="md" label={t("First name")} value={values.firstName} onChange={set("firstName")} status={errors.firstName ? "error" : "idle"} message={errors.firstName} autoComplete="given-name" />
+                    <TextField size="md" label={t("Last name")} value={values.lastName} onChange={set("lastName")} status={errors.lastName ? "error" : "idle"} message={errors.lastName} autoComplete="family-name" />
+                    <TextField size="md" wrapperClassName="col-span-2 sm:col-span-1" label={t("Email")} type="email" value={values.email} onChange={set("email")} status={errors.email ? "error" : "idle"} message={errors.email} autoComplete="email" />
+                    <PhoneField size="md" wrapperClassName="col-span-2 sm:col-span-1" label={t("Phone")} country={country} onCountryChange={setCountry} value={values.phone} onChange={set("phone")} status={errors.phone ? "error" : "idle"} message={errors.phone} autoComplete="tel-national" />
                   </div>
-                  <TextField size="md" label="LinkedIn profile (optional)" type="url" value={values.linkedin} onChange={set("linkedin")} />
+                  <TextField size="md" label={t("LinkedIn profile (optional)")} type="url" value={values.linkedin} onChange={set("linkedin")} />
 
                   {/* CV upload — a dashed drop-style button that shows the file once chosen. */}
                   <div className="flex flex-col gap-2">
@@ -112,10 +116,10 @@ export default function ApplicationForm({ role }: { role: string }) {
                         const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
                         if (!isPdf) {
                           setCv(null);
-                          setErrors((er) => ({ ...er, cv: "Please attach your CV as a PDF" }));
+                          setErrors((er) => ({ ...er, cv: t("Please attach your CV as a PDF") }));
                         } else if (file.size > MAX_CV_BYTES) {
                           setCv(null);
-                          setErrors((er) => ({ ...er, cv: "Your CV must be 20 MB or smaller" }));
+                          setErrors((er) => ({ ...er, cv: t("Your CV must be 20 MB or smaller") }));
                         } else {
                           setCv(file);
                           setErrors((er) => ({ ...er, cv: undefined }));
@@ -132,19 +136,19 @@ export default function ApplicationForm({ role }: { role: string }) {
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden className="shrink-0">
                           <path d="M10 13V3m0 0L6 7m4-4 4 4M3.5 13v2.5a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V13" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <span className="truncate">{cv ? cv.name : "Attach your CV"}</span>
+                        <span className="truncate">{cv ? cv.name : t("Attach your CV")}</span>
                       </span>
-                      <span className="shrink-0 font-sans text-sm text-brand-black/50">{cv ? "Change" : "PDF, max 20 MB"}</span>
+                      <span className="shrink-0 font-sans text-sm text-brand-black/50">{cv ? t("Change") : t("PDF, max 20 MB")}</span>
                     </label>
                     {errors.cv && <p className="font-sans text-sm text-error">{errors.cv}</p>}
                   </div>
 
-                  <TextareaField size="md" label="Tell us about yourself" rows={3} className="max-md:!h-[76px]" value={values.message} onChange={set("message")} status={errors.message ? "error" : "idle"} message={errors.message} />
+                  <TextareaField size="md" label={t("Tell us about yourself")} rows={3} className="max-md:!h-[76px]" value={values.message} onChange={set("message")} status={errors.message ? "error" : "idle"} message={errors.message} />
 
                   <div className="flex flex-col items-stretch gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between sm:pt-2">
-                    <ActionButton label="Apply now" type="submit" variant="solid" look="arrow" className="w-full justify-center sm:w-auto" />
-                    <p className="max-w-[280px] font-sans text-xs leading-[1.4] text-brand-black/50 sm:text-right">
-                      Your details are used only to review your application at Hassan Allam Properties.
+                    <ActionButton label={t("Apply now")} type="submit" variant="solid" look="arrow" className="w-full justify-center sm:w-auto" />
+                    <p className="max-w-[280px] font-sans text-xs leading-[1.4] text-brand-black/50 sm:text-end">
+                      {t("Your details are used only to review your application at Hassan Allam Properties.")}
                     </p>
                   </div>
                 </motion.form>

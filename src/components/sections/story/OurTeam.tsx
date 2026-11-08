@@ -12,6 +12,7 @@ import SectionEyebrow from "@/components/SectionEyebrow";
 import { useCarouselDrag } from "@/components/CarouselDrag";
 import TeamDrawer from "./TeamDrawer";
 import { TEAM } from "@/data/team";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 const VISIBLE = 3.4; // cards in view on desktop — the 4th peeks in at the edge
 const GAP = 20; // px between cards
@@ -23,6 +24,8 @@ const GAP = 20; // px between cards
  * in the black side drawer.
  */
 export default function OurTeam({ id }: { id?: string }) {
+  const t = useT();
+  const rtl = useRtl();
   const [open, setOpen] = useState<number | null>(null);
   const [index, setIndex] = useState(0);
   const maxIndex = Math.max(0, Math.ceil(TEAM.length - VISIBLE));
@@ -47,29 +50,24 @@ export default function OurTeam({ id }: { id?: string }) {
       data-nav-theme="light"
       className="flex flex-col gap-10 bg-brand-white px-6 pb-20 pt-16 text-brand-black md:gap-16 md:px-16 md:pb-24 md:pt-24"
     >
-      <SectionEyebrow>People Behind HAP</SectionEyebrow>
+      <SectionEyebrow>{t("People Behind HAP")}</SectionEyebrow>
 
       {/* Title on the eyebrow's left edge; the intro stacked on the right. */}
       <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between md:gap-16">
         <Reveal>
-          <h2 className="text-left font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(2.75rem,9.2vw,8.25rem)]">
-            Our Team
+          <h2 className="text-start font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(2.75rem,9.2vw,8.25rem)]">
+            {t("Our Team")}
           </h2>
         </Reveal>
         <div className="flex flex-col gap-5 font-sans text-base leading-[1.5] text-brand-black/80 md:w-[33.08%] md:pb-2">
           <Reveal delay={0.1}>
             <p>
-              Behind every HAP development is a dedicated team of experts;
-              architects, planners, creatives, and visionaries, driven by a
-              shared passion for excellence.
+              {t("Behind every HAP development is a dedicated team of experts; architects, planners, creatives, and visionaries, driven by a shared passion for excellence.")}
             </p>
           </Reveal>
           <Reveal delay={0.18}>
             <p>
-              Together, they bring our communities to life with purpose and
-              precision, crafting lasting spaces that reflect our values, enrich
-              lives, and carry forward the legacy we&rsquo;ve built over
-              generations.
+              {t("Together, they bring our communities to life with purpose and precision, crafting lasting spaces that reflect our values, enrich lives, and carry forward the legacy we’ve built over generations.")}
             </p>
           </Reveal>
         </div>
@@ -77,10 +75,10 @@ export default function OurTeam({ id }: { id?: string }) {
 
       <div className="flex flex-col gap-6 md:gap-8">
         {/* Desktop slider */}
-        <div {...bind} className={`hidden overflow-hidden md:-mr-16 md:block ${viewportClass}`}>
+        <div {...bind} className={`hidden overflow-hidden md:-me-16 md:block ${viewportClass}`}>
           <motion.div style={{ x: dragX }}>
             <div
-              style={{ "--team-x": `calc(${-index} * (${cardW} + ${GAP}px))` } as React.CSSProperties}
+              style={{ "--team-x": `calc(${rtl ? index : -index} * (${cardW} + ${GAP}px))` } as React.CSSProperties}
               className="flex gap-5 transition-transform duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] [transform:translateX(var(--team-x))]"
             >
               {TEAM.map((member, i) => (
@@ -97,7 +95,7 @@ export default function OurTeam({ id }: { id?: string }) {
         </div>
 
         {/* Mobile: swipe carousel, the next card peeking in. */}
-        <MobileCarousel label="team members" slideClassName="w-[68%]" className="md:hidden">
+        <MobileCarousel label={t("team members")} slideClassName="w-[68%]" className="md:hidden">
           {TEAM.map((member, i) => (
             <MemberCard key={member.slug} index={i} onOpen={() => setOpen(i)} className="w-full" />
           ))}
@@ -107,16 +105,16 @@ export default function OurTeam({ id }: { id?: string }) {
         <div className="hidden items-center gap-6 md:flex">
           <div className="relative h-[3px] flex-1 overflow-hidden bg-black/15">
             <div
-              className="absolute inset-y-0 bg-brand-black transition-[left] duration-700 ease-[cubic-bezier(0.65,0,0.35,1)]"
+              className="absolute inset-y-0 bg-brand-black transition-[left,right] duration-700 ease-[cubic-bezier(0.65,0,0.35,1)]"
               style={{
                 width: `${(VISIBLE / TEAM.length) * 100}%`,
-                left: `${(maxIndex ? index / maxIndex : 0) * (1 - VISIBLE / TEAM.length) * 100}%`,
+                [rtl ? "right" : "left"]: `${(maxIndex ? index / maxIndex : 0) * (1 - VISIBLE / TEAM.length) * 100}%`,
               }}
             />
           </div>
           <div className="flex items-center gap-2.5">
-            <SliderArrow direction="prev" onClick={goPrev} disabled={index === 0} emphasis label="Previous team members" />
-            <SliderArrow direction="next" onClick={goNext} disabled={index === maxIndex} emphasis label="Next team members" />
+            <SliderArrow direction="prev" onClick={goPrev} disabled={index === 0} emphasis label={t("Previous team members")} />
+            <SliderArrow direction="next" onClick={goNext} disabled={index === maxIndex} emphasis label={t("Next team members")} />
           </div>
         </div>
       </div>
@@ -137,14 +135,17 @@ function MemberCard({
   className?: string;
   style?: React.CSSProperties;
 }) {
+  const t = useT();
   const member = TEAM[index];
+  const name = t(member.name);
+  const role = t(member.role);
   return (
     <button
       type="button"
       onClick={onOpen}
-      aria-label={`${member.name}, ${member.role} — view bio`}
+      aria-label={t("{name}, {role} — view bio", { name, role })}
       style={style}
-      className={`group flex flex-col gap-4 text-left md:gap-5 ${className}`}
+      className={`group flex flex-col gap-4 text-start md:gap-5 ${className}`}
     >
       <GrowReveal
         axis="height"
@@ -154,7 +155,7 @@ function MemberCard({
         <div className="absolute inset-0 transition-transform duration-[1.2s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]">
           <Image
             src={member.image}
-            alt={member.name}
+            alt={name}
             fill
             sizes="(min-width: 768px) 32vw, 50vw"
             quality={85}
@@ -162,8 +163,8 @@ function MemberCard({
           />
         </div>
         {/* "View bio" tag */}
-        <span className="absolute bottom-4 right-4 flex items-center gap-3 bg-brand-white px-4 py-2.5 font-sans text-xs font-medium uppercase tracking-[0.12em] text-brand-black md:text-sm">
-          <RollText>View bio</RollText>
+        <span className="absolute bottom-4 end-4 flex items-center gap-3 bg-brand-white px-4 py-2.5 font-sans text-xs font-medium uppercase tracking-[0.12em] text-brand-black md:text-sm">
+          <RollText>{t("View bio")}</RollText>
           <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden className="transition-transform duration-500 group-hover:rotate-90">
             <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
           </svg>
@@ -171,10 +172,10 @@ function MemberCard({
       </GrowReveal>
       <div className="flex flex-col gap-1.5">
         <p className="font-serif text-xl uppercase leading-none tracking-[-0.02em] text-brand-black md:text-2xl">
-          {member.name}
+          {name}
         </p>
         <p className="font-sans text-sm font-medium leading-snug text-brand-black/60 md:text-base">
-          {member.role}
+          {role}
         </p>
       </div>
     </button>

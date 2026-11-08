@@ -1,7 +1,11 @@
+"use client";
+
 import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function StoryHero() {
+  const t = useT();
   return (
     <section
       data-nav-theme="light"
@@ -27,8 +31,8 @@ export default function StoryHero() {
         {/* Three lines (INSIDE THE / WORLD OF / HAP) at every size; phones
             size it so "INSIDE THE" fills most of the width. */}
         <h1 className="text-center font-serif font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(2.75rem,15vw,6rem)] md:[font-size:clamp(2.75rem,11vw,12rem)]">
-          <span className="block whitespace-nowrap">INSIDE THE</span>
-          <span className="block">WORLD OF</span>
+          <span className="block whitespace-nowrap">{t("INSIDE THE")}</span>
+          <span className="block">{t("WORLD OF")}</span>
           <span className="block">HAP</span>
         </h1>
       </Reveal>

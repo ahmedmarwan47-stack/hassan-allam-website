@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { useSeenOnce } from "@/hooks/useSeenOnce";
+import { useRtl } from "@/i18n/LocaleProvider";
 
 /**
  * GrowReveal — the site-wide card/image entrance.
@@ -22,7 +23,8 @@ export default function GrowReveal({
   className,
   children,
 }: {
-  /** "height" grows open top→bottom, "width" grows open left→right. */
+  /** "height" grows open top→bottom, "width" grows open from the start
+   *  edge (left→right, right→left on the Arabic site). */
   axis?: "height" | "width";
   /** Extra stagger on top of the base delay (seconds). */
   delay?: number;
@@ -34,9 +36,14 @@ export default function GrowReveal({
   // WebKit during fast continuous scrolling, which left cards permanently
   // clipped. The hook pairs the observer with a scroll-idle geometry check.
   const inView = useSeenOnce(ref);
+  const rtl = useRtl();
 
   const hidden =
-    axis === "height" ? "inset(0% 0% 100% 0%)" : "inset(0% 100% 0% 0%)";
+    axis === "height"
+      ? "inset(0% 0% 100% 0%)"
+      : rtl
+        ? "inset(0% 0% 0% 100%)"
+        : "inset(0% 100% 0% 0%)";
   const ease = "cubic-bezier(0.22, 0.61, 0.21, 1)";
   const t = `0.8s ${ease} ${0.05 + delay}s`;
 

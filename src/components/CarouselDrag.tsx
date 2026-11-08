@@ -24,6 +24,11 @@ import { animate, useMotionValue, type Transition } from "framer-motion";
  *   <div {...bind} className={`overflow-hidden … ${viewportClass}`}>  // the viewport
  *     <motion.div style={{ x: dragX }}>…track…</motion.div>
  *   </div>
+ *
+ * Right-to-left: `dragX` stays a physical offset (follow the finger), but the
+ * prev/next meaning of a drag flips with the viewport's `direction` — on the
+ * Arabic site the next card sits to the left, so dragging right moves on.
+ * The consumer's track transform must mirror too (+index × step in RTL).
  */
 
 const DRAG_START_PX = 6; // movement before a press counts as a drag
@@ -65,14 +70,22 @@ export function useCarouselDrag({
     latest.current = { onPrev, onNext, canPrev, canNext, settle, stepPx };
   });
 
+  // +1 in LTR, −1 in RTL: turns a physical drag distance into a logical one
+  // (positive = towards the previous slide).
+  const dirSign = () =>
+    viewportRef.current && getComputedStyle(viewportRef.current).direction === "rtl" ? -1 : 1;
   // 1:1 follow, with resistance only where there's no slide to go to.
   const follow = (dx: number) => {
     const { canPrev: p, canNext: n } = latest.current;
-    return (dx > 0 && !p) || (dx < 0 && !n) ? dx * EDGE_RUBBER : dx;
+    const ldx = dx * dirSign();
+    return (ldx > 0 && !p) || (ldx < 0 && !n) ? dx * EDGE_RUBBER : dx;
   };
   // Commit a slide change (or not) and bring dragX home.
-  const release = (dx: number, threshold: number, velocity = 0) => {
+  const release = (physicalDx: number, threshold: number, physicalVelocity = 0) => {
     const l = latest.current;
+    const sign = dirSign();
+    const dx = physicalDx * sign;
+    const velocity = physicalVelocity * sign;
     let changed = false;
     const step = l.stepPx && viewportRef.current ? l.stepPx(viewportRef.current) : 0;
     if (step && threshold === SWIPE_PX) {

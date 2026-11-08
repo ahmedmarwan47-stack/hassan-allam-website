@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "@/components/ProgressiveImage";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import GrowReveal from "@/components/GrowReveal";
 import type { NewsArticle } from "@/data/news";
 import { NEWS_DETAILS } from "@/data/newsDetail";
+import { useT } from "@/i18n/LocaleProvider";
 
 // Desktop grid span → column span + image aspect ratio. Mobile always stacks
 // full width at 3:4 for visual consistency, so the desktop aspect only kicks
@@ -45,7 +48,7 @@ const TITLE_MAX: Record<NewsArticle["span"], string> = {
 
 function ArrowUpRight() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden className="rtl:-scale-x-100">
       <path
         d="M6 18 18 6M18 6H8M18 6V16"
         stroke="currentColor"
@@ -62,12 +65,14 @@ function ArrowUpRight() {
 const COMPACT_ASPECT = "aspect-[4/3] md:max-h-[max(260px,calc(100svh-520px))]";
 
 export default function NewsCard({ article, compact = false }: { article: NewsArticle; compact?: boolean }) {
+  const t = useT();
+  const title = t(article.title);
   const href = NEWS_DETAILS[article.id] ? `/news/${article.id}` : "#";
   return (
     <div className={`group flex flex-col gap-5 ${SPAN_CLASSES[article.span]}`}>
       <Link
         href={href}
-        aria-label={`Read: ${article.title}`}
+        aria-label={t("Read: {title}", { title })}
         className={`relative block w-full overflow-hidden rounded-[2px] ${compact ? COMPACT_ASPECT : ASPECT_CLASSES[article.span]}`}
       >
         <GrowReveal axis={AXIS[article.span]} className="absolute inset-0">
@@ -81,12 +86,12 @@ export default function NewsCard({ article, compact = false }: { article: NewsAr
           />
 
           {/* Date pill — top right */}
-          <span className="absolute right-4 top-4 inline-flex items-center bg-brand-white px-3 py-[9px] font-sans text-sm font-medium text-brand-black md:text-base">
+          <span className="absolute end-4 top-4 inline-flex items-center bg-brand-white px-3 py-[9px] font-sans text-sm font-medium text-brand-black md:text-base">
             {article.date}
           </span>
 
           {/* Arrow button — bottom right */}
-          <span className="absolute bottom-4 right-4 flex size-[42px] items-center justify-center bg-brand-white text-brand-black transition-colors duration-300 group-hover:bg-brand-black group-hover:text-brand-white">
+          <span className="absolute bottom-4 end-4 flex size-[42px] items-center justify-center bg-brand-white text-brand-black transition-colors duration-300 group-hover:bg-brand-black group-hover:text-brand-white">
             <ArrowUpRight />
           </span>
         </GrowReveal>
@@ -94,11 +99,11 @@ export default function NewsCard({ article, compact = false }: { article: NewsAr
 
       <div className="flex flex-col gap-2">
         <span className="font-sans text-xs font-medium uppercase tracking-[0.12em] text-brand-black/55 md:text-sm">
-          {article.category}
+          {t(article.category)}
         </span>
         {/* Max two lines on every card (homepage teaser + /news), per client. */}
         <p className={`${TITLE_MAX[article.span]} line-clamp-2 font-sans text-lg font-medium leading-[1.3] text-brand-black md:text-2xl`}>
-          {article.title}
+          {title}
         </p>
       </div>
     </div>

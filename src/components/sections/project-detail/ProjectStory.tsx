@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "@/components/ProgressiveImage";
 import GrowReveal from "@/components/GrowReveal";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function ProjectStory({
   id,
@@ -12,6 +15,7 @@ export default function ProjectStory({
   heading: string;
   paragraphs: string[];
 }) {
+  const t = useT();
   return (
     <section
       id={id}
@@ -55,11 +59,11 @@ export default function ProjectStory({
             gutter, so the body column starts exactly at the second photo's
             left edge at any viewport width. */}
         <p className="font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-black md:w-[calc(50%-22px)] md:max-w-none [font-size:clamp(1.5rem,4.3vw,3.875rem)]">
-          <span className="block md:max-w-[780px]">{heading}</span>
+          <span className="block md:max-w-[780px]">{t(heading)}</span>
         </p>
         <div className="flex max-w-[640px] flex-1 flex-col gap-4 font-sans text-base leading-[1.4] text-brand-black">
           {paragraphs.map((p, i) => (
-            <p key={i}>{p}</p>
+            <p key={i}>{t(p)}</p>
           ))}
         </div>
       </div>

@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import type { MapProject, Setting } from "@/data/mapProjects";
+import { useT } from "@/i18n/LocaleProvider";
 
 // Solid teardrop in the setting colour — green "In the City", blue "By the
 // Sea" — with a thin white edge and a softly rounded tip, as on hap.com.eg.
@@ -46,6 +47,7 @@ export default function MapPin({
   /** Phones: a smaller pin and label. */
   compact?: boolean;
 }) {
+  const t = useT();
   const reduce = useReducedMotion();
   const { w, h } = SIZES[compact ? "compact" : "full"];
   const head = (w * 24) / 26; // head diameter at this size
@@ -57,7 +59,8 @@ export default function MapPin({
     <motion.div
       className="absolute cursor-pointer"
       style={{
-        // Tip of the pin on its map position.
+        // Tip of the pin on its map position — physical left/top on both
+        // sites, since the map image itself is never mirrored.
         left: `${project.mapX}%`,
         top: `${project.mapY}%`,
         marginLeft: -w / 2,
@@ -75,7 +78,7 @@ export default function MapPin({
       onClick={onClick}
     >
       <AnimatePresence>
-        {isHovered && <PinLabel name={project.name} color={color} bottom={h + (compact ? 6 : 10)} compact={compact} />}
+        {isHovered && <PinLabel name={t(project.name)} color={color} bottom={h + (compact ? 6 : 10)} compact={compact} />}
       </AnimatePresence>
 
       {/* Idle bob (a subtle 2px) — paused while hovered so the hover lift
@@ -122,7 +125,7 @@ export default function MapPin({
           height={h}
           viewBox="0 0 26 34"
           role="img"
-          aria-label={project.name}
+          aria-label={t(project.name)}
           className="relative will-change-transform"
           animate={{ scale: isHovered ? 1.1 : 1, y: isHovered ? -3 : 0 }}
           transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}

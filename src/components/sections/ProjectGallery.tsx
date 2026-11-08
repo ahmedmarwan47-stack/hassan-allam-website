@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "@/components/ProgressiveImage";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { projectHref } from "@/data/projectDetail";
@@ -10,6 +10,7 @@ import { useCarouselDrag } from "@/components/CarouselDrag";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 import SliderArrow from "@/components/SliderArrow";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 const FILTERS = ["In The City", "By The Sea"] as const;
 
@@ -37,6 +38,8 @@ const GROUPS: Record<(typeof FILTERS)[number], GalleryProject[]> = {
 };
 
 export default function ProjectGallery() {
+  const t = useT();
+  const rtl = useRtl();
   const [activeFilter, setActiveFilter] = useState(0);
   const [index, setIndex] = useState(0);
   // Cards shown per view: 3 on desktop; on phones one card plus the start
@@ -92,7 +95,7 @@ export default function ProjectGallery() {
         {/* Filter bar — single line on every breakpoint */}
         <div className="flex items-center justify-between gap-3 border-b border-white/20">
           <p className="whitespace-nowrap font-sans text-sm font-medium md:text-2xl">
-            All Projects
+            {t("All Projects")}
           </p>
           <div className="flex items-center gap-5 md:gap-16">
             {FILTERS.map((filter, i) => (
@@ -107,7 +110,7 @@ export default function ProjectGallery() {
                     : "text-brand-white",
                 ].join(" ")}
               >
-                {filter}
+                {t(filter)}
               </button>
             ))}
           </div>
@@ -118,7 +121,7 @@ export default function ProjectGallery() {
           {/* Heading */}
           <Reveal>
             <h2 className="max-w-[467px] font-serif text-[2rem] font-light uppercase leading-none tracking-[-0.02em] md:text-[2.625rem]">
-              Explore our {FILTERS[activeFilter]} projects
+              {t("Explore our {group} projects", { group: t(FILTERS[activeFilter]) })}
             </h2>
           </Reveal>
 
@@ -133,10 +136,11 @@ export default function ProjectGallery() {
             <motion.div style={{ x: dragX }} className="md:h-full">
             <motion.div
               key={activeFilter}
-              animate={{ x: `-${(offset / projects.length) * 100}%` }}
+              // RTL: the row starts at the right edge, so it slides rightward.
+              animate={{ x: `${rtl ? "" : "-"}${(offset / projects.length) * 100}%` }}
               transition={{ type: "spring", stiffness: 140, damping: 24 }}
               className="flex md:h-full"
-              // Each card carries its 20px gap as right padding, so a slot is
+              // Each card carries its 20px gap as end padding, so a slot is
               // exactly 1/n of the track and each step lands on the margin.
               style={{
                 width: `calc(${(projects.length / visible) * 100}% + ${(projects.length / visible) * 20}px)`,
@@ -148,7 +152,7 @@ export default function ProjectGallery() {
                   <Link
                     key={project.id}
                     href={href}
-                    className="group flex flex-col gap-5 pr-5 md:h-full"
+                    className="group flex flex-col gap-5 pe-5 md:h-full"
                     style={{ width: `${100 / projects.length}%` }}
                   >
                     <GrowReveal
@@ -157,7 +161,7 @@ export default function ProjectGallery() {
                     >
                       <Image
                         src={project.src}
-                        alt={project.name}
+                        alt={t(project.name)}
                         fill
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                         sizes="(max-width: 768px) 90vw, 33vw"
@@ -165,7 +169,7 @@ export default function ProjectGallery() {
                     </GrowReveal>
                     <Reveal delay={0.1} className="shrink-0">
                       <p className="font-sans text-base leading-[1.4] text-brand-white">
-                        {project.name}
+                        {t(project.name)}
                       </p>
                     </Reveal>
                   </Link>
@@ -179,7 +183,7 @@ export default function ProjectGallery() {
           <div className="flex shrink-0 items-center gap-6">
             <div className="relative h-[2px] flex-1 bg-white/15">
               <motion.div
-                animate={{ left: `${(offset / projects.length) * 100}%` }}
+                animate={rtl ? { right: `${(offset / projects.length) * 100}%` } : { left: `${(offset / projects.length) * 100}%` }}
                 transition={{ type: "spring", stiffness: 140, damping: 24 }}
                 style={{ width: `${(visible / projects.length) * 100}%` }}
                 className="absolute inset-y-0 bg-brand-white"

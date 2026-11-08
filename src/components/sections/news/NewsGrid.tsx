@@ -5,6 +5,7 @@ import NewsCard from "./NewsCard";
 import { NEWS, NEWS_CATEGORIES, type NewsCategory } from "@/data/news";
 import { Reveal } from "@/components/Reveal";
 import FilterButton from "@/components/FilterButton";
+import { useT } from "@/i18n/LocaleProvider";
 
 // Filter labels (plural for the pills) per category.
 const LABELS: Record<NewsCategory, string> = { News: "News", Event: "Events", Blog: "Blog" };
@@ -16,6 +17,7 @@ type Filter = "All" | NewsCategory;
 // card on the left (two columns, same image height as its neighbour);
 // everything after it is the standard one-column card.
 export default function NewsGrid() {
+  const t = useT();
   const [filter, setFilter] = useState<Filter>("All");
   const visible = filter === "All" ? NEWS : NEWS.filter((a) => a.category === filter);
 
@@ -26,7 +28,7 @@ export default function NewsGrid() {
     >
       <Reveal>
         <h1 className="text-center font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(3rem,12.5vw,11.25rem)]">
-          Media Center
+          {t("Media Center")}
         </h1>
       </Reveal>
 
@@ -37,7 +39,7 @@ export default function NewsGrid() {
           {(["All", ...NEWS_CATEGORIES] as Filter[]).map((f) => (
             <FilterButton
               key={f}
-              label={f === "All" ? "All" : LABELS[f]}
+              label={t(f === "All" ? "All" : LABELS[f])}
               active={filter === f}
               onClick={() => setFilter(f)}
             />

@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import Link from "@/components/LocaleLink";
 import Footer from "@/components/Footer";
 import SectionNav from "@/components/SectionNav";
 import ParallaxImage from "@/components/ParallaxImage";
@@ -10,6 +12,7 @@ import ConstructionTimeline from "@/components/sections/project-detail/Construct
 import RequestInterestForm from "@/components/sections/project-detail/RequestInterestForm";
 import { projectHref } from "@/data/projectDetail";
 import type { Neighborhood } from "@/data/neighborhoods";
+import { useT } from "@/i18n/LocaleProvider";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -20,6 +23,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
  * blocks, scoped to one neighborhood.
  */
 export default function NeighborhoodTemplate({ n }: { n: Neighborhood }) {
+  const t = useT();
   const { item, project } = n;
   const projectName = project.name.join(" ");
 
@@ -29,7 +33,7 @@ export default function NeighborhoodTemplate({ n }: { n: Neighborhood }) {
     { id: "amenities", label: "Amenities" },
     { id: "construction-updates", label: "Construction Updates" },
     { id: "request-interest", label: "Request Interest" },
-  ];
+  ].map((s) => ({ ...s, label: t(s.label) }));
 
   return (
     <main>
@@ -44,16 +48,16 @@ export default function NeighborhoodTemplate({ n }: { n: Neighborhood }) {
             href={`${projectHref(project.id)}#master-plan`}
             className="flex items-center gap-2 font-sans text-sm font-medium uppercase tracking-[0.12em] text-white/60 transition-colors duration-300 hover:text-white"
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden className="rtl:-scale-x-100">
               <path d="M9 2.5 4.5 7 9 11.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            {projectName}
+            {t(projectName)}
           </Link>
           <h1 className="font-serif font-light uppercase leading-[0.95] tracking-[-0.02em] text-brand-white [font-size:clamp(2.75rem,12vw,8.25rem)] md:[font-size:clamp(2.75rem,8vw,8.25rem)]">
-            {item.name}
+            {t(item.name)}
           </h1>
           <p className="font-sans text-sm font-medium uppercase tracking-[0.12em] text-white/50">
-            Neighborhood {pad(item.number)}
+            {t("Neighborhood {n}", { n: pad(item.number) })}
           </p>
           <RequestInterest tone="light" className="mt-2" />
         </Reveal>
@@ -61,13 +65,13 @@ export default function NeighborhoodTemplate({ n }: { n: Neighborhood }) {
 
       {/* Overview — the drawer's blurb as the lead, then a wide photo. */}
       <section id="overview" data-nav-theme="light" className="flex flex-col gap-10 bg-brand-white px-6 py-16 md:gap-16 md:px-16 md:py-20">
-        <Reveal className="md:ml-auto md:w-[66.16%]">
+        <Reveal className="md:ms-auto md:w-[66.16%]">
           <p className="font-serif font-light leading-[1.2] tracking-[-0.02em] [font-size:clamp(1.5rem,3.2vw,3rem)]">
-            {item.blurb}
+            {t(item.blurb)}
           </p>
         </Reveal>
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] md:aspect-[1312/700]">
-          <ParallaxImage src={item.image} alt={item.name} sizes="100vw" quality={90} />
+          <ParallaxImage src={item.image} alt={t(item.name)} sizes="100vw" quality={90} />
         </div>
       </section>
 
@@ -75,18 +79,18 @@ export default function NeighborhoodTemplate({ n }: { n: Neighborhood }) {
         <UnitTypesSection
           id="homes"
           projectId={project.id}
-          heading={`Homes at ${item.name}`}
+          heading={t("Homes at {name}", { name: t(item.name) })}
           units={n.units}
           from={n.slug}
         />
       )}
 
-      <AmenitiesSection id="amenities" heading={["Amenities", `at ${item.name}`]} items={n.amenities} />
+      <AmenitiesSection id="amenities" heading={[t("Amenities"), t("at {name}", { name: t(item.name) })]} items={n.amenities} />
 
       <ConstructionTimeline data={project.construction} />
       <RequestInterestForm projectName={item.name} image={item.image} />
       <Footer />
-      <SectionNav items={sections} back={{ label: projectName, href: projectHref(project.id) }} />
+      <SectionNav items={sections} back={{ label: t(projectName), href: projectHref(project.id) }} />
     </main>
   );
 }

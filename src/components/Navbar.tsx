@@ -2,9 +2,13 @@
 
 import Image from "@/components/ProgressiveImage";
 import ActionButton from "@/components/ActionButton";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useSectionTheme } from "@/hooks/useSectionTheme";
+import { useLocale, useT } from "@/i18n/LocaleProvider";
+import { switchHref } from "@/i18n";
+import { withBasePath } from "@/lib/basePath";
 
 // FAQs and Careers live in the footer only.
 const NAV_LINKS = [
@@ -29,6 +33,7 @@ export default function Navbar() {
   // dark section  -> show the white "on-dark" navbar
   // light section -> show the black "on-light" navbar
   const theme = useSectionTheme(40);
+  const t = useT();
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Once the page scrolls past the top, the header compacts (80 → 64px) and
@@ -103,7 +108,7 @@ export default function Navbar() {
         {/* Logo — both variants stacked and cross-faded. */}
         <Link
           href="/"
-          aria-label="Hassan Allam Properties — home"
+          aria-label={t("Hassan Allam Properties — home")}
           className={`relative z-10 block shrink-0 transition-[width,height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
             scrolled && !menuOpen ? "h-7 w-[120px]" : "h-9 w-[150px]"
           }`}
@@ -111,11 +116,11 @@ export default function Navbar() {
         >
           <Image
             src="/logo-on-light.svg"
-            alt="Hassan Allam Properties"
+            alt={t("Hassan Allam Properties")}
             fill
             priority
             sizes="150px"
-            className={`object-contain object-left ${TRANSITION} ${onDark && !menuOpen ? "opacity-0" : "opacity-100"}`}
+            className={`object-contain object-left rtl:object-right ${TRANSITION} ${onDark && !menuOpen ? "opacity-0" : "opacity-100"}`}
           />
           <Image
             src="/logo-on-dark.svg"
@@ -124,7 +129,7 @@ export default function Navbar() {
             fill
             priority
             sizes="150px"
-            className={`object-contain object-left ${TRANSITION} ${onDark && !menuOpen ? "opacity-100" : "opacity-0"}`}
+            className={`object-contain object-left rtl:object-right ${TRANSITION} ${onDark && !menuOpen ? "opacity-100" : "opacity-0"}`}
           />
         </Link>
 
@@ -138,7 +143,7 @@ export default function Navbar() {
                 href={link.href}
                 className="font-sans text-[15px] font-medium uppercase opacity-70 transition-opacity duration-300 hover:opacity-100 lg:text-base"
               >
-                {link.label}
+                {t(link.label)}
               </Link>
             </li>
           ))}
@@ -147,9 +152,10 @@ export default function Navbar() {
         {/* Hotline + CTA (desktop) — the hotline styled like the links,
             the CTA the site's shared button, compact. */}
         <span className={`relative z-10 hidden items-center gap-6 lg:flex ${TRANSITION} ${onDark ? "text-white" : "text-black"}`}>
+          <LanguageSwitch />
           <a
             href="tel:19172"
-            aria-label="Call our hotline 19172"
+            aria-label={t("Call our hotline 19172")}
             className="flex items-center gap-1 font-sans text-base font-medium tabular-nums opacity-70 transition-opacity duration-300 hover:opacity-100"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -158,7 +164,7 @@ export default function Navbar() {
             19172
           </a>
           <ActionButton
-            label="Contact us"
+            label={t("Contact us")}
             href="/contact"
             size="sm"
             look="arrow"
@@ -173,7 +179,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setMenuOpen((v) => !v)}
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-label={menuOpen ? t("Close menu") : t("Open menu")}
           aria-expanded={menuOpen}
           className={`relative z-10 flex size-11 items-center justify-center lg:hidden ${
             menuOpen ? "text-black" : onDark ? "text-white" : "text-black"
@@ -211,11 +217,11 @@ export default function Navbar() {
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
                   style={{ transitionDelay: menuOpen ? `${280 + i * 55}ms` : "0ms" }}
-                  className={`block transition-[translate,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] hover:translate-x-2 ${
+                  className={`block transition-[translate,opacity] ease-[cubic-bezier(0.22,1,0.36,1)] hover:translate-x-2 rtl:hover:-translate-x-2 ${
                     menuOpen ? "translate-y-0 opacity-100 duration-700" : "translate-y-full opacity-0 duration-300"
                   }`}
                 >
-                  {link.label}
+                  {t(link.label)}
                 </Link>
               </span>
             ))}
@@ -225,10 +231,31 @@ export default function Navbar() {
             style={{ transitionDelay: menuOpen ? "700ms" : "0ms" }}
             className={`mt-auto font-sans text-base font-medium text-black transition-opacity duration-500 ${menuOpen ? "opacity-100" : "opacity-0"}`}
           >
-            Call our hotline 19172
+            {t("Call our hotline 19172")}
           </a>
         </div>
       </div>
     </header>
+  );
+}
+
+/** The other language, small, beside the hotline: "العربية" (in Alexandria)
+ *  on the English site, "English" on the Arabic one. A full page load, since
+ *  each language has its own root layout. */
+function LanguageSwitch({ className = "" }: { className?: string }) {
+  const locale = useLocale();
+  const pathname = usePathname() || "/";
+  const toAr = locale === "en";
+  return (
+    <a
+      href={withBasePath(switchHref(locale, pathname))}
+      lang={toAr ? "ar" : "en"}
+      hrefLang={toAr ? "ar" : "en"}
+      className={`text-sm font-medium opacity-70 transition-opacity duration-300 hover:opacity-100 ${
+        toAr ? "font-[family-name:var(--font-alexandria),sans-serif]" : "font-sans"
+      } ${className}`}
+    >
+      {toAr ? "العربية" : "English"}
+    </a>
   );
 }

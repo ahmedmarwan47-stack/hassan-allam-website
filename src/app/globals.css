@@ -209,3 +209,31 @@ html:not(.hydrated) [data-reveal] {
   font-synthesis-weight: none;
   font-size-adjust: 0.45;
 }
+
+/* ── Arabic site (/ar): right-to-left, everything set in Alexandria. Arabic
+   letters must stay joined, so no letter-spacing; Eirlys's size-adjust and
+   uppercase don't apply. Latin snippets marked lang="en" (e.g. the
+   "English" switch) keep the Latin fonts. ── */
+html[lang="ar"] *:not(:lang(en)) {
+  font-family: var(--font-alexandria), "Segoe UI", Tahoma, sans-serif !important;
+  letter-spacing: 0 !important;
+}
+html[lang="ar"] .font-serif {
+  font-size-adjust: none;
+}
+html[lang="ar"] :lang(en).font-sans,
+html[lang="ar"] :lang(en) .font-sans {
+  font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+}
+/* Arabic letters rise and fall further than Latin caps (dots, hamzas,
+   descenders like ي), so the tight display leading used for Eirlys makes
+   lines collide — give Arabic headlines room to breathe. */
+html[lang="ar"] .font-serif,
+html[lang="ar"] :is(h1, h2, h3) {
+  line-height: 1.45 !important;
+}
+/* …and a little more air in running Arabic text too. */
+html[lang="ar"] p:not(.font-serif),
+html[lang="ar"] li {
+  line-height: 1.75 !important;
+}

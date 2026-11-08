@@ -1,9 +1,13 @@
+"use client";
+
 import type { ProjectDetailData } from "@/data/projectDetail";
 import GrowImagePair from "./GrowImagePair";
 import { Reveal } from "@/components/Reveal";
 import { BrochureButton, NeighborhoodLink } from "./ProjectActions";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function ProjectIntro({ id, data }: { id?: string; data: ProjectDetailData }) {
+  const t = useT();
   return (
     <section
       id={id}
@@ -14,12 +18,12 @@ export default function ProjectIntro({ id, data }: { id?: string; data: ProjectD
           (x=444 of the 1312 grid), split 372/424 with a 72px gutter (Figma
           Frame 1092). */}
       <div className="flex flex-col items-start gap-8 md:flex-row md:items-start">
-        <div className="grid gap-8 font-sans text-base leading-[1.4] text-brand-black md:ml-auto md:w-[66.16%] md:grid-cols-[372fr_424fr] md:gap-x-[72px]">
+        <div className="grid gap-8 font-sans text-base leading-[1.4] text-brand-black md:ms-auto md:w-[66.16%] md:grid-cols-[372fr_424fr] md:gap-x-[72px]">
           <Reveal delay={0.1}>
-            <p>{data.introParagraphs[0]}</p>
+            <p>{t(data.introParagraphs[0])}</p>
           </Reveal>
           <Reveal delay={0.18}>
-            <p>{data.introParagraphs[1]}</p>
+            <p>{t(data.introParagraphs[1])}</p>
           </Reveal>
         </div>
       </div>
@@ -33,12 +37,12 @@ export default function ProjectIntro({ id, data }: { id?: string; data: ProjectD
         <div className="flex shrink-0 flex-col items-start justify-between gap-10 md:w-[284px] md:gap-0">
           <Reveal>
             <span className="flex h-[54px] items-center justify-center rounded-[2px] border border-brand-black/20 px-4 font-sans text-lg font-medium text-brand-black">
-              {data.tag}
+              {t(data.tag)}
             </span>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="max-w-[284px] font-sans text-base leading-[1.4] text-brand-black">
-              {data.tagline}
+              {t(data.tagline)}
             </p>
           </Reveal>
         </div>
@@ -46,7 +50,7 @@ export default function ProjectIntro({ id, data }: { id?: string; data: ProjectD
         <div className="flex flex-col items-start gap-8 md:w-[66.16%] md:gap-8">
           <Reveal>
             <p className="font-sans text-xl font-medium text-success-dark md:text-2xl">
-              {data.communityLabel}
+              {t(data.communityLabel)}
             </p>
           </Reveal>
           <Reveal delay={0.1}>
@@ -58,8 +62,9 @@ export default function ProjectIntro({ id, data }: { id?: string; data: ProjectD
               // never starts with ", and".
               const prev = all[i - 1];
               const prevLinked = prev?.link && data.masterPlan?.items.some((it) => it.name === prev.text);
-              const text = prevLinked ? segment.text.replace(/^[,.;:]/, "") : segment.text;
-              const glue = linked ? all[i + 1]?.text.match(/^[,.;:]/)?.[0] : undefined;
+              const text = prevLinked ? t(segment.text).replace(/^[,.;:،؛]/, "") : t(segment.text);
+              const next = all[i + 1];
+              const glue = linked && next ? t(next.text).match(/^[,.;:،؛]/)?.[0] : undefined;
               return linked ? (
                 <span key={i} className="whitespace-nowrap">
                   <NeighborhoodLink name={segment.text} />

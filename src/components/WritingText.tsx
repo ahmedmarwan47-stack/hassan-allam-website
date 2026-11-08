@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useReducedMotion } from "framer-motion";
 import { useSeenOnce } from "@/hooks/useSeenOnce";
+import { useT } from "@/i18n/LocaleProvider";
 
 export const WRITE_MS = 1000; // a paragraph finishes writing in about this long
 const MAX_CHAR_MS = 16; // …and short lines never write slower than this per letter
@@ -14,9 +15,23 @@ const MAX_CHAR_MS = 16; // …and short lines never write slower than this per l
  * Words stay unbreakable mid-write. The pace scales with length, so any
  * paragraph completes in about WRITE_MS. `delay` (ms) holds the first letter
  * back, e.g. to start a second paragraph a beat after the first.
+ *
+ * Arabic is written word by word instead: splitting a word into per-letter
+ * inline-blocks would break the joining between its letters.
  */
+const ARABIC = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
+
+const reveal = (seen: boolean, reduce: boolean | null, at: number): React.CSSProperties => ({
+  opacity: seen ? 1 : 0,
+  filter: seen ? "blur(0px)" : "blur(6px)",
+  transform: seen ? "none" : "translateY(0.25em)",
+  transition: reduce
+    ? "none"
+    : `opacity 0.4s ease-out ${at}ms, filter 0.4s ease-out ${at}ms, transform 0.4s cubic-bezier(0.22,1,0.36,1) ${at}ms`,
+});
+
 export default function WritingText({
-  text,
+  text: textEn,
   className,
   delay = 250,
 }: {
@@ -24,6 +39,9 @@ export default function WritingText({
   className?: string;
   delay?: number;
 }) {
+  const t = useT();
+  const text = t(textEn);
+  const perWord = ARABIC.test(text);
   const ref = useRef<HTMLParagraphElement>(null);
   const seen = useSeenOnce(ref);
   const reduce = useReducedMotion();
@@ -38,27 +56,20 @@ export default function WritingText({
     <p ref={ref} aria-label={text} className={className}>
       {words.map((word, w) => (
         <span key={w} aria-hidden>
-          <span className="inline-block whitespace-nowrap">
-            {[...word].map((ch, c) => {
-              const at = delay + (starts[w] + c) * step;
-              return (
-                <span
-                  key={c}
-                  className="inline-block"
-                  style={{
-                    opacity: seen ? 1 : 0,
-                    filter: seen ? "blur(0px)" : "blur(6px)",
-                    transform: seen ? "none" : "translateY(0.25em)",
-                    transition: reduce
-                      ? "none"
-                      : `opacity 0.4s ease-out ${at}ms, filter 0.4s ease-out ${at}ms, transform 0.4s cubic-bezier(0.22,1,0.36,1) ${at}ms`,
-                  }}
-                >
+          {perWord ? (
+            // The whole word is one unit, timed by where it starts.
+            <span className="inline-block whitespace-nowrap" style={reveal(seen, reduce, delay + starts[w] * step)}>
+              {word}
+            </span>
+          ) : (
+            <span className="inline-block whitespace-nowrap">
+              {[...word].map((ch, c) => (
+                <span key={c} className="inline-block" style={reveal(seen, reduce, delay + (starts[w] + c) * step)}>
                   {ch}
                 </span>
-              );
-            })}
-          </span>{" "}
+              ))}
+            </span>
+          )}{" "}
         </span>
       ))}
     </p>

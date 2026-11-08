@@ -1,4 +1,7 @@
-import Link from "next/link";
+"use client";
+
+import Link from "@/components/LocaleLink";
+import { useT } from "@/i18n/LocaleProvider";
 import RollText from "@/components/RollText";
 
 /**
@@ -47,6 +50,7 @@ export default function ActionButton({
   type?: "button" | "submit";
   className?: string;
 }) {
+  const t = useT();
   const dark = tone === "dark";
   const solid = variant === "solid";
   // true → dark text (a white solid bar, or an outline bar on light).
@@ -115,17 +119,19 @@ export default function ActionButton({
       <span
         className={`relative z-10 whitespace-nowrap font-sans font-medium transition-colors duration-500 ${sm ? "text-sm md:text-base" : "text-base md:text-lg"} ${fg}`}
       >
-        <RollText>{label}</RollText>
+        {/* t() is a no-op on English and on already-translated labels. */}
+        <RollText>{t(label)}</RollText>
       </span>
       {look === "arrow" && (
-        // ↗ that turns a quarter-of-a-turn to → on hover.
+        // ↗ that turns a quarter-of-a-turn to → on hover; mirrored on the
+        // Arabic site (↖ that turns to ←).
         <svg
           width={sm ? 12 : 14}
           height={sm ? 12 : 14}
           viewBox="0 0 14 14"
           fill="none"
           aria-hidden
-          className={`relative z-10 shrink-0 transition-[rotate,color] ${ease} group-hover:rotate-45 ${fg}`}
+          className={`relative z-10 shrink-0 transition-[rotate,color] ${ease} group-hover:rotate-45 rtl:-scale-x-100 rtl:group-hover:-rotate-45 ${fg}`}
         >
           <path d={PATHS.arrow} stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
         </svg>

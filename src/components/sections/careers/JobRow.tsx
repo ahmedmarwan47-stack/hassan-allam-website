@@ -1,6 +1,9 @@
-import Link from "next/link";
+"use client";
+
+import Link from "@/components/LocaleLink";
 import type { Job } from "@/data/careers";
 import { ArrowUpRightIcon, BriefcaseIcon, ClockIcon, LocationIcon } from "./icons";
+import { useT } from "@/i18n/LocaleProvider";
 
 /**
  * One listing row — Figma "Job row" (17135:1343). The arrow box fills black
@@ -8,6 +11,7 @@ import { ArrowUpRightIcon, BriefcaseIcon, ClockIcon, LocationIcon } from "./icon
  * border themselves (per the client's audit of the careers pages).
  */
 export default function JobRow({ job }: { job: Job }) {
+  const t = useT();
   return (
     <Link
       href={`/careers/${job.slug}`}
@@ -15,25 +19,25 @@ export default function JobRow({ job }: { job: Job }) {
     >
       <div className="flex min-w-0 flex-col gap-3">
         <h3 className="font-serif text-xl font-medium leading-[1.2] tracking-[-0.01em] text-brand-black md:text-[1.75rem]">
-          {job.title}
+          {t(job.title)}
         </h3>
         <ul className="flex flex-wrap gap-x-6 gap-y-2 font-sans text-sm leading-[1.5] text-brand-black/80 md:text-base">
           <li className="flex items-center gap-2">
             <BriefcaseIcon size={18} />
-            {job.department}
+            {t(job.department)}
           </li>
           <li className="flex items-center gap-2">
             <LocationIcon size={18} />
-            {job.location}
+            {t(job.location)}
           </li>
           <li className="flex items-center gap-2">
             <ClockIcon size={18} />
-            {job.type}
+            {t(job.type)}
           </li>
         </ul>
       </div>
       <span className="flex size-[42px] shrink-0 items-center justify-center border border-brand-black text-brand-black transition-[background-color,color] duration-300 ease-out group-hover:bg-brand-black group-hover:text-brand-white">
-        <ArrowUpRightIcon size={20} />
+        <ArrowUpRightIcon size={20} className="rtl:-scale-x-100" />
       </span>
     </Link>
   );

@@ -5,6 +5,7 @@ import { Reveal } from "@/components/Reveal";
 import { DEPARTMENTS, JOBS } from "@/data/careers";
 import { SelectField } from "@/components/FormField";
 import JobRow from "./JobRow";
+import { useT } from "@/i18n/LocaleProvider";
 
 const ALL = "all";
 // Locations come from the listings themselves, so new roles add theirs.
@@ -22,6 +23,8 @@ const DEPARTMENT_OPTIONS = [
 // Location + Department filters — the site's dropdown field (same as the
 // forms), side by side above the list.
 export default function CareersList() {
+  const t = useT();
+  const localize = (opts: { value: string; label: string }[]) => opts.map((o) => ({ ...o, label: t(o.label) }));
   const [location, setLocation] = useState(ALL);
   const [department, setDepartment] = useState(ALL);
   const visible = JOBS.filter(
@@ -36,11 +39,11 @@ export default function CareersList() {
       <div className="mx-auto flex max-w-[1080px] flex-col gap-10">
         <Reveal className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div className="grid w-full grid-cols-2 gap-x-5 md:max-w-[620px] md:gap-x-8">
-            <SelectField size="md" label="Location" value={location} onValueChange={setLocation} options={LOCATION_OPTIONS} />
-            <SelectField size="md" label="Department" value={department} onValueChange={setDepartment} options={DEPARTMENT_OPTIONS} />
+            <SelectField size="md" label={t("Location")} value={location} onValueChange={setLocation} options={localize(LOCATION_OPTIONS)} />
+            <SelectField size="md" label={t("Department")} value={department} onValueChange={setDepartment} options={localize(DEPARTMENT_OPTIONS)} />
           </div>
           <p className="shrink-0 font-sans text-sm font-medium uppercase tracking-[0.12em] text-brand-black/50 md:pb-3">
-            {visible.length} {visible.length === 1 ? "role" : "roles"}
+            {visible.length === 1 ? t("1 role") : visible.length === 2 ? t("2 roles") : t("{count} roles", { count: visible.length })}
           </p>
         </Reveal>
 
@@ -49,7 +52,7 @@ export default function CareersList() {
           {visible.length === 0 ? (
             <Reveal y={16}>
               <p className="border-t border-brand-black/20 py-10 font-sans text-base text-brand-black/60">
-                No open roles match these filters right now — try another location or department.
+                {t("No open roles match these filters right now — try another location or department.")}
               </p>
             </Reveal>
           ) : (

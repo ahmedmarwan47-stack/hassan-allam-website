@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useT } from "@/i18n/LocaleProvider";
 
 /**
  * SectionNav — in-page navigation bar for long pages (the Story page).
@@ -14,7 +15,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
  * On phones the bar scrolls sideways (edges softly faded to hint at more)
  * and keeps the active item centred.
  *
- * `back` adds a "‹ Back to …" link at the bar's left (e.g. a neighborhood
+ * `back` adds a "‹ Back to …" link at the bar's start edge (e.g. a neighborhood
  * page back to its project); phones show just "‹ Back".
  */
 export default function SectionNav({
@@ -24,6 +25,7 @@ export default function SectionNav({
   items: { id: string; label: string }[];
   back?: { label: string; href: string };
 }) {
+  const t = useT();
   const reduce = useReducedMotion();
   const [visible, setVisible] = useState(false);
   const [active, setActive] = useState(items[0]?.id);
@@ -66,7 +68,11 @@ export default function SectionNav({
     const list = listRef.current;
     const btn = list?.querySelector<HTMLElement>(`[data-id="${active}"]`);
     if (!list || !btn || list.scrollWidth <= list.clientWidth) return;
-    list.scrollTo({ left: btn.offsetLeft - list.clientWidth / 2 + btn.offsetWidth / 2, behavior: "smooth" });
+    // Measured on screen, so it centres the item in RTL (negative
+    // scrollLeft) just as in LTR.
+    const b = btn.getBoundingClientRect();
+    const l = list.getBoundingClientRect();
+    list.scrollBy({ left: b.left + b.width / 2 - (l.left + l.width / 2), behavior: "smooth" });
   }, [active]);
 
   const go = (id: string) => {
@@ -79,7 +85,7 @@ export default function SectionNav({
     <AnimatePresence>
       {visible && (
         <motion.nav
-          aria-label="On this page"
+          aria-label={t("On this page")}
           className="fixed inset-x-0 bottom-0 z-40"
           initial={{ y: "100%", opacity: 0 }}
           animate={{ y: "0%", opacity: 1 }}
@@ -90,7 +96,7 @@ export default function SectionNav({
           {back && (
             <Link
               href={back.href}
-              className="group flex shrink-0 items-center gap-2 border-r border-black/[0.08] px-4 font-sans text-[11px] font-medium uppercase tracking-[0.1em] text-brand-black transition-colors duration-300 hover:bg-brand-black hover:text-brand-white md:px-6 md:text-xs md:tracking-[0.12em]"
+              className="group flex shrink-0 items-center gap-2 border-e border-black/[0.08] px-4 font-sans text-[11px] font-medium uppercase tracking-[0.1em] text-brand-black transition-colors duration-300 hover:bg-brand-black hover:text-brand-white md:px-6 md:text-xs md:tracking-[0.12em]"
             >
               <svg
                 width="12"
@@ -98,12 +104,12 @@ export default function SectionNav({
                 viewBox="0 0 14 14"
                 fill="none"
                 aria-hidden
-                className="transition-transform duration-300 group-hover:-translate-x-0.5"
+                className="transition-transform duration-300 group-hover:-translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:translate-x-0.5"
               >
                 <path d="M9 2.5 4.5 7 9 11.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span className="md:hidden">Back</span>
-              <span className="hidden md:inline">Back to {back.label}</span>
+              <span className="md:hidden">{t("Back")}</span>
+              <span className="hidden md:inline">{t("Back to {label}", { label: t(back.label) })}</span>
             </Link>
           )}
           <div
@@ -124,7 +130,7 @@ export default function SectionNav({
                   }`}
                 >
                   <span className="relative block">
-                    {label}
+                    {t(label)}
                     {isActive && (
                       <motion.span
                         layoutId="section-nav-marker"

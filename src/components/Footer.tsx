@@ -1,11 +1,12 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import RollText from "@/components/RollText";
 import { LIVE_PROJECTS } from "@/data/hapLive";
 import { projectHref } from "@/data/projectDetail";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useT } from "@/i18n/LocaleProvider";
 
 const NAV_LINKS: { label: string; href: string }[] = [
   { label: "Home", href: "/" },
@@ -99,6 +100,7 @@ function LinkedInIcon() {
 function NewsletterField() {
   const [value, setValue] = useState("");
   const [status, setStatus] = useState<"idle" | "error" | "success">("idle");
+  const t = useT();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,7 +115,7 @@ function NewsletterField() {
           <path d="M4 10.5l3.5 3.5L16 5.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         <p className="font-sans text-base font-medium leading-[1.4] text-white">
-          You&apos;re subscribed — welcome to HAP.
+          {t("You’re subscribed — welcome to HAP.")}
         </p>
       </div>
     );
@@ -128,7 +130,7 @@ function NewsletterField() {
     <form onSubmit={handleSubmit} noValidate>
       {/* One line on every breakpoint — input + button side by side. */}
       <div
-        className={`flex items-center gap-3 border py-2 pl-4 pr-2 transition-colors duration-200 ${borderState}`}
+        className={`flex items-center gap-3 border py-2 ps-4 pe-2 transition-colors duration-200 ${borderState}`}
       >
         <input
           type="email"
@@ -137,20 +139,20 @@ function NewsletterField() {
             setValue(e.target.value);
             if (status === "error") setStatus("idle");
           }}
-          placeholder="Your Email"
-          aria-label="Email address"
+          placeholder={t("Your Email")}
+          aria-label={t("Email address")}
           className="min-w-0 flex-1 bg-transparent font-sans text-base font-medium leading-[1.4] text-white placeholder:text-white/50 focus:outline-none"
         />
         <button
           type="submit"
           className="shrink-0 bg-white/80 px-4 py-3 font-serif text-sm font-medium uppercase leading-[1.4] text-black transition-colors duration-300 hover:bg-white sm:px-5"
         >
-          Subscribe
+          {t("Subscribe")}
         </button>
       </div>
       {status === "error" && (
         <p className="mt-2 font-sans text-sm font-medium leading-[1.4] text-error">
-          Please enter a valid email address.
+          {t("Please enter a valid email address.")}
         </p>
       )}
     </form>
@@ -158,6 +160,7 @@ function NewsletterField() {
 }
 
 function ProjectLinks({ items }: { items: FooterProject[] }) {
+  const t = useT();
   return (
     <div className="flex flex-col gap-3 text-base leading-[1.4]">
       {items.map((project) => (
@@ -166,7 +169,7 @@ function ProjectLinks({ items }: { items: FooterProject[] }) {
           href={projectHref(project.id)}
           className="text-white/75 transition-colors duration-300 hover:text-white"
         >
-          {project.name}
+          {t(project.name)}
         </Link>
       ))}
     </div>
@@ -182,7 +185,7 @@ function FooterAccordion({ title, items }: { title: string; items: FooterProject
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between py-5 text-left"
+        className="flex w-full items-center justify-between py-5 text-start"
       >
         <span className="font-sans text-[1.625rem] font-medium leading-[1.3]">
           {title}
@@ -210,6 +213,7 @@ function FooterAccordion({ title, items }: { title: string; items: FooterProject
 }
 
 export default function Footer() {
+  const t = useT();
   const pathname = usePathname() ?? "/";
   // Only the link whose pathname matches the current route is active.
   // On "/", only "Home" lights up — section anchors (/#story etc.) stay dim
@@ -245,7 +249,7 @@ export default function Footer() {
                     active ? "text-white" : "text-white/30"
                   }`}
                 >
-                  <RollText>{link.label}</RollText>
+                  <RollText>{t(link.label)}</RollText>
                 </Link>
               );
             })}
@@ -256,22 +260,22 @@ export default function Footer() {
             {/* Project listings — accordions on mobile, three columns on desktop */}
             <div className="font-sans font-medium">
               <div className="flex flex-col md:hidden">
-                <FooterAccordion title="In the City" items={IN_THE_CITY} />
-                <FooterAccordion title="By the Sea" items={BY_THE_SEA} />
+                <FooterAccordion title={t("In the City")} items={IN_THE_CITY} />
+                <FooterAccordion title={t("By the Sea")} items={BY_THE_SEA} />
               </div>
               <div className="flex flex-col gap-10 md:flex-row md:items-start md:gap-[66px]">
                 <div className="hidden flex-1 flex-col gap-7 md:flex">
-                  <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">In the City</p>
+                  <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">{t("In the City")}</p>
                   <ProjectLinks items={IN_THE_CITY} />
                 </div>
                 <div className="hidden flex-1 flex-col gap-7 md:flex">
-                  <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">By the Sea</p>
+                  <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">{t("By the Sea")}</p>
                   <ProjectLinks items={BY_THE_SEA} />
                 </div>
 
                 {/* Get In Touch — contact rows + socials in one stack */}
                 <div className="flex flex-1 flex-col gap-7 pt-10 md:pt-0">
-                  <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">Get In Touch</p>
+                  <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">{t("Get In Touch")}</p>
                   <div className="flex flex-col gap-3">
                     <a href="mailto:info@hap.com.eg" className="flex items-center gap-3 text-base leading-[1.4] text-white/75 transition-colors duration-300 hover:text-white">
                       <MailIcon />
@@ -290,8 +294,8 @@ export default function Footer() {
                     >
                       <span className="mt-px shrink-0"><LocationIcon /></span>
                       <span className="flex flex-col gap-0.5">
-                        <span className="decoration-1 underline-offset-4 group-hover/map:underline">HAP Head Office</span>
-                        <span className="text-white/75 transition-colors duration-300 group-hover/map:text-white">Building 67 - Southern Road 90 - New Cairo - Egypt</span>
+                        <span className="decoration-1 underline-offset-4 group-hover/map:underline">{t("HAP Head Office")}</span>
+                        <span className="text-white/75 transition-colors duration-300 group-hover/map:text-white">{t("Building 67 - Southern Road 90 - New Cairo - Egypt")}</span>
                       </span>
                     </a>
                     <div className="flex gap-4 pt-1">
@@ -318,10 +322,10 @@ export default function Footer() {
             <div className="flex w-full flex-col gap-5 min-[1440px]:flex-row min-[1440px]:items-center min-[1440px]:justify-between min-[1440px]:gap-10">
               <div className="flex flex-col gap-1">
                 <p className="font-serif text-[1.625rem] font-normal uppercase leading-none tracking-[-0.02em] min-[1440px]:whitespace-nowrap">
-                  Join our Newsletter
+                  {t("Join our Newsletter")}
                 </p>
                 <p className="font-sans text-base font-medium leading-[1.4]">
-                  Stay in the know of all the HAP properties
+                  {t("Stay in the know of all the HAP properties")}
                 </p>
               </div>
               <div className="w-full max-w-[600px] min-[1440px]:min-w-[320px] min-[1440px]:flex-1">
@@ -338,10 +342,10 @@ export default function Footer() {
         <div className="flex flex-col gap-4 font-sans text-xs font-normal leading-[1.4] md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-7">
             <p>&copy; {new Date().getFullYear()} HAP</p>
-            <a href="https://www.hap.com.eg/legals/terms-of-use/" target="_blank" rel="noopener noreferrer" className="text-white/75 transition-colors duration-300 hover:text-white">Terms of Use</a>
-            <a href="https://www.hap.com.eg/legals/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-white/75 transition-colors duration-300 hover:text-white">Privacy policy</a>
+            <a href="https://www.hap.com.eg/legals/terms-of-use/" target="_blank" rel="noopener noreferrer" className="text-white/75 transition-colors duration-300 hover:text-white">{t("Terms of Use")}</a>
+            <a href="https://www.hap.com.eg/legals/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-white/75 transition-colors duration-300 hover:text-white">{t("Privacy policy")}</a>
           </div>
-          <p className="uppercase">Web Design &amp; Development by MitchDesigns</p>
+          <p className="uppercase">{t("Web Design & Development by MitchDesigns")}</p>
         </div>
       </div>
     </footer>

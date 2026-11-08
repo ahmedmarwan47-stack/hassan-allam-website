@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import SliderArrow from "@/components/SliderArrow";
 import { useCarouselDrag } from "@/components/CarouselDrag";
 import SectionEyebrow from "@/components/SectionEyebrow";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 /**
  * "Construction Updates" slider — Figma component set 17149:2642, placed on
@@ -82,6 +83,10 @@ const WIPE_EASE = [0.76, 0, 0.24, 1] as const;
 const nodePct = (i: number) => (i / N) * 100;
 
 export default function ConstructionUpdates({ id }: { id?: string }) {
+  const t = useT();
+  const rtl = useRtl();
+  // Timeline positions run from the reading-start edge.
+  const startSide = rtl ? "right" : "left";
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const reduceMotion = useReducedMotion();
@@ -128,7 +133,7 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
                   key={s.year}
                   className="font-sans text-[10px] font-medium uppercase tracking-[0.08em] text-grey-500 md:text-xs"
                 >
-                  {i === 0 || STEPS[i - 1].eyebrow !== s.eyebrow ? s.eyebrow : ""}
+                  {i === 0 || STEPS[i - 1].eyebrow !== s.eyebrow ? t(s.eyebrow) : ""}
                 </span>
               ))}
             </div>
@@ -137,7 +142,7 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
             <div className="relative h-4">
               <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-brand-black/15" />
               <motion.div
-                className="absolute left-0 top-1/2 h-0.5 -translate-y-1/2 bg-brand-black"
+                className="absolute start-0 top-1/2 h-0.5 -translate-y-1/2 bg-brand-black"
                 animate={{ width: `${nodePct(index)}%` }}
                 transition={{ duration: reduceMotion ? 0 : 0.9, ease: WIPE_EASE }}
               />
@@ -145,7 +150,7 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
                 <motion.div
                   key={`timer-${index}`}
                   className="absolute top-1/2 h-0.5 -translate-y-1/2 bg-brand-black/35"
-                  style={{ left: `${nodePct(index)}%` }}
+                  style={{ [startSide]: `${nodePct(index)}%` }}
                   initial={{ width: "0%" }}
                   animate={{ width: `${100 / N}%` }}
                   transition={{ duration: AUTOPLAY_MS / 1000, ease: "linear" }}
@@ -158,15 +163,15 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
                     key={s.year}
                     type="button"
                     onClick={() => goTo(i)}
-                    aria-label={`${s.year}: ${s.title}`}
+                    aria-label={`${s.year}: ${t(s.title)}`}
                     aria-current={state === "current" ? "step" : undefined}
-                    className="group absolute top-1/2 flex size-6 -translate-x-[3px] -translate-y-1/2 items-center justify-start"
-                    style={{ left: `${nodePct(i)}%` }}
+                    className="group absolute top-1/2 flex size-6 -translate-x-[3px] -translate-y-1/2 items-center justify-start rtl:translate-x-[3px]"
+                    style={{ [startSide]: `${nodePct(i)}%` }}
                   >
                     {state === "current" && !reduceMotion && (
                       <motion.span
                         aria-hidden
-                        className="absolute left-0 top-1/2 size-3 -translate-y-1/2 rounded-full border border-brand-black"
+                        className="absolute start-0 top-1/2 size-3 -translate-y-1/2 rounded-full border border-brand-black"
                         animate={{ scale: [1, 2.4], opacity: [0.6, 0] }}
                         transition={{ duration: 1.6, repeat: Infinity, ease: "easeOut" }}
                       />
@@ -196,7 +201,7 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
                   type="button"
                   onClick={() => goTo(i)}
                   tabIndex={-1}
-                  className={`py-1 text-left font-sans text-[11px] font-medium uppercase leading-[1.4] tracking-[0.04em] transition-colors duration-300 md:text-sm ${
+                  className={`py-1 text-start font-sans text-[11px] font-medium uppercase leading-[1.4] tracking-[0.04em] transition-colors duration-300 md:text-sm ${
                     i <= index ? "text-brand-black" : "text-grey-500 hover:text-brand-black"
                   }`}
                 >
@@ -212,12 +217,12 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
       id={id}
       data-nav-theme="light"
       aria-roledescription="carousel"
-      aria-label="Our history"
+      aria-label={t("Our history")}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       className="bg-brand-white px-6 py-16 text-brand-black md:px-16 md:pb-20 md:pt-24"
     >
-      <SectionEyebrow className="mb-10">Our History</SectionEyebrow>
+      <SectionEyebrow className="mb-10">{t("Our History")}</SectionEyebrow>
       {/* Full width between the page margins — lines up with the eyebrow on
           the left and the navbar CTA on the right. */}
       <div className="flex flex-col gap-10">
@@ -234,8 +239,8 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
             {/* Phones: arrows beside the year, so they sit right above the
                 image they change. */}
             <div className="flex gap-2 md:hidden">
-              <SliderArrow direction="prev" size="sm" onClick={() => goTo(index - 1)} disabled={index === 0} label="Previous update" />
-              <SliderArrow direction="next" size="sm" onClick={() => goTo(index + 1)} disabled={index === N - 1} label="Next update" />
+              <SliderArrow direction="prev" size="sm" onClick={() => goTo(index - 1)} disabled={index === 0} label={t("Previous update")} />
+              <SliderArrow direction="next" size="sm" onClick={() => goTo(index + 1)} disabled={index === N - 1} label={t("Next update")} />
             </div>
           </div>
 
@@ -289,10 +294,10 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
                 >
                   {/* Phones drop the timeline's generation row — show it here. */}
                   <span className="-mb-2 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-grey-500 md:hidden">
-                    {step.eyebrow}
+                    {t(step.eyebrow)}
                   </span>
                   <h3 className="font-serif text-[1.5rem] font-light uppercase leading-[1.15] tracking-[-0.02em] md:text-[2rem]">
-                    {step.title.split(" ").map((word, w) => (
+                    {t(step.title).split(" ").map((word, w) => (
                       <span key={w} className="inline-block overflow-hidden pb-[0.08em] align-top">
                         <motion.span
                           className="inline-block"
@@ -311,14 +316,14 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
                     transition={{ duration: reduceMotion ? 0 : 0.6, ease: EASE, delay: reduceMotion ? 0 : 0.35 }}
                     className="font-sans text-base leading-[1.5] text-brand-black/80"
                   >
-                    {step.body}
+                    {t(step.body)}
                   </motion.p>
                 </motion.div>
               </AnimatePresence>
             </div>
             <div className="hidden gap-2.5 md:flex">
-              <SliderArrow direction="prev" onClick={() => goTo(index - 1)} disabled={index === 0} label="Previous update" />
-              <SliderArrow direction="next" onClick={() => goTo(index + 1)} disabled={index === N - 1} label="Next update" />
+              <SliderArrow direction="prev" onClick={() => goTo(index - 1)} disabled={index === 0} label={t("Previous update")} />
+              <SliderArrow direction="next" onClick={() => goTo(index + 1)} disabled={index === N - 1} label={t("Next update")} />
             </div>
           </div>
         </div>
@@ -343,7 +348,7 @@ const ROW = 1.4; // em — one digit's slot on the wheel (glyph + clear space)
 
 function YearWheels({ value }: { value: string }) {
   return (
-    <span aria-label={value} className="inline-flex [font-feature-settings:'tnum']">
+    <span aria-label={value} dir="ltr" className="inline-flex [font-feature-settings:'tnum']">
       {value.split("").map((d, i) => (
         <DigitWheel key={i} digit={Number(d)} index={i} />
       ))}

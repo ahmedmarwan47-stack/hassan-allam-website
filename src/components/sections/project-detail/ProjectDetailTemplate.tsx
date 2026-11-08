@@ -1,3 +1,5 @@
+"use client";
+
 import Footer from "@/components/Footer";
 import SectionNav from "@/components/SectionNav";
 import type { ProjectDetailData } from "@/data/projectDetail";
@@ -11,6 +13,7 @@ import UnitTypesSection from "./UnitTypesSection";
 import { UNIT_TYPES } from "@/data/units";
 import ConstructionTimeline from "./ConstructionTimeline";
 import RequestInterestForm from "./RequestInterestForm";
+import { useT } from "@/i18n/LocaleProvider";
 
 /**
  * Shared project detail template. The Master Plan section only renders when
@@ -19,6 +22,7 @@ import RequestInterestForm from "./RequestInterestForm";
  * Every "Request interest" button on the page jumps to the closing form.
  */
 export default function ProjectDetailTemplate({ data }: { data: ProjectDetailData }) {
+  const t = useT();
   // In-page navigation (same bar as Our Story); Master Plan only when present.
   const sections = [
     { id: "overview", label: "Overview" },
@@ -29,7 +33,7 @@ export default function ProjectDetailTemplate({ data }: { data: ProjectDetailDat
     { id: "homes", label: "Homes" },
     { id: "construction-updates", label: "Construction Updates" },
     { id: "request-interest", label: "Request Interest" },
-  ];
+  ].map((s) => ({ ...s, label: t(s.label) }));
 
   return (
     <main>
@@ -57,7 +61,7 @@ export default function ProjectDetailTemplate({ data }: { data: ProjectDetailDat
         id="homes"
         projectId={data.id}
         heading={data.productsHeading}
-        intro="From garden apartments to standalone villas — every home is designed around light, privacy and outdoor living."
+        intro={t("From garden apartments to standalone villas — every home is designed around light, privacy and outdoor living.")}
         units={UNIT_TYPES}
       />
       <ConstructionTimeline data={data.construction} />

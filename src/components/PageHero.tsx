@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "@/components/ProgressiveImage";
+import { useT } from "@/i18n/LocaleProvider";
 import { Reveal } from "@/components/Reveal";
 
 /**
@@ -23,6 +26,7 @@ export default function PageHero({
   lines: React.ReactNode[];
   size?: keyof typeof SIZES;
 }) {
+  const t = useT();
   return (
     <section
       data-nav-theme="light"
@@ -44,12 +48,12 @@ export default function PageHero({
 
       <Reveal className="relative z-10 flex flex-col items-center gap-6 text-center md:gap-8">
         <p className="font-sans text-sm font-medium uppercase leading-[1.4] tracking-[0.12em] text-brand-black/60 md:text-base">
-          {eyebrow}
+          {t(eyebrow)}
         </p>
         <h1 className={`font-serif font-light uppercase leading-[0.95] tracking-[-0.02em] text-brand-black ${SIZES[size]}`}>
           {lines.map((line, i) => (
             <span key={i} className="block">
-              {line}
+              {typeof line === "string" ? t(line) : line}
             </span>
           ))}
         </h1>

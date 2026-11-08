@@ -4,6 +4,7 @@ import Image from "@/components/ProgressiveImage";
 import MapPin from "@/components/MapPin";
 import { MAP_PROJECTS } from "@/data/mapProjects";
 import { withBasePath } from "@/lib/basePath";
+import { useT } from "@/i18n/LocaleProvider";
 
 /**
  * MapStage — the full-Egypt map (the live site's map texture) with drifting
@@ -58,6 +59,7 @@ export default function MapStage({
   /** Ease zoom/focus changes (phone zoom buttons) instead of jumping. */
   smooth?: boolean;
 }) {
+  const t = useT();
   return (
     <div
       data-no-fx=""
@@ -73,7 +75,7 @@ export default function MapStage({
     >
       <Image
         src="/images/map/egypt-map-full.webp"
-        alt="Aerial map of Egypt showing Hassan Allam project locations"
+        alt={t("Aerial map of Egypt showing Hassan Allam project locations")}
         fill
         className="object-cover"
         priority={priority}

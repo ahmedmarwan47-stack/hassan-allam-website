@@ -1,15 +1,24 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
-import "./globals.css";
+import { Alexandria, Manrope } from "next/font/google";
+import "../globals.css";
 import Navbar from "@/components/Navbar";
 import HydrationMark from "@/components/HydrationMark";
 import ScrollEffects from "@/components/ScrollEffects";
 import { withBasePath } from "@/lib/basePath";
+import { LocaleProvider } from "@/i18n/LocaleProvider";
 
 const manrope = Manrope({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-manrope",
+  display: "swap",
+});
+
+// Only for the small "العربية" switch in the header.
+const alexandria = Alexandria({
+  subsets: ["arabic"],
+  weight: ["500"],
+  variable: "--font-alexandria",
   display: "swap",
 });
 
@@ -27,7 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} antialiased`}
+      className={`${manrope.variable} ${alexandria.variable} antialiased`}
     >
       <head>
         {/* Eirlys Light (display serif) — the vendor's stylesheet, unaltered,
@@ -42,10 +51,12 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <HydrationMark />
-        <ScrollEffects />
-        <Navbar />
-        {children}
+        <LocaleProvider locale="en">
+          <HydrationMark />
+          <ScrollEffects />
+          <Navbar />
+          {children}
+        </LocaleProvider>
       </body>
     </html>
   );

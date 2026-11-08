@@ -1,10 +1,14 @@
+"use client";
+
 import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
 import type { ProjectDetailData } from "@/data/projectDetail";
 import { RequestInterest } from "@/components/ActionButton";
 import { CATEGORY_LABEL } from "@/data/mapProjects";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function ProjectHero({ data }: { data: ProjectDetailData }) {
+  const t = useT();
   return (
     <section
       data-nav-theme="light"
@@ -42,7 +46,7 @@ export default function ProjectHero({ data }: { data: ProjectDetailData }) {
           {data.tags.map((tag, i) => (
             <li key={tag} className="flex items-center gap-2">
               {i > 0 && <span aria-hidden className="h-2.5 w-px bg-brand-black/25" />}
-              {CATEGORY_LABEL[tag]}
+              {t(CATEGORY_LABEL[tag])}
             </li>
           ))}
         </ul>

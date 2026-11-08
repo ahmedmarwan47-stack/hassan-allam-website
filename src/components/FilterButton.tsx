@@ -1,3 +1,7 @@
+"use client";
+
+import { useT } from "@/i18n/LocaleProvider";
+
 /**
  * FilterButton — the site's one filter button (FAQs, Careers, Media Center):
  * white with a thin border and a brand-black hover; the active one inverts
@@ -12,6 +16,7 @@ export default function FilterButton({
   active: boolean;
   onClick: () => void;
 }) {
+  const t = useT();
   return (
     <button
       type="button"
@@ -23,7 +28,7 @@ export default function FilterButton({
           : "border-brand-black/20 bg-transparent text-brand-black hover:border-brand-black"
       }`}
     >
-      {label}
+      {t(label)}
     </button>
   );
 }

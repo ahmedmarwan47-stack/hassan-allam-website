@@ -1,7 +1,8 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
+import { useT } from "@/i18n/LocaleProvider";
 
 export interface BackTarget {
   label: string;
@@ -24,6 +25,7 @@ export default function UnitBackLink({
   /** Neighborhoods offering this unit, keyed by their slug. */
   neighborhoods: Record<string, BackTarget>;
 }) {
+  const t = useT();
   const from = useSyncExternalStore(noop, readFrom, () => "");
   const target = neighborhoods[from] ?? project;
   return (
@@ -31,10 +33,10 @@ export default function UnitBackLink({
       href={target.href}
       className="flex items-center gap-2 self-start font-sans text-sm font-medium uppercase tracking-[0.12em] text-white/60 transition-colors duration-300 hover:text-white"
     >
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden className="rtl:-scale-x-100">
         <path d="M9 2.5 4.5 7 9 11.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-      Back to {target.label}
+      {t("Back to {name}", { name: t(target.label) })}
     </Link>
   );
 }

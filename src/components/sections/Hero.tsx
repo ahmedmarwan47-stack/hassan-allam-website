@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { withBasePath } from "@/lib/basePath";
 import { Reveal } from "@/components/Reveal";
 import RollText from "@/components/RollText";
+import { useT } from "@/i18n/LocaleProvider";
 
 /**
  * Full-screen showreel player — the background loop plays muted with no
@@ -22,6 +23,7 @@ const REEL_EASE = [0.76, 0, 0.24, 1] as const;
 
 function ShowreelModal({ onClose }: { onClose: () => void }) {
   const reduce = useReducedMotion();
+  const t = useT();
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -50,15 +52,15 @@ function ShowreelModal({ onClose }: { onClose: () => void }) {
 
   // Start as the entrance settles (straight away under reduced motion).
   useEffect(() => {
-    const t = setTimeout(start, reduce ? 0 : 250);
-    return () => clearTimeout(t);
+    const timer = setTimeout(start, reduce ? 0 : 250);
+    return () => clearTimeout(timer);
   }, [reduce, start]);
 
   return (
     <motion.div
       role="dialog"
       aria-modal="true"
-      aria-label="Showreel"
+      aria-label={t("Showreel")}
       onClick={onClose}
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-16"
     >
@@ -72,8 +74,8 @@ function ShowreelModal({ onClose }: { onClose: () => void }) {
       <motion.button
         type="button"
         onClick={onClose}
-        aria-label="Close showreel"
-        className="absolute right-4 top-4 z-10 flex size-11 items-center justify-center text-white opacity-80 transition-[opacity,rotate] duration-300 hover:rotate-90 hover:opacity-100 md:right-8 md:top-8"
+        aria-label={t("Close showreel")}
+        className="absolute end-4 top-4 z-10 flex size-11 items-center justify-center text-white opacity-80 transition-[opacity,rotate] duration-300 hover:rotate-90 hover:opacity-100 md:end-8 md:top-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.3, delay: reduce ? 0 : 0.25 } }}
         exit={{ opacity: 0, transition: { duration: 0.2 } }}
@@ -112,6 +114,7 @@ function ShowreelModal({ onClose }: { onClose: () => void }) {
  * until it can play.
  */
 export default function Hero() {
+  const t = useT();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [canPlay, setCanPlay] = useState(false);
   const [reelOpen, setReelOpen] = useState(false);
@@ -165,9 +168,9 @@ export default function Hero() {
         <div className="mt-auto flex w-full flex-col items-start gap-6 px-6 pb-12 md:flex-row md:items-end md:justify-between md:px-12 md:pb-16 lg:px-16">
           <Reveal delay={0.3}>
             <h1 className="max-w-[20ch] font-serif text-[clamp(2.5rem,4.2vw,3.5rem)] font-normal uppercase leading-none tracking-[-0.02em] text-white">
-              From Our
+              {t("From Our")}
               <br />
-              Family, to Yours.
+              {t("Family, to Yours.")}
             </h1>
           </Reveal>
           <Reveal delay={0.4}>
@@ -199,7 +202,7 @@ export default function Hero() {
                   </svg>
                 ))}
               </span>
-              <RollText>See the Showreel</RollText>
+              <RollText>{t("See the Showreel")}</RollText>
             </button>
           </Reveal>
         </div>

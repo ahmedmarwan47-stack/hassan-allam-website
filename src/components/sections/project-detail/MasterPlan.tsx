@@ -8,6 +8,7 @@ import GrowReveal from "@/components/GrowReveal";
 import NeighborhoodDrawer from "./NeighborhoodDrawer";
 import { OPEN_NEIGHBORHOOD } from "./ProjectActions";
 import { neighborhoodHref } from "@/data/neighborhoods";
+import { useT } from "@/i18n/LocaleProvider";
 
 const CYCLE_MS = 2600;
 
@@ -37,6 +38,7 @@ export default function MasterPlan({
 }) {
   // Pins sit at each item's position (% of the image) — from the live
   // site's GPS for the neighborhoods.
+  const t = useT();
   const pins = items.filter((it) => it.left !== undefined && it.top !== undefined);
   const [hovered, setActive] = useState<number | null>(null);
   const [open, setOpen] = useState<number | null>(null); // index into items
@@ -104,13 +106,13 @@ export default function MasterPlan({
                     onClick={() => setOpen(i)}
                     onMouseEnter={() => setActive(item.number)}
                     onMouseLeave={() => setActive(null)}
-                    className={`group flex w-full items-center justify-between border-b border-brand-black/10 px-2 py-3 text-left transition-colors duration-300 ${
+                    className={`group flex w-full items-center justify-between border-b border-brand-black/10 px-2 py-3 text-start transition-colors duration-300 ${
                       isActive ? "bg-warm-100" : "hover:bg-warm-50"
                     }`}
                   >
                     <span className="flex items-center gap-9 font-sans text-base font-medium text-brand-black">
                       <span className="w-5 tabular-nums">{item.number}</span>
-                      <span>{item.name}</span>
+                      <span>{t(item.name)}</span>
                     </span>
                     <svg
                       width="24"
@@ -118,8 +120,8 @@ export default function MasterPlan({
                       viewBox="0 0 24 24"
                       fill="none"
                       aria-hidden
-                      className={`shrink-0 text-brand-black transition-transform duration-300 ${
-                        isActive ? "translate-x-1" : "group-hover:translate-x-1"
+                      className={`shrink-0 text-brand-black transition-transform duration-300 rtl:-scale-x-100 ${
+                        isActive ? "translate-x-1 rtl:-translate-x-1" : "group-hover:translate-x-1 rtl:group-hover:-translate-x-1"
                       }`}
                     >
                       <path
@@ -146,14 +148,14 @@ export default function MasterPlan({
           cropped at the sides, with the pins positioned inside it. */}
       <div
         data-no-fx=""
-        className="relative aspect-[3/4] w-full overflow-hidden rounded-[2px] md:aspect-[var(--plan-aspect)] lg:ml-auto lg:w-[66.16%]"
+        className="relative aspect-[3/4] w-full overflow-hidden rounded-[2px] md:aspect-[var(--plan-aspect)] lg:ms-auto lg:w-[66.16%]"
         style={{ "--plan-aspect": aspect } as React.CSSProperties}
       >
         <div className="absolute inset-y-0 left-1/2 h-full -translate-x-1/2" style={{ aspectRatio: aspect }}>
           <GrowReveal axis="width" className="absolute inset-0">
             <Image
               src={mapImage}
-              alt={`${projectName} master plan`}
+              alt={t("{name} master plan", { name: t(projectName) })}
               fill
               sizes="(min-width: 768px) 62vw, 135vw"
               quality={95}
@@ -170,7 +172,7 @@ export default function MasterPlan({
                 onClick={() => openNumber(pin.number)}
                 onMouseEnter={() => setActive(pin.number)}
                 onMouseLeave={() => setActive(null)}
-                aria-label={`${item.name} — view details`}
+                aria-label={t("{name} — view details", { name: t(item.name) })}
                 // Anchored at the stem's foot: the ground dot sits on the spot.
                 className="group absolute flex -translate-x-1/2 -translate-y-full flex-col items-center"
                 style={{ left: `${pin.left}%`, top: `${pin.top}%`, zIndex: isActive ? 20 : 10 }}
@@ -179,14 +181,14 @@ export default function MasterPlan({
                     is active. Pins near the plan's sides anchor it inward, so
                     it never runs off the (side-cropped) phone frame. */}
                 <span
-                  className={`pointer-events-none absolute bottom-full mb-2 flex items-center gap-2 whitespace-nowrap rounded-full bg-brand-white py-1 pl-1 pr-3.5 font-sans text-xs font-medium text-brand-black shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-[opacity,translate,scale] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] md:text-[13px] ${
+                  className={`pointer-events-none absolute bottom-full mb-2 flex items-center gap-2 whitespace-nowrap rounded-full bg-brand-white py-1 ps-1 pe-3.5 font-sans text-xs font-medium text-brand-black shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-[opacity,translate,scale] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] md:text-[13px] ${
                     pin.left < 30 ? "left-0 origin-bottom-left" : pin.left > 70 ? "right-0 origin-bottom-right" : "origin-bottom"
                   } ${isActive ? "translate-y-0 scale-100 opacity-100" : "translate-y-1 scale-95 opacity-0"}`}
                 >
                   <span className="flex size-5 items-center justify-center rounded-full bg-brand-black text-[10px] tabular-nums text-brand-white">
                     {pin.number}
                   </span>
-                  {item.name}
+                  {t(item.name)}
                 </span>
                 {/* Marker: a small numbered head on a hairline stem, standing
                     on a ground dot that breathes with a soft pulse. */}

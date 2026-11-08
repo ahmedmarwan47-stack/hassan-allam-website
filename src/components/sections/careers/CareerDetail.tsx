@@ -1,11 +1,14 @@
+"use client";
+
 import Image from "@/components/ProgressiveImage";
 import ActionButton from "@/components/ActionButton";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { Reveal } from "@/components/Reveal";
 import { JOBS, OFFER, type Job } from "@/data/careers";
 import JobRow from "./JobRow";
 import CareerStickyBar from "./CareerStickyBar";
 import ApplicationForm from "./ApplicationForm";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 // Every "Apply now" glides down to the application form on the page.
 const APPLY_HREF = "#apply";
@@ -18,7 +21,16 @@ import {
   MortarboardIcon,
 } from "./icons";
 
+// "22 Oct 2026" → "22 أكتوبر 2026" on /ar.
+const AR_MONTHS: Record<string, string> = {
+  Jan: "يناير", Feb: "فبراير", Mar: "مارس", Apr: "أبريل", May: "مايو", Jun: "يونيو",
+  Jul: "يوليو", Aug: "أغسطس", Sep: "سبتمبر", Oct: "أكتوبر", Nov: "نوفمبر", Dec: "ديسمبر",
+};
+const localDate = (date: string, rtl: boolean) =>
+  rtl ? date.replace(/[A-Z][a-z]{2}/, (m) => AR_MONTHS[m] ?? m) : date;
+
 function CareerHero({ job }: { job: Job }) {
+  const t = useT();
   return (
     <section
       data-nav-theme="light"
@@ -43,11 +55,11 @@ function CareerHero({ job }: { job: Job }) {
           href="/careers"
           className="flex items-center gap-2 font-sans text-base font-medium text-brand-black/75 transition-colors duration-300 hover:text-brand-black hover:underline decoration-1 underline-offset-4"
         >
-          <ArrowLeftIcon size={20} />
-          All Careers
+          <ArrowLeftIcon size={20} className="rtl:-scale-x-100" />
+          {t("All Careers")}
         </Link>
         <h1 className="max-w-[1014px] font-serif font-light uppercase leading-none tracking-[-0.02em] text-brand-black [font-size:clamp(2.5rem,7vw,5.75rem)]">
-          {job.title}
+          {t(job.title)}
         </h1>
       </Reveal>
     </section>
@@ -55,10 +67,11 @@ function CareerHero({ job }: { job: Job }) {
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  const t = useT();
   return (
     <Reveal y={16} className="flex flex-col gap-5 border-t border-brand-black/20 pt-5">
       <h2 className="font-serif text-2xl font-medium leading-[1.2] tracking-[-0.01em] md:text-[1.75rem]">
-        {title}
+        {t(title)}
       </h2>
       {children}
     </Reveal>
@@ -66,22 +79,25 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function Bullets({ items }: { items: string[] }) {
+  const t = useT();
   return (
-    <ul className="flex list-disc flex-col gap-2 pl-6 font-sans text-base leading-[1.5] text-brand-black/80">
+    <ul className="flex list-disc flex-col gap-2 ps-6 font-sans text-base leading-[1.5] text-brand-black/80">
       {items.map((item) => (
-        <li key={item}>{item}</li>
+        <li key={item}>{t(item)}</li>
       ))}
     </ul>
   );
 }
 
 function CareerBody({ job }: { job: Job }) {
+  const t = useT();
+  const rtl = useRtl();
   const overview = [
     { Icon: BriefcaseIcon, label: "Department", value: job.department },
     { Icon: LocationIcon, label: "Location", value: job.location },
     { Icon: ClockIcon, label: "Employment type", value: job.type },
     { Icon: MortarboardIcon, label: "Experience", value: job.experience },
-    { Icon: CalendarIcon, label: "Posted", value: job.posted },
+    { Icon: CalendarIcon, label: "Posted", value: localDate(job.posted, rtl) },
   ];
   return (
     <section
@@ -93,7 +109,7 @@ function CareerBody({ job }: { job: Job }) {
             once its Apply button scrolls past, the compact bar takes over. */}
         <aside className="flex w-full flex-col gap-5 md:sticky md:top-28 md:w-[313px] md:shrink-0">
           <h2 className="font-serif text-2xl font-medium leading-[1.2] tracking-[-0.01em] md:text-[1.75rem]">
-            Job overview
+            {t("Job overview")}
           </h2>
           <dl className="flex flex-col gap-3">
             {overview.map(({ Icon, label, value }) => (
@@ -103,20 +119,20 @@ function CareerBody({ job }: { job: Job }) {
               >
                 <Icon size={24} />
                 <div className="flex flex-col gap-0.5 font-sans text-base leading-[1.4]">
-                  <dt className="text-brand-black/60">{label}</dt>
-                  <dd className="font-medium">{value}</dd>
+                  <dt className="text-brand-black/60">{t(label)}</dt>
+                  <dd className="font-medium">{t(value)}</dd>
                 </div>
               </div>
             ))}
           </dl>
           <div id="apply-now" className="self-start">
-            <ActionButton label="Apply now" href={APPLY_HREF} variant="solid" />
+            <ActionButton label={t("Apply now")} href={APPLY_HREF} variant="solid" />
           </div>
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col gap-12">
           <Section title="About the role">
-            <p className="font-sans text-base leading-[1.5] text-brand-black/80">{job.about}</p>
+            <p className="font-sans text-base leading-[1.5] text-brand-black/80">{t(job.about)}</p>
           </Section>
           <Section title="Key responsibilities">
             <Bullets items={job.responsibilities} />
@@ -134,6 +150,7 @@ function CareerBody({ job }: { job: Job }) {
 }
 
 function OtherRoles({ job }: { job: Job }) {
+  const t = useT();
   const others = JOBS.filter((j) => j.slug !== job.slug).slice(0, 3);
   return (
     <section
@@ -142,25 +159,26 @@ function OtherRoles({ job }: { job: Job }) {
     >
       <div className="flex flex-col gap-10">
         <h2 className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] [font-size:clamp(2.5rem,5vw,3.875rem)]">
-          Other open roles
+          {t("Other open roles")}
         </h2>
         <div className="flex flex-col border-t border-brand-black [&>a:last-child]:border-b-0">
           {others.map((o) => (
             <JobRow key={o.slug} job={o} />
           ))}
         </div>
-        <ActionButton label="View all careers" href="/careers" className="self-start" />
+        <ActionButton label={t("View all careers")} href="/careers" className="self-start" />
       </div>
     </section>
   );
 }
 
 export default function CareerDetail({ job }: { job: Job }) {
+  const t = useT();
   return (
     <>
       <CareerHero job={job} />
       <CareerStickyBar
-        title={job.title}
+        title={t(job.title)}
         applyHref={APPLY_HREF}
         targetId="apply-now"
       />

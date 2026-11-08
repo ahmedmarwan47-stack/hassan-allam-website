@@ -5,6 +5,7 @@ import { TextField, SelectField, TextareaField, PhoneField, type FieldStatus } f
 import { AnimatePresence, motion } from "framer-motion";
 import ActionButton from "@/components/ActionButton";
 import { MAP_PROJECTS } from "@/data/mapProjects";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 // Each subject decides what the form asks next (see `Followups` below).
 const SUBJECTS = ["Projects", "Resale", "Partnerships", "General Inquiry"] as const;
@@ -77,6 +78,7 @@ function CallIcon() {
 }
 
 export default function ContactForm() {
+  const t = useT();
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [emailTouched, setEmailTouched] = useState(false);
@@ -95,7 +97,7 @@ export default function ContactForm() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => setField(field, e.target.value);
   const choose = (field: keyof FormState) => (value: string) => setField(field, value);
-  const toOptions = (list: readonly string[]) => list.map((v) => ({ value: v, label: v }));
+  const toOptions = (list: readonly string[]) => list.map((v) => ({ value: v, label: t(v) }));
 
   const emailStatus: FieldStatus =
     errors.email
@@ -107,19 +109,19 @@ export default function ContactForm() {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const nextErrors: Partial<Record<keyof FormState, string>> = {};
-    if (!form.subject) nextErrors.subject = "Choose what your message is about";
+    if (!form.subject) nextErrors.subject = t("Choose what your message is about");
     if ((form.subject === "Projects" || form.subject === "Resale") && !form.project)
-      nextErrors.project = "Choose a project";
+      nextErrors.project = t("Choose a project");
     if (form.subject === "Partnerships") {
-      if (!form.industry) nextErrors.industry = "Choose your industry";
-      if (!form.company.trim()) nextErrors.company = "Company name is required";
+      if (!form.industry) nextErrors.industry = t("Choose your industry");
+      if (!form.company.trim()) nextErrors.company = t("Company name is required");
     }
-    if (!form.firstName.trim()) nextErrors.firstName = "First name is required";
-    if (!form.lastName.trim()) nextErrors.lastName = "Last name is required";
-    if (form.phone.replace(/\D/g, "").length < 8) nextErrors.phone = "Enter a valid phone number";
-    if (!form.email.trim()) nextErrors.email = "Email is required";
-    else if (!EMAIL_RE.test(form.email)) nextErrors.email = "Enter a valid email address";
-    if (!form.message.trim()) nextErrors.message = "Tell us a bit about your inquiry";
+    if (!form.firstName.trim()) nextErrors.firstName = t("First name is required");
+    if (!form.lastName.trim()) nextErrors.lastName = t("Last name is required");
+    if (form.phone.replace(/\D/g, "").length < 8) nextErrors.phone = t("Enter a valid phone number");
+    if (!form.email.trim()) nextErrors.email = t("Email is required");
+    else if (!EMAIL_RE.test(form.email)) nextErrors.email = t("Enter a valid email address");
+    if (!form.message.trim()) nextErrors.message = t("Tell us a bit about your inquiry");
 
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length === 0) {
@@ -141,10 +143,10 @@ export default function ContactForm() {
         ].map(({ label, value, href, icon, big }) => {
           const body = (
             <>
-              <span className="font-sans text-xs font-medium uppercase tracking-[0.12em] text-brand-black/50">{label}</span>
+              <span className="font-sans text-xs font-medium uppercase tracking-[0.12em] text-brand-black/50">{t(label)}</span>
               <span className={`flex items-center gap-3 font-sans font-medium text-brand-black ${big ? "text-2xl md:text-[1.75rem]" : "text-base"}`}>
                 {icon}
-                {value}
+                <bdi>{t(value)}</bdi>
               </span>
             </>
           );
@@ -169,11 +171,10 @@ export default function ContactForm() {
         {submitted ? (
           <div className="flex flex-col items-start gap-4 py-10">
             <p className="font-serif text-4xl font-light leading-[1.1] tracking-[-0.02em] text-field-success md:text-5xl">
-              Message sent
+              {t("Message sent")}
             </p>
             <p className="max-w-[500px] font-sans text-lg leading-[1.4] text-brand-black">
-              Thank you, {form.firstName}. A member of our team will be in
-              touch shortly.
+              {t("Thank you, {name}. A member of our team will be in touch shortly.", { name: form.firstName })}
             </p>
             <button
               type="button"
@@ -185,7 +186,7 @@ export default function ContactForm() {
               }}
               className="mt-4 font-sans text-base font-medium text-brand-black underline decoration-1 underline-offset-4 transition-[text-decoration-thickness] duration-200 hover:decoration-2"
             >
-              Send another message
+              {t("Send another message")}
             </button>
           </div>
         ) : (
@@ -194,7 +195,7 @@ export default function ContactForm() {
                 and out as the choice changes. */}
             <div className="flex flex-col gap-10 sm:flex-row sm:gap-10">
               <SelectField
-                label="Subject"
+                label={t("Subject")}
                 value={form.subject}
                 onValueChange={choose("subject")}
                 status={errors.subject ? "error" : "idle"}
@@ -205,7 +206,7 @@ export default function ContactForm() {
                 {(form.subject === "Projects" || form.subject === "Resale") && (
                   <Followup key="project">
                     <SelectField
-                      label={form.subject === "Resale" ? "Select project to resell" : "Select project"}
+                      label={form.subject === "Resale" ? t("Select project to resell") : t("Select project")}
                       value={form.project}
                       onValueChange={choose("project")}
                       status={errors.project ? "error" : "idle"}
@@ -217,7 +218,7 @@ export default function ContactForm() {
                 {form.subject === "Partnerships" && (
                   <Followup key="industry">
                     <SelectField
-                      label="Industry"
+                      label={t("Industry")}
                       value={form.industry}
                       onValueChange={choose("industry")}
                       status={errors.industry ? "error" : "idle"}
@@ -241,7 +242,7 @@ export default function ContactForm() {
                 >
                   <div className="pb-10">
                     <TextField
-                      label="Company Name"
+                      label={t("Company Name")}
                       value={form.company}
                       onChange={update("company")}
                       status={errors.company ? "error" : "idle"}
@@ -255,16 +256,16 @@ export default function ContactForm() {
 
             <div className="flex flex-col gap-10 sm:flex-row sm:gap-10">
               <TextField
-                label="First Name"
-                placeholder="John"
+                label={t("First Name")}
+                placeholder={t("John")}
                 value={form.firstName}
                 onChange={update("firstName")}
                 status={errors.firstName ? "error" : "idle"}
                 message={errors.firstName}
               />
               <TextField
-                label="Last Name"
-                placeholder="Doe"
+                label={t("Last Name")}
+                placeholder={t("Doe")}
                 value={form.lastName}
                 onChange={update("lastName")}
                 status={errors.lastName ? "error" : "idle"}
@@ -273,7 +274,7 @@ export default function ContactForm() {
             </div>
 
             <PhoneField
-              label="Phone"
+              label={t("Phone")}
               placeholder="10 1234 5678"
               country={form.country}
               onCountryChange={choose("country")}
@@ -285,7 +286,7 @@ export default function ContactForm() {
             />
 
             <TextField
-              label="Email"
+              label={t("Email")}
               type="email"
               placeholder="example@email.com"
               value={form.email}
@@ -296,8 +297,8 @@ export default function ContactForm() {
             />
 
             <TextareaField
-              label="Message"
-              placeholder="My message is"
+              label={t("Message")}
+              placeholder={t("My message is")}
               rows={4}
               value={form.message}
               onChange={update("message")}
@@ -305,7 +306,7 @@ export default function ContactForm() {
               message={errors.message}
             />
 
-            <ActionButton label="Send message" type="submit" variant="solid" look="arrow" className="self-start" />
+            <ActionButton label={t("Send message")} type="submit" variant="solid" look="arrow" className="self-start" />
           </form>
         )}
       </div>
@@ -315,13 +316,15 @@ export default function ContactForm() {
 
 /** A follow-up field that slides in beside the subject. */
 function Followup({ children }: { children: React.ReactNode }) {
+  // Slides in from the reading-end side.
+  const dx = useRtl() ? -24 : 24;
   return (
     <motion.div
       layout
       className="w-full"
-      initial={{ opacity: 0, x: 24 }}
+      initial={{ opacity: 0, x: dx }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 24 }}
+      exit={{ opacity: 0, x: dx }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}

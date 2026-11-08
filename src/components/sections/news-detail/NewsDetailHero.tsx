@@ -1,7 +1,19 @@
+"use client";
+
 import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
 import { formatNewsDate, type NewsArticle } from "@/data/news";
 import type { NewsDetail } from "@/data/newsDetail";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
+
+const AR_MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+
+/** "09.03.2025" → "9 March 2025", or "9 مارس 2025" on /ar. */
+function localNewsDate(date: string, rtl: boolean) {
+  if (!rtl) return formatNewsDate(date);
+  const [d, m, y] = date.split(".").map(Number);
+  return `${d} ${AR_MONTHS[m - 1]} ${y}`;
+}
 
 export default function NewsDetailHero({
   article,
@@ -10,6 +22,8 @@ export default function NewsDetailHero({
   article: NewsArticle;
   detail: NewsDetail;
 }) {
+  const t = useT();
+  const rtl = useRtl();
   return (
     <section
       data-nav-theme="dark"
@@ -37,11 +51,11 @@ export default function NewsDetailHero({
       <Reveal className="relative z-10 flex justify-end pt-6 md:pt-0">
         <div className="flex flex-col gap-6 md:w-[66.16%] md:gap-8">
           <p className="flex items-center gap-3 font-sans text-sm font-medium uppercase tracking-[0.12em] text-white/60 md:text-base">
-            <span className="rounded-full border border-white/30 px-3 py-1 text-white">{article.category}</span>
-            <time dateTime={article.date.split(".").reverse().join("-")}>{formatNewsDate(article.date)}</time>
+            <span className="rounded-full border border-white/30 px-3 py-1 text-white">{t(article.category)}</span>
+            <time dateTime={article.date.split(".").reverse().join("-")}>{localNewsDate(article.date, rtl)}</time>
           </p>
           <h1 className="font-serif font-light leading-[1.1] tracking-[-0.02em] text-brand-white [font-size:clamp(1.75rem,4.3vw,3.875rem)]">
-            {detail.headline}
+            {t(detail.headline)}
           </h1>
         </div>
       </Reveal>
@@ -53,8 +67,8 @@ export default function NewsDetailHero({
         className="relative z-10 mt-28 flex flex-col items-start gap-8 md:mt-0 md:flex-row md:items-start md:justify-end"
       >
         <div className="grid gap-8 font-sans text-base leading-[1.4] text-brand-white md:w-[66.16%] md:grid-cols-2 md:gap-16">
-          <p>{detail.intro[0]}</p>
-          <p>{detail.intro[1]}</p>
+          <p>{t(detail.intro[0])}</p>
+          <p>{t(detail.intro[1])}</p>
         </div>
       </Reveal>
 

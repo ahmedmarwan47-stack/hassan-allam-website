@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "@/components/ProgressiveImage";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { projectHref } from "@/data/projectDetail";
 import GrowReveal from "@/components/GrowReveal";
 import { CATEGORY_LABEL, type Category } from "@/data/mapProjects";
 import { LIVE_PROJECTS } from "@/data/hapLive";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 interface ProjectCard {
   id: string;
@@ -59,14 +60,15 @@ const PROJECTS: ProjectCard[] = (["city", "sea"] as const).flatMap((group) => {
  *  divider sits just left of its tag; the list is pulled 8px left and
  *  clipped, so a tag that wraps to the start of a line loses its divider. */
 function TagList({ tags }: { tags: Category[] }) {
+  const t = useT();
   return (
-    <ul className="-ml-2 flex flex-wrap items-center gap-y-0.5 overflow-hidden font-sans text-[11px] leading-[1.4] text-grey-500 md:text-xs">
+    <ul className="-ms-2 flex flex-wrap items-center gap-y-0.5 overflow-hidden font-sans text-[11px] leading-[1.4] text-grey-500 md:text-xs">
       {tags.map((tag) => (
         <li
           key={tag}
-          className="relative whitespace-nowrap pl-2 pr-[7px] before:absolute before:-left-px before:top-1/2 before:h-3.5 before:w-px before:-translate-y-1/2 before:bg-grey-300"
+          className="relative whitespace-nowrap ps-2 pe-[7px] before:absolute before:-start-px before:top-1/2 before:h-3.5 before:w-px before:-translate-y-1/2 before:bg-grey-300"
         >
-          {TAG_LABEL[tag]}
+          {t(TAG_LABEL[tag])}
         </li>
       ))}
     </ul>
@@ -80,6 +82,7 @@ export default function AllProjects({
 }: {
   activeFilter?: "all" | Category;
 }) {
+  const t = useT();
   const [view, setView] = useState<View>("grid");
   const [activeGroup, setActiveGroup] = useState<"city" | "sea">("city");
   const seaRef = useRef<HTMLDivElement>(null);
@@ -118,7 +121,7 @@ export default function AllProjects({
     (p) => p.group === "sea" && (activeFilter === "all" || p.tags.includes(activeFilter)),
   );
 
-  const filterLabel = activeFilter === "all" ? "All projects" : activeFilter;
+  const filterLabel = activeFilter === "all" ? t("All projects") : t(activeFilter);
 
   return (
     <section
@@ -132,9 +135,9 @@ export default function AllProjects({
           {filterLabel}
         </p>
         <p className="mt-10 max-w-[857px] font-serif font-light uppercase leading-[1.2] tracking-[-0.02em] [font-size:clamp(1.5rem,3vw,2.625rem)] md:mt-14">
-          Our refined expertise lies in the art of designing and transforming
-          living spaces, from elegant residences to exclusive coastal
-          destinations, from visionary neighborhoods to established communities.
+          {t(
+            "Our refined expertise lies in the art of designing and transforming living spaces, from elegant residences to exclusive coastal destinations, from visionary neighborhoods to established communities.",
+          )}
         </p>
       </div>
 
@@ -180,8 +183,8 @@ export default function AllProjects({
                     {String(seaProjects.length).padStart(2, "0")}
                   </span>
                   <h3 className="font-sans text-base font-normal leading-none text-brand-black md:text-center md:[font-size:clamp(1.25rem,2.8vw,2.5rem)]">
-                    Our Communities
-                    <span className="block pb-[0.1em]">By The Sea</span>
+                    {t("Our Communities")}
+                    <span className="block pb-[0.1em]">{t("By The Sea")}</span>
                   </h3>
                   <span aria-hidden className="hidden md:block" />
                 </div>
@@ -216,6 +219,7 @@ function CommunitiesBar({
   view: View;
   onViewChange: (v: View) => void;
 }) {
+  const t = useT();
   const swap = {
     initial: { opacity: 0, y: "0.6em" },
     animate: { opacity: 1, y: 0 },
@@ -236,11 +240,11 @@ function CommunitiesBar({
         </span>
 
         <h3 className="min-w-0 flex-1 font-sans font-normal leading-none text-brand-black text-base md:flex-none md:text-center md:[font-size:clamp(1.25rem,2.8vw,2.5rem)]">
-          Our Communities
+          {t("Our Communities")}
           <span className="block overflow-hidden pb-[0.1em]">
             <AnimatePresence mode="wait" initial={false}>
               <motion.span key={subtitle} className="block" {...swap}>
-                {subtitle}
+                {t(subtitle)}
               </motion.span>
             </AnimatePresence>
           </span>
@@ -305,6 +309,7 @@ function ViewToggle({
   view: View;
   onChange: (v: View) => void;
 }) {
+  const t = useT();
   const word = (v: View) =>
     [
       "relative hidden font-sans text-lg transition-colors duration-200 focus:outline-none focus-visible:underline md:block md:text-2xl",
@@ -320,7 +325,7 @@ function ViewToggle({
   return (
     <div className="flex items-center gap-1.5 md:gap-10">
       {(["grid", "list"] as const).map((v) => (
-        <button key={v} type="button" onClick={() => onChange(v)} aria-pressed={view === v} aria-label={`${v} view`} className={icon(v)}>
+        <button key={v} type="button" onClick={() => onChange(v)} aria-pressed={view === v} aria-label={v === "grid" ? t("Grid view") : t("List view")} className={icon(v)}>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
             {v === "grid" ? (
               <path d="M2.5 2.5h4.5v4.5H2.5zM9 2.5h4.5v4.5H9zM2.5 9h4.5v4.5H2.5zM9 9h4.5v4.5H9z" stroke="currentColor" strokeWidth="1.2" />
@@ -331,10 +336,10 @@ function ViewToggle({
         </button>
       ))}
       <button type="button" onClick={() => onChange("grid")} className={word("grid")}>
-        Grid
+        {t("Grid")}
       </button>
       <button type="button" onClick={() => onChange("list")} className={word("list")}>
-        List
+        {t("List")}
       </button>
     </div>
   );
@@ -350,6 +355,7 @@ function GridView({
   projects: ProjectCard[];
   revealAxis: "height" | "width";
 }) {
+  const t = useT();
   return (
     <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-6 md:gap-x-5 md:gap-y-12">
       {projects.map((p, i) => {
@@ -381,7 +387,7 @@ function GridView({
               <div className="absolute inset-0">
                 <Image
                   src={p.image}
-                  alt={p.name}
+                  alt={t(p.name)}
                   fill
                   sizes={sizes}
                   quality={95}
@@ -391,7 +397,7 @@ function GridView({
             </GrowReveal>
             <div className="mt-3 flex flex-col gap-1 md:mt-6">
               <p className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(1rem,1.8vw,1.625rem)]">
-                {p.name}
+                {t(p.name)}
               </p>
               <TagList tags={p.tags} />
             </div>
@@ -409,6 +415,8 @@ function GridView({
 const LIST_EASE = "cubic-bezier(0.65,0,0.35,1)";
 
 function ListView({ projects, accent }: { projects: ProjectCard[]; accent: string }) {
+  const t = useT();
+  const rtl = useRtl();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   // Centre (px from the list's top) of the row the photo sits on.
   const [photoY, setPhotoY] = useState(0);
@@ -431,18 +439,18 @@ function ListView({ projects, accent }: { projects: ProjectCard[]; accent: strin
           <li key={p.id} onMouseEnter={(e) => enter(p.id, e.currentTarget)} className="relative">
             {i === 0 && <div className="h-px w-full bg-brand-black/15" />}
 
-            {/* Phones: small photo on the left, name + tags beside it. */}
+            {/* Phones: small photo at the start, name + tags beside it. */}
             <Link href={href} className="flex items-center gap-4 py-4 md:hidden">
               <div className="relative h-[84px] w-[68px] shrink-0 overflow-hidden rounded-[2px] bg-grey-100">
                 <Image src={p.image} alt="" fill sizes="68px" className="object-cover" />
               </div>
               <div className="flex min-w-0 flex-1 flex-col gap-1.5">
                 <span className="font-serif text-lg font-light uppercase leading-[1.05] tracking-[-0.02em] text-brand-black">
-                  {p.name}
+                  {t(p.name)}
                 </span>
                 <TagList tags={p.tags} />
               </div>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden className="shrink-0 text-brand-black/50">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden className="shrink-0 text-brand-black/50 rtl:-scale-x-100">
                 <path d="M3 11 11 3M11 3H4M11 3v7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Link>
@@ -461,16 +469,17 @@ function ListView({ projects, accent }: { projects: ProjectCard[]; accent: strin
               <div
                 className="relative flex items-center justify-between gap-6 py-10"
                 style={{
-                  transform: `translateX(${isHovered ? 64 : 0}px)`,
+                  // Eases inward — leftward on the mirrored (RTL) row.
+                  transform: `translateX(${isHovered ? (rtl ? -64 : 64) : 0}px)`,
                   width: isHovered ? "calc(100% - 128px)" : "100%",
                   transition: `transform 0.6s ${LIST_EASE}, width 0.6s ${LIST_EASE}`,
                 }}
               >
                 <span className={`font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(1.25rem,2.2vw,2rem)] ${ink}`}>
-                  {p.name}
+                  {t(p.name)}
                 </span>
-                <span className={`w-[31.4%] max-w-[414px] whitespace-pre-wrap text-right font-sans text-sm font-medium leading-[1.3] ${ink}`}>
-                  {p.tags.map((t) => TAG_LABEL[t]).join("  |  ")}
+                <span className={`w-[31.4%] max-w-[414px] whitespace-pre-wrap text-end font-sans text-sm font-medium leading-[1.3] ${ink}`}>
+                  {p.tags.map((tag) => t(TAG_LABEL[tag])).join("  |  ")}
                 </span>
               </div>
             </Link>

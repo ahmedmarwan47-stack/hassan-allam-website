@@ -8,11 +8,13 @@ import {
   type ReactNode,
   type TextareaHTMLAttributes,
 } from "react";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 /**
  * Form fields with a floating label: the label rests inside the field like a
  * placeholder; on focus (or once filled) it shrinks and glides up above the
- * text, and a black underline draws in from the left. Errors turn the line
+ * text, and a black underline draws in from the start edge (left, or right
+ * on the Arabic site). Errors turn the line
  * and message red, a confirmed value turns them green.
  *
  * `size="lg"` (default) is the Contact page scale; `size="md"` suits
@@ -81,6 +83,7 @@ function Shell({
   wrapperClassName?: string;
   children: ReactNode;
 }) {
+  const t = useT();
   const s = SIZES[size];
   const lineOn = focused || status !== "idle";
   return (
@@ -88,25 +91,25 @@ function Shell({
       <div className="relative pt-6">
         <label
           htmlFor={id}
-          className={`pointer-events-none absolute left-0 top-0 origin-top-left font-sans transition-[transform,color] duration-500 ${EASE} ${s.text} ${
+          className={`pointer-events-none absolute start-0 top-0 origin-top-left rtl:origin-top-right font-sans transition-[transform,color] duration-500 ${EASE} ${s.text} ${
             floated
               ? `${s.float} ${status === "error" ? "text-error" : "text-brand-black/55"}`
               : `${s.rest} text-grey-500`
           }`}
         >
-          {label}
+          {t(label)}
         </label>
         {children}
-        {/* Resting hairline + the focus line that draws in from the left. */}
+        {/* Resting hairline + the focus line that draws in from the start edge. */}
         <span aria-hidden className="absolute inset-x-0 bottom-0 h-px bg-brand-black/15" />
         <span
           aria-hidden
-          className={`absolute inset-x-0 bottom-0 h-[1.5px] origin-left transition-transform duration-500 ${EASE} ${lineColor(status)} ${
+          className={`absolute inset-x-0 bottom-0 h-[1.5px] origin-left rtl:origin-right transition-transform duration-500 ${EASE} ${lineColor(status)} ${
             lineOn ? "scale-x-100" : "scale-x-0"
           }`}
         />
       </div>
-      {message && <p className={`font-sans text-sm ${messageClass(status)}`}>{message}</p>}
+      {message && <p className={`font-sans text-sm ${messageClass(status)}`}>{t(message)}</p>}
     </div>
   );
 }
@@ -128,6 +131,7 @@ export function TextField({
   Omit<InputHTMLAttributes<HTMLInputElement>, "className" | "size"> & {
     className?: string;
   }) {
+  const t = useT();
   const id = useId();
   const [focused, setFocused] = useState(false);
   const filled = String(value ?? "").length > 0;
@@ -136,6 +140,7 @@ export function TextField({
     <Shell id={id} label={label} floated={focused || filled} focused={focused} status={status} message={message} size={size} wrapperClassName={wrapperClassName}>
       <input
         {...props}
+        placeholder={props.placeholder === undefined ? undefined : t(props.placeholder)}
         id={id}
         value={value}
         aria-invalid={status === "error"}
@@ -183,7 +188,7 @@ function Chevron({ open }: { open: boolean }) {
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden
-      className={`pointer-events-none absolute bottom-3 right-0 text-brand-black transition-transform duration-500 ${EASE} ${open ? "rotate-180" : ""}`}
+      className={`pointer-events-none absolute bottom-3 end-0 text-brand-black transition-transform duration-500 ${EASE} ${open ? "rotate-180" : ""}`}
     >
       <path d="M5 8.5 12 15.5 19 8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
@@ -213,20 +218,22 @@ export function SelectField({
 }) {
   const id = useId();
   const [open, setOpen] = useState(false);
+  const t = useT();
+  const dir = useRtl() ? "rtl" : "ltr";
   const filled = value.length > 0;
   const s = SIZES[size];
   const current = options.find((o) => o.value === value);
   return (
     <Shell id={id} label={label} floated={open || filled} focused={open} status={status} message={message} size={size} wrapperClassName={wrapperClassName}>
-      <DropdownMenu.Root modal={false} open={open} onOpenChange={setOpen}>
+      <DropdownMenu.Root dir={dir} modal={false} open={open} onOpenChange={setOpen}>
         <DropdownMenu.Trigger asChild>
           <button
             id={id}
             type="button"
-            className={`${inputBase} ${s.text} ${s.pad} flex min-h-[1.3em] cursor-pointer items-center pr-8 text-left`}
+            className={`${inputBase} ${s.text} ${s.pad} flex min-h-[1.3em] cursor-pointer items-center pe-8 text-start`}
           >
             {/* Non-breaking space keeps the line height while empty. */}
-            <span className="truncate">{current?.label ?? "\u00a0"}</span>
+            <span className="truncate">{current ? t(current.label) : "\u00a0"}</span>
           </button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
@@ -243,7 +250,7 @@ export function SelectField({
                   className={ROW_CLASS}
                 >
                   <OptionIcon icon={o.icon} />
-                  <span className="flex-1">{o.label}</span>
+                  <span className="flex-1">{t(o.label)}</span>
                   <DropdownMenu.ItemIndicator>
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
                       <path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -281,20 +288,22 @@ export function MultiSelectField({
 }) {
   const id = useId();
   const [open, setOpen] = useState(false);
+  const t = useT();
+  const dir = useRtl() ? "rtl" : "ltr";
   const s = SIZES[size];
-  const shown = options.filter((o) => value.includes(o.value)).map((o) => o.label);
+  const shown = options.filter((o) => value.includes(o.value)).map((o) => t(o.label));
   const toggle = (v: string, on: boolean) =>
     onValueChange(on ? options.map((o) => o.value).filter((x) => x === v || value.includes(x)) : value.filter((x) => x !== v));
   return (
     <Shell id={id} label={label} floated={open || value.length > 0} focused={open} status={status} message={message} size={size} wrapperClassName={wrapperClassName}>
-      <DropdownMenu.Root modal={false} open={open} onOpenChange={setOpen}>
+      <DropdownMenu.Root dir={dir} modal={false} open={open} onOpenChange={setOpen}>
         <DropdownMenu.Trigger asChild>
           <button
             id={id}
             type="button"
-            className={`${inputBase} ${s.text} ${s.pad} flex min-h-[1.3em] cursor-pointer items-center pr-8 text-left`}
+            className={`${inputBase} ${s.text} ${s.pad} flex min-h-[1.3em] cursor-pointer items-center pe-8 text-start`}
           >
-            <span className="truncate">{shown.length ? shown.join(", ") : "\u00a0"}</span>
+            <span className="truncate">{shown.length ? shown.join(t(", ")) : "\u00a0"}</span>
           </button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
@@ -311,7 +320,7 @@ export function MultiSelectField({
                   className={ROW_CLASS}
                 >
                   <OptionIcon icon={o.icon} />
-                  <span className="flex-1">{o.label}</span>
+                  <span className="flex-1">{t(o.label)}</span>
                   <span
                     aria-hidden
                     className={`flex size-[18px] shrink-0 items-center justify-center rounded-[3px] border transition-colors duration-200 ${
@@ -333,7 +342,7 @@ export function MultiSelectField({
                 onSelect={() => setOpen(false)}
                 className="cursor-pointer rounded-[2px] font-sans text-sm font-medium text-brand-black/75 underline-offset-4 outline-none transition-colors duration-200 hover:text-brand-black hover:underline data-[highlighted]:text-brand-black data-[highlighted]:underline"
               >
-                Done
+                {t("Done")}
               </DropdownMenu.Item>
             </div>
           </DropdownMenu.Content>
@@ -397,19 +406,21 @@ export function PhoneField({
   const id = useId();
   const [focused, setFocused] = useState(false);
   const [open, setOpen] = useState(false);
+  const t = useT();
+  const dir = useRtl() ? "rtl" : "ltr";
   const s = SIZES[size];
   const current = COUNTRIES.find((c) => c.iso === country) ?? COUNTRIES[0];
   return (
     <Shell id={id} label={label} floated focused={focused || open} status={status} message={message} size={size} wrapperClassName={wrapperClassName}>
       <div className={`flex items-center gap-3 ${s.text}`}>
-        <DropdownMenu.Root modal={false} open={open} onOpenChange={setOpen}>
+        <DropdownMenu.Root dir={dir} modal={false} open={open} onOpenChange={setOpen}>
           <DropdownMenu.Trigger asChild>
             <button
               type="button"
-              aria-label={`Country code: ${current.name} ${current.dial}`}
+              aria-label={t("Country code: {name} {dial}", { name: t(current.name), dial: current.dial })}
               className={`${s.text} ${s.pad} group/code flex shrink-0 cursor-pointer items-center gap-1.5 font-sans text-brand-black/50 transition-colors duration-300 hover:text-brand-black focus:outline-none data-[state=open]:text-brand-black`}
             >
-              <span className="tabular-nums">{current.dial}</span>
+              <span dir="ltr" className="tabular-nums">{current.dial}</span>
               <svg
                 width="14"
                 height="14"
@@ -429,8 +440,8 @@ export function PhoneField({
               <DropdownMenu.RadioGroup value={current.iso} onValueChange={onCountryChange}>
                 {COUNTRIES.map((c) => (
                   <DropdownMenu.RadioItem key={c.iso} value={c.iso} className={ROW_CLASS}>
-                    <span className="flex-1">{c.name}</span>
-                    <span className="tabular-nums text-brand-black/55">{c.dial}</span>
+                    <span className="flex-1">{t(c.name)}</span>
+                    <span dir="ltr" className="tabular-nums text-brand-black/55">{c.dial}</span>
                     <span className="flex w-4 justify-end">
                       <DropdownMenu.ItemIndicator>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
@@ -446,7 +457,11 @@ export function PhoneField({
         </DropdownMenu.Root>
         <input
           {...props}
+          placeholder={props.placeholder === undefined ? undefined : t(props.placeholder)}
           id={id}
+          // The number reads left-to-right on both sites; on the Arabic one it
+          // hugs the code at the start (right) edge.
+          dir="ltr"
           type="tel"
           inputMode="tel"
           aria-invalid={status === "error"}
@@ -458,7 +473,7 @@ export function PhoneField({
             setFocused(false);
             onBlur?.(e);
           }}
-          className={`${inputBase} ${s.text} ${s.pad} min-w-0 flex-1 placeholder:text-grey-500 ${className ?? ""}`}
+          className={`${inputBase} ${s.text} ${s.pad} min-w-0 flex-1 placeholder:text-grey-500 rtl:text-right ${className ?? ""}`}
         />
       </div>
     </Shell>
@@ -481,6 +496,7 @@ export function TextareaField({
   Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "className"> & {
     className?: string;
   }) {
+  const t = useT();
   const id = useId();
   const [focused, setFocused] = useState(false);
   const filled = String(value ?? "").length > 0;
@@ -489,6 +505,7 @@ export function TextareaField({
     <Shell id={id} label={label} floated={focused || filled} focused={focused} status={status} message={message} size={size} wrapperClassName={wrapperClassName}>
       <textarea
         {...props}
+        placeholder={props.placeholder === undefined ? undefined : t(props.placeholder)}
         id={id}
         rows={rows}
         value={value}

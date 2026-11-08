@@ -1,10 +1,14 @@
+"use client";
+
 import Image from "@/components/ProgressiveImage";
 import DownloadPdfButton from "./DownloadPdfButton";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 import type { NewsDetail } from "@/data/newsDetail";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function NewsDetailContent({ detail }: { detail: NewsDetail }) {
+  const t = useT();
   return (
     <section
       data-nav-theme="dark"
@@ -32,7 +36,7 @@ export default function NewsDetailContent({ detail }: { detail: NewsDetail }) {
           {/* Big uppercase serif intro paragraph */}
           <Reveal>
             <p className="font-serif font-light uppercase leading-[1.2] tracking-[-0.02em] text-brand-white [font-size:clamp(1.375rem,2.8vw,2.625rem)]">
-              {detail.bigIntroParagraph}
+              {t(detail.bigIntroParagraph)}
             </p>
           </Reveal>
 
@@ -46,8 +50,8 @@ export default function NewsDetailContent({ detail }: { detail: NewsDetail }) {
             delay={0.1}
             className="grid gap-8 font-sans text-base leading-[1.4] text-brand-white md:grid-cols-2 md:gap-16"
           >
-            <p>{detail.body[0]}</p>
-            <p>{detail.body[1]}</p>
+            <p>{t(detail.body[0])}</p>
+            <p>{t(detail.body[1])}</p>
           </Reveal>
         </div>
       </div>

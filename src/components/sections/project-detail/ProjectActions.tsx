@@ -1,6 +1,7 @@
 "use client";
 
 import ActionButton from "@/components/ActionButton";
+import { useT } from "@/i18n/LocaleProvider";
 
 /**
  * Small client hooks between project-page sections, via window events:
@@ -13,13 +14,14 @@ export const PREFILL_INTEREST = "hap:prefill-interest";
 export const PREFILL_UNIT = "hap:prefill-unit";
 
 export function NeighborhoodLink({ name }: { name: string }) {
+  const t = useT();
   return (
     <button
       type="button"
       onClick={() => window.dispatchEvent(new CustomEvent(OPEN_NEIGHBORHOOD, { detail: name }))}
       className="text-grey-500 underline decoration-1 underline-offset-2 transition-colors duration-200 hover:text-brand-black"
     >
-      {name}
+      {t(name)}
     </button>
   );
 }
@@ -28,9 +30,10 @@ export function NeighborhoodLink({ name }: { name: string }) {
 /** Opens the project's brochure (the live hap.com.eg file) when there is
  *  one; otherwise asks for it through the interest form. */
 export function BrochureButton({ label, url }: { label: string; url?: string }) {
+  const t = useT();
   return (
     <ActionButton
-      label={label}
+      label={t(label)}
       look="download"
       onClick={() => {
         if (url) {
@@ -38,7 +41,7 @@ export function BrochureButton({ label, url }: { label: string; url?: string }) 
           return;
         }
         window.dispatchEvent(
-          new CustomEvent(PREFILL_INTEREST, { detail: "Please send me the project brochure." }),
+          new CustomEvent(PREFILL_INTEREST, { detail: t("Please send me the project brochure.") }),
         );
         document.getElementById("request-interest")?.scrollIntoView({ behavior: "smooth" });
       }}

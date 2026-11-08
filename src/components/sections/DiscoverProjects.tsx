@@ -12,12 +12,14 @@ import MapStage from "@/components/MapStage";
 import MobileProjectMap from "@/components/MobileProjectMap";
 import ProjectSidebar from "@/components/ProjectSidebar";
 import MapFilterBarMobile from "@/components/MapFilterBarMobile";
+import { useT } from "@/i18n/LocaleProvider";
 import RiseWords from "@/components/RiseWords";
 
 // Homepage "Discover our projects in Egypt" — the interactive map. Shares its
 // pins, sidebar and mobile filter bar with the Projects page hero.
 export default function DiscoverProjects() {
   const [activeFilter, setActiveFilter] = useState<FilterValue>("all");
+  const t = useT();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -59,11 +61,11 @@ export default function DiscoverProjects() {
            (scroll/drag to navigate) left clear for the pins ── */}
       <div className="bg-brand-black px-6 pb-8 pt-20 text-white md:hidden">
         <h2 data-no-fx="" className="font-serif text-[2rem] font-light uppercase leading-[1.05] tracking-[-0.02em]">
-          <RiseWords text="Discover our projects in Egypt" />
+          <RiseWords text={t("Discover our projects in Egypt")} />
         </h2>
         <p data-no-fx="" className="mt-4 font-sans text-sm leading-[1.5] text-white/70">
           <RiseWords
-            text="Choose between In The City and By The Sea to discover current and upcoming projects tailored to your preferences."
+            text={t("Choose between In The City and By The Sea to discover current and upcoming projects tailored to your preferences.")}
             delay={350}
             stagger={18}
             duration={800}
@@ -111,7 +113,7 @@ export default function DiscoverProjects() {
           className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-white"
           style={{ fontSize: "clamp(2rem, 4.3vw, 3.875rem)" }}
         >
-          <RiseWords text="Discover our projects in Egypt" stagger={60} duration={1000} />
+          <RiseWords text={t("Discover our projects in Egypt")} stagger={60} duration={1000} />
         </h2>
         </motion.div>
 
@@ -126,7 +128,7 @@ export default function DiscoverProjects() {
           style={{ fontSize: "clamp(0.875rem, 1.5vw, 1.375rem)" }}
         >
           <RiseWords
-            text="Choose between In The City and By The Sea to discover current and upcoming projects tailored to your preferences using two intuitive filters."
+            text={t("Choose between In The City and By The Sea to discover current and upcoming projects tailored to your preferences using two intuitive filters.")}
             delay={400}
             stagger={22}
             duration={850}
@@ -140,7 +142,7 @@ export default function DiscoverProjects() {
           <div className="flex h-12 items-center justify-between bg-brand-white px-16">
             <div className="flex items-center gap-8">
               <span className="whitespace-nowrap font-sans text-base font-medium text-brand-black">
-                Filters
+                {t("Filters")}
               </span>
               {/* Pin colour legend */}
               <div className="flex items-center gap-5 font-sans text-sm font-medium text-grey-500">
@@ -151,7 +153,7 @@ export default function DiscoverProjects() {
                       className="size-2.5 rounded-full"
                       style={{ background: PIN_COLORS[setting], boxShadow: `0 0 6px ${PIN_COLORS[setting]}` }}
                     />
-                    {setting === "city" ? "In the City" : "By the Sea"}
+                    {setting === "city" ? t("In the City") : t("By the Sea")}
                   </span>
                 ))}
               </div>
@@ -169,7 +171,9 @@ export default function DiscoverProjects() {
                       : "text-grey-500 hover:text-brand-black",
                   ].join(" ")}
                 >
-                  {label}
+                  {value === "all"
+                    ? t("All projects ({count})", { count: MAP_PROJECTS.length })
+                    : t(label)}
                 </button>
               ))}
             </div>

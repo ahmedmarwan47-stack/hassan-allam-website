@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import ActionButton from "@/components/ActionButton";
+import { useT } from "@/i18n/LocaleProvider";
 
 /**
  * CareerStickyBar — phones only (desktop keeps the sidebar sticky). Once
@@ -20,6 +21,7 @@ export default function CareerStickyBar({
   applyHref: string;
   targetId: string;
 }) {
+  const t = useT();
   const reduce = useReducedMotion();
   const [show, setShow] = useState(false);
 
@@ -63,7 +65,7 @@ export default function CareerStickyBar({
             <p className="line-clamp-2 min-w-0 font-serif text-base font-light uppercase leading-[1.05] tracking-[-0.02em] text-brand-black">
               {title}
             </p>
-            <ActionButton label="Apply now" href={applyHref} variant="solid" size="sm" className="shrink-0" />
+            <ActionButton label={t("Apply now")} href={applyHref} variant="solid" size="sm" className="shrink-0" />
           </div>
         </motion.div>
       )}

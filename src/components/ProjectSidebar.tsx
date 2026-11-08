@@ -8,11 +8,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { MapProject } from "@/data/mapProjects";
 import { projectHref } from "@/data/projectDetail";
 import SliderArrow from "@/components/SliderArrow";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 /**
  * ProjectSidebar — the slide-in panel that opens when a map pin is clicked.
  * Shared by the Projects page hero and the homepage "Discover our projects"
  * map, so any change here lands in both. Works full-width on mobile.
+ * Slides in from the right — from the left on the Arabic site.
  */
 export default function ProjectSidebar({
   project,
@@ -29,9 +31,14 @@ export default function ProjectSidebar({
   onPrev: () => void;
   onNext: () => void;
 }) {
-  // Black segment marks the current project along the track (homepage style).
+  const t = useT();
+  const rtl = useRtl();
+  // Black segment marks the current project along the track (homepage style);
+  // it runs from the start edge, so from the right in RTL.
   const segment = total > 0 ? 100 / total : 0;
-  const segmentLeft = index >= 0 ? index * segment : 0;
+  const segmentStart = index >= 0 ? index * segment : 0;
+  const segmentLeft = rtl ? 100 - segment - segmentStart : segmentStart;
+  const offscreen = rtl ? "-100%" : "100%";
 
   // Its own page when built, otherwise the shared project page.
   const detailHref = project
@@ -45,7 +52,7 @@ export default function ProjectSidebar({
           {/* Dim only towards the panel, so the map — and the open project's
               highlighted pin — stays visible beside it. */}
           <motion.div
-            className="fixed inset-0 z-[60] bg-black/40 md:bg-transparent md:bg-gradient-to-l md:from-black/45 md:via-black/15 md:to-transparent"
+            className="fixed inset-0 z-[60] bg-black/40 md:bg-transparent md:bg-gradient-to-l md:rtl:bg-gradient-to-r md:from-black/45 md:via-black/15 md:to-transparent"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -54,18 +61,18 @@ export default function ProjectSidebar({
           />
           <motion.aside
             key="project-sidebar"
-            className="fixed inset-y-0 right-0 z-[70] flex w-full max-w-[500px] flex-col bg-brand-white"
-            initial={{ x: "100%" }}
+            className="fixed inset-y-0 end-0 z-[70] flex w-full max-w-[500px] flex-col bg-brand-white"
+            initial={{ x: offscreen }}
             animate={{ x: 0 }}
-            exit={{ x: "100%" }}
+            exit={{ x: offscreen }}
             transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
           >
-            {/* Close row — just the X icon, on the left. */}
+            {/* Close row — just the X icon, at the start edge. */}
             <div className="flex items-center px-6 pt-5">
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Close"
+                aria-label={t("Close")}
                 className="text-brand-black opacity-70 transition-opacity duration-200 hover:opacity-100"
               >
                 <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
@@ -87,28 +94,28 @@ export default function ProjectSidebar({
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
                 >
-                  <SidebarCarousel images={project.images} name={project.name} />
+                  <SidebarCarousel images={project.images} name={t(project.name)} />
                   <div className="mt-5">
                     <h3 className="font-serif text-[2.75rem] font-light leading-[1.1] tracking-[-0.02em] text-brand-black">
-                      {project.name}
+                      {t(project.name)}
                     </h3>
                     <p className="mt-1.5 font-sans text-sm font-normal leading-[1.45] text-brand-black/70">
-                      {project.categories.map((c) => CATEGORY_LABEL[c]).join(" · ")}
+                      {project.categories.map((c) => t(CATEGORY_LABEL[c])).join(" · ")}
                     </p>
                   </div>
                   <p className="mt-5 font-sans text-sm font-normal leading-[1.55] text-brand-black/85">
-                    {project.description}
+                    {t(project.description)}
                   </p>
                   {/* Primary: straight to the interest form on the project's
                       page; secondary: the project page itself. */}
                   <div className="mt-6 flex flex-wrap gap-2.5">
                     <ActionButton
-                      label="Request interest"
+                      label={t("Request interest")}
                       href={`${detailHref}#request-interest`}
                       variant="solid"
                       size="sm"
                     />
-                    <ActionButton label="Discover the project" href={detailHref} look="plain" size="sm" />
+                    <ActionButton label={t("Discover the project")} href={detailHref} look="plain" size="sm" />
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -125,8 +132,8 @@ export default function ProjectSidebar({
                 />
               </div>
               <div className="flex items-center gap-2">
-                <SliderArrow direction="prev" size="sm" emphasis onClick={onPrev} label="Previous project" />
-                <SliderArrow direction="next" size="sm" emphasis onClick={onNext} label="Next project" />
+                <SliderArrow direction="prev" size="sm" emphasis onClick={onPrev} label={t("Previous project")} />
+                <SliderArrow direction="next" size="sm" emphasis onClick={onNext} label={t("Next project")} />
               </div>
             </div>
           </motion.aside>
@@ -141,13 +148,16 @@ export default function ProjectSidebar({
  * project's photos, auto-advances, and supports arrows, dots and swipe.
  */
 function SidebarCarousel({ images, name }: { images: string[]; name: string }) {
+  const t = useT();
+  // In RTL the next photo lies to the left: swiping right moves on.
+  const dir = useRtl() ? -1 : 1;
   const [i, setI] = useState(0);
   const go = (n: number) => setI((v) => (v + n + images.length) % images.length);
 
   useEffect(() => {
     if (images.length < 2) return;
-    const t = setInterval(() => setI((v) => (v + 1) % images.length), 4500);
-    return () => clearInterval(t);
+    const timer = setInterval(() => setI((v) => (v + 1) % images.length), 4500);
+    return () => clearInterval(timer);
   }, [images.length]);
 
   return (
@@ -164,8 +174,9 @@ function SidebarCarousel({ images, name }: { images: string[]; name: string }) {
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.18}
           onDragEnd={(_, info) => {
-            if (info.offset.x < -60) go(1);
-            else if (info.offset.x > 60) go(-1);
+            const dx = info.offset.x * dir;
+            if (dx < -60) go(1);
+            else if (dx > 60) go(-1);
           }}
         >
           <Image
@@ -186,12 +197,12 @@ function SidebarCarousel({ images, name }: { images: string[]; name: string }) {
             key={step}
             type="button"
             onClick={() => go(step)}
-            aria-label={step < 0 ? "Previous photo" : "Next photo"}
+            aria-label={step < 0 ? t("Previous photo") : t("Next photo")}
             className={`absolute top-1/2 z-10 flex size-7 -translate-y-1/2 items-center justify-center rounded-[2px] bg-white/85 text-brand-black shadow-[0_4px_14px_rgba(0,0,0,0.18)] backdrop-blur-sm transition-colors duration-300 hover:bg-white ${
-              step < 0 ? "left-2.5" : "right-2.5"
+              step < 0 ? "start-2.5" : "end-2.5"
             }`}
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden className="rtl:-scale-x-100">
               <path
                 d={step < 0 ? "M15 18l-6-6 6-6" : "M9 6l6 6-6 6"}
                 stroke="currentColor"
@@ -210,7 +221,7 @@ function SidebarCarousel({ images, name }: { images: string[]; name: string }) {
             key={d}
             type="button"
             onClick={() => setI(d)}
-            aria-label={`Show photo ${d + 1}`}
+            aria-label={t("Show photo {n}", { n: d + 1 })}
             className={`h-1.5 rounded-full bg-white shadow transition-all duration-300 ${
               d === i ? "w-5" : "w-1.5 opacity-60"
             }`}

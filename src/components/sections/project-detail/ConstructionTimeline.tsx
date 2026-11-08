@@ -14,10 +14,12 @@ import SectionEyebrow from "@/components/SectionEyebrow";
 import MobileCarousel, { type MobileCarouselHandle } from "@/components/MobileCarousel";
 import { RequestInterest } from "@/components/ActionButton";
 import type { ConstructionUpdates } from "@/data/projectDetail";
+import { useT } from "@/i18n/LocaleProvider";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 // Dates only once a phase is done — planned ones keep just their number.
-const phaseDates = (p: { status: string; period: string }) => (p.status === "Completed" ? ` · ${p.period}` : "");
+const phaseDates = (p: { status: string; period: string }, t: (en: string) => string) =>
+  p.status === "Completed" ? ` · ${t(p.period)}` : "";
 
 /**
  * Construction Updates — a scroll-driven timeline: the phase list runs down
@@ -29,6 +31,7 @@ const phaseDates = (p: { status: string; period: string }) => (p.status === "Com
  */
 export default function ConstructionTimeline({ data }: { data: ConstructionUpdates }) {
   const reduce = useReducedMotion();
+  const t = useT();
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const n = data.phases.length;
@@ -52,18 +55,18 @@ export default function ConstructionTimeline({ data }: { data: ConstructionUpdat
       data-nav-theme="light"
       className="flex flex-col gap-8 bg-brand-white px-6 py-16 text-brand-black md:gap-16 md:px-16 md:py-24"
     >
-      <SectionEyebrow>Construction Updates</SectionEyebrow>
+      <SectionEyebrow>{t("Construction Updates")}</SectionEyebrow>
 
       {/* Heading + last update */}
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between md:gap-10">
         <Reveal>
           <h2 className="max-w-[12em] font-serif font-light leading-[1.05] tracking-[-0.02em] [font-size:clamp(2rem,4.4vw,4.5rem)]">
-            Watch it take shape, phase by phase
+            {t("Watch it take shape, phase by phase")}
           </h2>
         </Reveal>
         <Reveal delay={0.1}>
           <span className="font-sans text-sm font-medium uppercase tracking-[0.12em] text-brand-black/50">
-            Last updated {data.updated}
+            {t("Last updated {date}", { date: t(data.updated) })}
           </span>
         </Reveal>
       </div>
@@ -79,16 +82,17 @@ export default function ConstructionTimeline({ data }: { data: ConstructionUpdat
         {phases.map((phase) => (
           <article key={phase.title} className="flex flex-col gap-4">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[2px] bg-grey-100">
-              <Image src={phase.image} alt={phase.title} fill sizes="82vw" quality={85} className="object-cover" />
+              <Image src={phase.image} alt={t(phase.title)} fill sizes="82vw" quality={85} className="object-cover" />
             </div>
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-brand-black/50">
-                Phase {pad(phase.num)}{phaseDates(phase)}
+                {t("Phase {n}", { n: pad(phase.num) })}
+                {phaseDates(phase, t)}
               </span>
               <StatusChip status={phase.status} />
             </div>
-            <h3 className="font-serif text-[1.375rem] font-light uppercase leading-[1.05] tracking-[-0.02em]">{phase.title}</h3>
-            <p className="font-sans text-sm leading-[1.5] text-brand-black/75">{phase.text}</p>
+            <h3 className="font-serif text-[1.375rem] font-light uppercase leading-[1.05] tracking-[-0.02em]">{t(phase.title)}</h3>
+            <p className="font-sans text-sm leading-[1.5] text-brand-black/75">{t(phase.text)}</p>
           </article>
         ))}
       </MobileCarousel>
@@ -109,26 +113,26 @@ export default function ConstructionTimeline({ data }: { data: ConstructionUpdat
               animate={{ opacity: i === active ? 1 : 0, scale: i === active ? 1 : 1.06 }}
               transition={reduce ? { duration: 0 } : { duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Image src={phase.image} alt={phase.title} fill sizes="(min-width: 768px) 44vw, 100vw" quality={85} className="object-cover" />
+              <Image src={phase.image} alt={t(phase.title)} fill sizes="(min-width: 768px) 44vw, 100vw" quality={85} className="object-cover" />
             </motion.div>
           ))}
           {/* Current phase caption over the image */}
           <div className="absolute inset-x-4 bottom-4 flex items-center justify-between gap-4 rounded-[2px] bg-brand-white/90 px-4 py-3 backdrop-blur-md md:inset-x-5 md:bottom-5">
             <span className="font-sans text-xs font-medium uppercase tracking-[0.12em] text-brand-black/50">
-              Phase {pad(phases[active].num)} / {pad(n)}
+              {t("Phase {n} / {total}", { n: pad(phases[active].num), total: pad(n) })}
             </span>
             <span className="truncate font-sans text-sm font-medium text-brand-black">
-              {phases[active].title}
+              {t(phases[active].title)}
             </span>
           </div>
         </div>
 
         <ol className="relative flex w-full flex-col md:w-[53%]">
           {/* Track + scroll-drawn fill, through the node centres. */}
-          <span aria-hidden className="absolute bottom-6 left-[7px] top-6 w-px bg-brand-black/10" />
+          <span aria-hidden className="absolute bottom-6 start-[7px] top-6 w-px bg-brand-black/10" />
           <motion.span
             aria-hidden
-            className="absolute bottom-6 left-[7px] top-6 w-px origin-top bg-brand-black"
+            className="absolute bottom-6 start-[7px] top-6 w-px origin-top bg-brand-black"
             style={{ scaleY: lineScale }}
           />
           {phases.map((phase, i) => {
@@ -152,21 +156,22 @@ export default function ConstructionTimeline({ data }: { data: ConstructionUpdat
                 >
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <span className="font-sans text-xs font-medium uppercase tracking-[0.12em] text-brand-black/50">
-                      Phase {pad(phase.num)}{phaseDates(phase)}
+                      {t("Phase {n}", { n: pad(phase.num) })}
+                      {phaseDates(phase, t)}
                     </span>
                     <StatusChip status={phase.status} />
                   </div>
                   <h3 className="mt-1 font-serif text-xl font-light uppercase leading-none tracking-[-0.02em] md:text-[1.5rem]">
-                    {phase.title}
+                    {t(phase.title)}
                   </h3>
-                  <p className="max-w-[520px] font-sans text-sm leading-[1.5] text-brand-black/75">{phase.text}</p>
+                  <p className="max-w-[520px] font-sans text-sm leading-[1.5] text-brand-black/75">{t(phase.text)}</p>
                 </div>
               </li>
             );
           })}
         </ol>
       </div>
-      <div className="ml-auto w-[53%] pl-[47px]">
+      <div className="ms-auto w-[53%] ps-[47px]">
         <RequestInterest />
       </div>
       </div>
@@ -180,6 +185,7 @@ export default function ConstructionTimeline({ data }: { data: ConstructionUpdat
 }
 
 function StatusChip({ status }: { status: "Completed" | "In progress" | "Upcoming" }) {
+  const t = useT();
   const style =
     status === "Completed"
       ? "bg-brand-black text-brand-white"
@@ -189,7 +195,7 @@ function StatusChip({ status }: { status: "Completed" | "In progress" | "Upcomin
   return (
     <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-sans text-xs font-medium ${style}`}>
       {status === "In progress" && <span className="size-1.5 animate-pulse rounded-full bg-brand-black" />}
-      {status}
+      {t(status)}
     </span>
   );
 }
@@ -208,6 +214,7 @@ function PhaseProgress({
   viewed: number;
   onPick: (i: number) => void;
 }) {
+  const t = useT();
   const n = phases.length;
   const done = phases.filter((p) => p.status === "Completed").length;
   const current = phases.findIndex((p) => p.status === "In progress");
@@ -218,16 +225,16 @@ function PhaseProgress({
   return (
     <Reveal className="md:hidden">
       <div className="flex items-center justify-between pb-3 font-sans text-[11px] font-medium uppercase tracking-[0.12em]">
-        <span className="text-brand-black/50">Progress</span>
+        <span className="text-brand-black/50">{t("Progress")}</span>
         <span className="text-brand-black">
-          {done} of {n} phases complete
+          {t("{done} of {n} phases complete", { done, n })}
         </span>
       </div>
       {/* Track + fill run through the node centres (half a node in from each end). */}
       <div className="relative">
         <div className="absolute inset-x-[10px] top-[9px] h-[2px] bg-brand-black/10" />
         <div
-          className="absolute left-[10px] top-[9px] h-[2px] bg-brand-black transition-[width] duration-700"
+          className="absolute start-[10px] top-[9px] h-[2px] bg-brand-black transition-[width] duration-700"
           style={{ width: `calc((100% - 20px) * ${pct / 100})` }}
         />
         <ol className="relative flex justify-between">
@@ -244,7 +251,7 @@ function PhaseProgress({
                 <button
                   type="button"
                   onClick={() => onPick(i)}
-                  aria-label={`Phase ${pad(i + 1)}: ${phase.title} (${phase.status})`}
+                  aria-label={t("Phase {n}: {title} ({status})", { n: pad(i + 1), title: t(phase.title), status: t(phase.status) })}
                   aria-current={isViewed ? "step" : undefined}
                   className="flex w-5 flex-col items-center gap-2"
                 >

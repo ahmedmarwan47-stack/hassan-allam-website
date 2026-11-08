@@ -47,7 +47,9 @@ export default function ScrollEffects() {
         .sort((a, b) => {
           const ra = a.getBoundingClientRect();
           const rb = b.getBoundingClientRect();
-          return ra.top - rb.top || ra.left - rb.left;
+          // Row by row, then in reading order (right-to-left on /ar).
+          const rtl = document.documentElement.dir === "rtl";
+          return ra.top - rb.top || (rtl ? rb.right - ra.right : ra.left - rb.left);
         })
         .forEach((el, i) => {
           if (!pending.delete(el)) return;

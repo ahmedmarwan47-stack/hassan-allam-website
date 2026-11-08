@@ -3,15 +3,17 @@
 import { useRef } from "react";
 import { useReducedMotion } from "framer-motion";
 import { useSeenOnce } from "@/hooks/useSeenOnce";
+import { useT } from "@/i18n/LocaleProvider";
 
 /**
  * RiseWords — a text entrance: each word rises into place from behind its
  * own line mask, one after another, with a soft fade. Plays once when the
  * text comes into view. Put it inside the heading/paragraph that styles it;
- * screen readers get the plain text once.
+ * screen readers get the plain text once. Each mask holds a whole word,
+ * so Arabic letters inside it stay joined.
  */
 export default function RiseWords({
-  text,
+  text: textEn,
   delay = 0,
   stagger = 45,
   duration = 900,
@@ -24,6 +26,8 @@ export default function RiseWords({
   /** Each word's rise (ms). */
   duration?: number;
 }) {
+  const t = useT();
+  const text = t(textEn);
   const ref = useRef<HTMLSpanElement>(null);
   const seen = useSeenOnce(ref);
   const reduce = useReducedMotion();

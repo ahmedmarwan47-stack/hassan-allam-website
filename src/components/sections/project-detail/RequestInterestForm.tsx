@@ -8,6 +8,7 @@ import ActionButton from "@/components/ActionButton";
 import { MultiSelectField, TextField, TextareaField, type SelectOption, PhoneField } from "@/components/FormField";
 import { FeatureIcon } from "./icons";
 import { PREFILL_INTEREST, PREFILL_UNIT } from "./ProjectActions";
+import { useT } from "@/i18n/LocaleProvider";
 
 /**
  * Request Interest — where every "Request interest" button on the project
@@ -39,6 +40,7 @@ export default function RequestInterestForm({
   /** Unit types ticked to start with (e.g. the unit page's own type). */
   units?: string[];
 }) {
+  const t = useT();
   const [values, setValues] = useState({
     firstName: "",
     lastName: "",
@@ -84,10 +86,10 @@ export default function RequestInterestForm({
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const next: Partial<Record<Field, string>> = {};
-    if (!values.firstName.trim()) next.firstName = "Please enter your first name";
-    if (!values.lastName.trim()) next.lastName = "Please enter your last name";
-    if (values.phone.replace(/\D/g, "").length < 8) next.phone = "Please enter a valid phone number";
-    if (!EMAIL_RE.test(values.email)) next.email = "Please enter a valid email";
+    if (!values.firstName.trim()) next.firstName = t("Please enter your first name");
+    if (!values.lastName.trim()) next.lastName = t("Please enter your last name");
+    if (values.phone.replace(/\D/g, "").length < 8) next.phone = t("Please enter a valid phone number");
+    if (!EMAIL_RE.test(values.email)) next.email = t("Please enter a valid email");
     setErrors(next);
     if (Object.keys(next).length === 0) setSent(true);
   };
@@ -101,21 +103,21 @@ export default function RequestInterestForm({
       <div className="absolute inset-0 -z-10">
         <ParallaxImage src={image} sizes="100vw" quality={85} strength={14} />
       </div>
-      <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-black/75 via-black/45 to-black/25" />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-black/75 via-black/45 to-black/25 rtl:bg-gradient-to-l" />
 
       <div className="flex flex-col gap-12 md:flex-row md:items-center md:justify-between md:gap-16">
         {/* Pitch */}
         <Reveal className="flex flex-col gap-6 text-white md:w-[40%]">
           <p className="font-sans text-sm font-medium uppercase tracking-[0.12em] text-white/70 md:text-base">
-            Request Interest
+            {t("Request Interest")}
           </p>
           <h2 className="font-serif font-light uppercase leading-[1.02] tracking-[-0.02em] [font-size:clamp(2.25rem,4.4vw,4.75rem)]">
-            Find your home at {projectName}
+            {t("Find your home at {name}", { name: t(projectName) })}
           </h2>
           <p className="max-w-[460px] font-sans text-lg leading-[1.5] text-white/85">
-            Tell us what you&rsquo;re looking for and a HAP sales advisor will
-            get back to you with availability, payment plans and a private
-            viewing.
+            {t(
+              "Tell us what you’re looking for and a HAP sales advisor will get back to you with availability, payment plans and a private viewing.",
+            )}
           </p>
         </Reveal>
 
@@ -138,11 +140,13 @@ export default function RequestInterestForm({
                     </svg>
                   </span>
                   <h3 className="font-serif text-4xl font-light uppercase leading-none tracking-[-0.02em]">
-                    Thank you, {values.firstName}
+                    {t("Thank you, {name}", { name: values.firstName })}
                   </h3>
                   <p className="max-w-[420px] font-sans text-base leading-[1.5] text-brand-black/70">
-                    Your request for {projectName} is in. An advisor will reach
-                    you by {values.contactBy.toLowerCase()} within one working day.
+                    {t("Your request for {name} is in. An advisor will reach you by {method} within one working day.", {
+                      name: t(projectName),
+                      method: t(values.contactBy.toLowerCase()),
+                    })}
                   </p>
                 </motion.div>
               ) : (
@@ -156,22 +160,22 @@ export default function RequestInterestForm({
                   {/* Names share a row at every size; phone + email go
                       full width on phones. */}
                   <div className="grid grid-cols-2 gap-x-5 gap-y-4 sm:gap-x-8 sm:gap-y-6">
-                    <TextField size="md" label="First name" value={values.firstName} onChange={set("firstName")} status={errors.firstName ? "error" : "idle"} message={errors.firstName} autoComplete="given-name" />
-                    <TextField size="md" label="Last name" value={values.lastName} onChange={set("lastName")} status={errors.lastName ? "error" : "idle"} message={errors.lastName} autoComplete="family-name" />
-                    <PhoneField size="md" wrapperClassName="col-span-2 sm:col-span-1" label="Phone" country={country} onCountryChange={setCountry} value={values.phone} onChange={set("phone")} status={errors.phone ? "error" : "idle"} message={errors.phone} autoComplete="tel-national" />
-                    <TextField size="md" wrapperClassName="col-span-2 sm:col-span-1" label="Email" type="email" value={values.email} onChange={set("email")} status={errors.email ? "error" : "idle"} message={errors.email} autoComplete="email" />
+                    <TextField size="md" label={t("First name")} value={values.firstName} onChange={set("firstName")} status={errors.firstName ? "error" : "idle"} message={errors.firstName} autoComplete="given-name" />
+                    <TextField size="md" label={t("Last name")} value={values.lastName} onChange={set("lastName")} status={errors.lastName ? "error" : "idle"} message={errors.lastName} autoComplete="family-name" />
+                    <PhoneField size="md" wrapperClassName="col-span-2 sm:col-span-1" label={t("Phone")} country={country} onCountryChange={setCountry} value={values.phone} onChange={set("phone")} status={errors.phone ? "error" : "idle"} message={errors.phone} autoComplete="tel-national" />
+                    <TextField size="md" wrapperClassName="col-span-2 sm:col-span-1" label={t("Email")} type="email" value={values.email} onChange={set("email")} status={errors.email ? "error" : "idle"} message={errors.email} autoComplete="email" />
                   </div>
 
                   <MultiSelectField
                     size="md"
-                    label="Interested in"
+                    label={t("Interested in")}
                     value={values.units}
                     onValueChange={(v) => setValues((s) => ({ ...s, units: v }))}
-                    options={UNIT_TYPES}
+                    options={UNIT_TYPES.map((o) => ({ ...o, label: t(o.label) }))}
                   />
 
                   <fieldset className="flex flex-col gap-2 md:gap-3">
-                    <legend className="mb-2 font-sans text-sm text-brand-black/60 md:mb-3">Preferred contact</legend>
+                    <legend className="mb-2 font-sans text-sm text-brand-black/60 md:mb-3">{t("Preferred contact")}</legend>
                     <div className="flex flex-wrap gap-2">
                       {CONTACT_BY.map((c) => (
                         <button
@@ -185,18 +189,18 @@ export default function RequestInterestForm({
                               : "border-brand-black/15 text-brand-black/70 hover:border-brand-black"
                           }`}
                         >
-                          {c}
+                          {t(c)}
                         </button>
                       ))}
                     </div>
                   </fieldset>
 
-                  <TextareaField size="md" label="Message (optional)" rows={4} className="max-md:!h-[76px]" value={values.message} onChange={set("message")} />
+                  <TextareaField size="md" label={t("Message (optional)")} rows={4} className="max-md:!h-[76px]" value={values.message} onChange={set("message")} />
 
                   <div className="flex flex-col items-stretch gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between sm:pt-2">
-                    <ActionButton label="Send request" type="submit" variant="solid" look="arrow" className="w-full justify-center sm:w-auto" />
-                    <p className="max-w-[260px] font-sans text-xs leading-[1.4] text-brand-black/50 sm:text-right">
-                      By sending, you agree to be contacted by Hassan Allam Properties about this project.
+                    <ActionButton label={t("Send request")} type="submit" variant="solid" look="arrow" className="w-full justify-center sm:w-auto" />
+                    <p className="max-w-[260px] font-sans text-xs leading-[1.4] text-brand-black/50 sm:text-end">
+                      {t("By sending, you agree to be contacted by Hassan Allam Properties about this project.")}
                     </p>
                   </div>
                 </motion.form>

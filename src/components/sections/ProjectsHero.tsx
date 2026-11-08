@@ -11,6 +11,7 @@ import MapStage from "@/components/MapStage";
 import MobileProjectMap from "@/components/MobileProjectMap";
 import ProjectSidebar from "@/components/ProjectSidebar";
 import MapFilterBarMobile from "@/components/MapFilterBarMobile";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function ProjectsHero({
   activeFilter,
@@ -19,6 +20,7 @@ export default function ProjectsHero({
   activeFilter: FilterValue;
   onFilterChange: (v: FilterValue) => void;
 }) {
+  const t = useT();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -76,7 +78,7 @@ export default function ProjectsHero({
           <div className="flex h-12 items-center justify-between bg-brand-white px-16">
             <div className="flex items-center gap-8">
               <span className="whitespace-nowrap font-sans text-base font-medium text-brand-black">
-                Filters
+                {t("Filters")}
               </span>
               {/* Pin colour legend — same as the homepage map. */}
               <div className="flex items-center gap-5 font-sans text-sm font-medium text-grey-500">
@@ -87,7 +89,7 @@ export default function ProjectsHero({
                       className="size-2.5 rounded-full"
                       style={{ background: PIN_COLORS[setting], boxShadow: `0 0 6px ${PIN_COLORS[setting]}` }}
                     />
-                    {setting === "city" ? "In the City" : "By the Sea"}
+                    {setting === "city" ? t("In the City") : t("By the Sea")}
                   </span>
                 ))}
               </div>
@@ -105,7 +107,9 @@ export default function ProjectsHero({
                       : "text-grey-500 hover:text-brand-black",
                   ].join(" ")}
                 >
-                  {label}
+                  {value === "all"
+                    ? t("All projects ({count})", { count: MAP_PROJECTS.length })
+                    : t(label)}
                 </button>
               ))}
             </div>

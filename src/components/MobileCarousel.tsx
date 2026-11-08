@@ -2,6 +2,7 @@
 
 import { Children, useCallback, useEffect, useImperativeHandle, useRef, useState, type Ref } from "react";
 import SliderArrow from "@/components/SliderArrow";
+import { useT } from "@/i18n/LocaleProvider";
 
 /**
  * MobileCarousel — the phone version of the site's sliders. A native
@@ -36,6 +37,7 @@ export default function MobileCarousel({
   /** Lets the parent jump to a slide (e.g. from a timeline). */
   ref?: Ref<MobileCarouselHandle>;
 }) {
+  const t = useT();
   const slides = Children.toArray(children);
   const trackRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
@@ -50,8 +52,11 @@ export default function MobileCarousel({
     const step = first.offsetWidth + parseFloat(getComputedStyle(track).columnGap || "0");
     const max = Math.max(0, Math.ceil((track.scrollWidth - track.clientWidth) / step - 0.05));
     setMaxIndex(max);
-    const atEnd = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
-    setIndex(atEnd ? max : Math.round(track.scrollLeft / step));
+    // In RTL scrollLeft runs from 0 to negative; its magnitude is the
+    // distance from the start edge either way.
+    const scrolled = Math.abs(track.scrollLeft);
+    const atEnd = scrolled >= track.scrollWidth - track.clientWidth - 2;
+    setIndex(atEnd ? max : Math.round(scrolled / step));
   }, []);
 
   useEffect(() => {
@@ -75,7 +80,8 @@ export default function MobileCarousel({
     const first = track?.firstElementChild as HTMLElement | null;
     if (!track || !first) return;
     const step = first.offsetWidth + parseFloat(getComputedStyle(track).columnGap || "0");
-    track.scrollTo({ left: i * step, behavior: "smooth" });
+    const rtl = getComputedStyle(track).direction === "rtl";
+    track.scrollTo({ left: (rtl ? -1 : 1) * i * step, behavior: "smooth" });
   };
 
   useImperativeHandle(ref, () => ({ goTo }));
@@ -100,8 +106,8 @@ export default function MobileCarousel({
         <div className="flex items-center gap-6">
           <div className={`relative h-[2px] flex-1 ${dark ? "bg-white/15" : "bg-black/15"}`}>
             <div
-              className={`absolute inset-y-0 transition-[left] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${dark ? "bg-brand-white" : "bg-brand-black"}`}
-              style={{ width: `${(visible / slides.length) * 100}%`, left: `${(index / slides.length) * 100}%` }}
+              className={`absolute inset-y-0 transition-[inset-inline-start] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${dark ? "bg-brand-white" : "bg-brand-black"}`}
+              style={{ width: `${(visible / slides.length) * 100}%`, insetInlineStart: `${(index / slides.length) * 100}%` }}
             />
           </div>
           <div className="flex shrink-0 gap-2.5">
@@ -111,7 +117,7 @@ export default function MobileCarousel({
               size="sm"
               onClick={() => goTo(index - 1)}
               disabled={index === 0}
-              label={`Previous ${label}`}
+              label={t("Previous {label}", { label: t(label) })}
             />
             <SliderArrow
               direction="next"
@@ -119,7 +125,7 @@ export default function MobileCarousel({
               size="sm"
               onClick={() => goTo(index + 1)}
               disabled={index >= maxIndex}
-              label={`Next ${label}`}
+              label={t("Next {label}", { label: t(label) })}
             />
           </div>
         </div>

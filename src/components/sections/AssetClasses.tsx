@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "@/components/ProgressiveImage";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   animate,
@@ -18,6 +18,7 @@ import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
 import SliderArrow from "@/components/SliderArrow";
 import MobileCarousel from "@/components/MobileCarousel";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 /**
  * AssetClasses — Figma node 16988-1390.
@@ -63,6 +64,8 @@ const growProgress = (v: number) =>
   Math.min(1, Math.max(0, (v - GROW_RANGE[0]) / (GROW_RANGE[1] - GROW_RANGE[0])));
 
 export default function AssetClasses() {
+  const t = useT();
+  const rtl = useRtl();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -147,7 +150,8 @@ export default function AssetClasses() {
   const [index, setIndex] = useState(0);
   const indexRef = useRef(0);
   const trackX = useMotionValue(0);
-  const trackXPct = useMotionTemplate`${trackX}%`;
+  // RTL: the row starts at the right edge, so the track slides the other way.
+  const trackXPct = useTransform(trackX, (v) => `${rtl ? -v : v}%`);
 
   const slide = useCallback(
     (dir: 1 | -1) => {
@@ -191,7 +195,7 @@ export default function AssetClasses() {
         />
         <Reveal className="relative z-10">
           <h2 className="font-serif text-[1.875rem] font-light uppercase leading-[1.1] tracking-[-0.02em] text-black">
-            Asset Classes Designed for Future Lifestyles
+            {t("Asset Classes Designed for Future Lifestyles")}
           </h2>
         </Reveal>
 
@@ -199,9 +203,9 @@ export default function AssetClasses() {
           {CARDS.map((card) => (
             <Link key={card.label} href={projectsHref(card.filter)} className="flex flex-col gap-3">
               <GrowReveal axis="height" className="relative aspect-[4/5] w-full overflow-hidden rounded-[2px]">
-                <Image src={card.src} alt={card.label} fill sizes="82vw" className="object-cover" />
+                <Image src={card.src} alt={t(card.label)} fill sizes="82vw" className="object-cover" />
               </GrowReveal>
-              <figcaption className="font-sans text-base font-medium leading-[1.3] text-black">{card.label}</figcaption>
+              <figcaption className="font-sans text-base font-medium leading-[1.3] text-black">{t(card.label)}</figcaption>
             </Link>
           ))}
         </MobileCarousel>
@@ -227,10 +231,10 @@ export default function AssetClasses() {
           {/* Heading top-right, fixed at 4 lines. */}
           <Reveal className="relative z-10 flex justify-end">
             {/* Three set lines, right-aligned. */}
-            <h2 className="text-right font-serif text-[62px] font-light uppercase leading-[68px] tracking-[-0.02em] text-black">
-              <span className="block whitespace-nowrap">Asset Classes</span>
-              <span className="block whitespace-nowrap">Designed for</span>
-              <span className="block whitespace-nowrap">Future Lifestyles</span>
+            <h2 className="text-end font-serif text-[62px] font-light uppercase leading-[68px] tracking-[-0.02em] text-black">
+              <span className="block whitespace-nowrap">{t("Asset Classes")}</span>
+              <span className="block whitespace-nowrap">{t("Designed for")}</span>
+              <span className="block whitespace-nowrap">{t("Future Lifestyles")}</span>
             </h2>
           </Reveal>
 
@@ -251,14 +255,14 @@ export default function AssetClasses() {
                 style={{ width: cardsWidth, x: trackXPct, "--card-h": cardHpx } as MotionStyle}
                 className="flex"
               >
-                {/* Each card carries its gap as right padding so every slot is
+                {/* Each card carries its gap as end padding so every slot is
                     exactly STEP_PERCENT wide — the loop jump stays pixel-exact. */}
                 {LOOP_CARDS.map((card, i) => {
                   const isClone = i >= TOTAL_CARDS;
                   const image = (
                     <Image
                       src={card.src}
-                      alt={isClone ? "" : card.label}
+                      alt={isClone ? "" : t(card.label)}
                       fill
                       sizes="(max-width: 768px) 40vw, 50vw"
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
@@ -271,7 +275,7 @@ export default function AssetClasses() {
                       href={projectsHref(card.filter)}
                       aria-hidden={isClone || undefined}
                       tabIndex={isClone ? -1 : undefined}
-                      className="group flex min-w-0 flex-1 flex-col pr-5"
+                      className="group flex min-w-0 flex-1 flex-col pe-5"
                     >
                       {/* Clones skip the entrance reveal: they only scroll into
                           view mid-loop, where a reveal would flash. */}
@@ -283,7 +287,7 @@ export default function AssetClasses() {
                         </GrowReveal>
                       )}
                       <figcaption className="mt-4 font-sans text-[14px] font-medium leading-[1.3] text-black">
-                        {card.label}
+                        {t(card.label)}
                       </figcaption>
                     </Link>
                   );
@@ -296,7 +300,7 @@ export default function AssetClasses() {
             <motion.div style={{ opacity: railOpacity }} className="mt-6 flex items-center gap-6">
               <div className="relative h-[3px] flex-1 overflow-hidden bg-black/20">
                 <motion.div
-                  animate={{ left: `${(activeCard / TOTAL_CARDS) * 100}%` }}
+                  animate={rtl ? { right: `${(activeCard / TOTAL_CARDS) * 100}%` } : { left: `${(activeCard / TOTAL_CARDS) * 100}%` }}
                   transition={SLIDE_SPRING}
                   style={{ width: `${100 / TOTAL_CARDS}%` }}
                   className="absolute inset-y-0 bg-black"

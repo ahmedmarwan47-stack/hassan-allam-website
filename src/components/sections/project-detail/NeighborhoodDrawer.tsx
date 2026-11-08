@@ -7,6 +7,7 @@ import RollText from "@/components/RollText";
 import ActionButton from "@/components/ActionButton";
 import type { MasterPlanItem } from "@/data/projectDetail";
 import { PREFILL_INTEREST } from "./ProjectActions";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 /**
  * NeighborhoodDrawer — the master plan's side drawer, in the same black
@@ -41,6 +42,10 @@ export default function NeighborhoodDrawer({
   discoverHref?: (number: number) => string | undefined;
 }) {
   const reduce = useReducedMotion();
+  const t = useT();
+  const rtl = useRtl();
+  // Comes in from the end side: the right in English, the left on /ar.
+  const off = rtl ? "-100%" : "100%";
   const open = index !== null;
   const item = open ? items[index] : null;
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -52,17 +57,20 @@ export default function NeighborhoodDrawer({
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowRight") onIndex(((index ?? 0) + 1) % n);
-      if (e.key === "ArrowLeft") onIndex(((index ?? 0) - 1 + n) % n);
+      // "Next" sits on the reading end: right in English, left on /ar.
+      const fwd = rtl ? "ArrowLeft" : "ArrowRight";
+      const back = rtl ? "ArrowRight" : "ArrowLeft";
+      if (e.key === fwd) onIndex(((index ?? 0) + 1) % n);
+      if (e.key === back) onIndex(((index ?? 0) - 1 + n) % n);
     };
     window.addEventListener("keydown", onKey);
-    const t = setTimeout(() => closeRef.current?.focus(), 500);
+    const timer = setTimeout(() => closeRef.current?.focus(), 500);
     return () => {
       document.body.style.overflow = prevOverflow;
       window.removeEventListener("keydown", onKey);
-      clearTimeout(t);
+      clearTimeout(timer);
     };
-  }, [open, index, n, onClose, onIndex]);
+  }, [open, index, n, onClose, onIndex, rtl]);
 
   const dur = (s: number) => (reduce ? 0 : s);
 
@@ -70,7 +78,7 @@ export default function NeighborhoodDrawer({
     onClose();
     if (item) {
       window.dispatchEvent(
-        new CustomEvent(PREFILL_INTEREST, { detail: `I'm interested in ${item.name}.` }),
+        new CustomEvent(PREFILL_INTEREST, { detail: t("I’m interested in {name}.", { name: t(item.name) }) }),
       );
     }
     // Wait for the page to unlock before gliding to the form.
@@ -84,7 +92,7 @@ export default function NeighborhoodDrawer({
       {open && item && (
         <div className="fixed inset-0 z-[90]" key="neighborhood-drawer">
           <motion.div
-            className="absolute inset-0 bg-black/55 md:bg-transparent md:bg-gradient-to-l md:from-black/60 md:via-black/25 md:to-transparent"
+            className="absolute inset-0 bg-black/55 md:bg-transparent md:bg-gradient-to-l md:rtl:bg-gradient-to-r md:from-black/60 md:via-black/25 md:to-transparent"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: dur(0.5), ease: SOFT } }}
             exit={{ opacity: 0, transition: { duration: dur(0.45), ease: EASE, delay: dur(0.15) } }}
@@ -92,27 +100,27 @@ export default function NeighborhoodDrawer({
           />
           <motion.div
             aria-hidden
-            className="absolute inset-y-0 right-0 w-full bg-brand-white md:w-[min(620px,40vw)]"
-            initial={{ x: "100%" }}
+            className="absolute inset-y-0 end-0 w-full bg-brand-white md:w-[min(620px,40vw)]"
+            initial={{ x: off }}
             animate={{ x: "0%", transition: { duration: dur(0.8), ease: EASE } }}
-            exit={{ x: "100%", transition: { duration: dur(0.7), ease: EASE, delay: dur(0.1) } }}
+            exit={{ x: off, transition: { duration: dur(0.7), ease: EASE, delay: dur(0.1) } }}
           />
 
           <motion.aside
             role="dialog"
             aria-modal="true"
-            aria-label={item.name}
-            className="absolute inset-y-0 right-0 flex w-full flex-col overflow-hidden bg-[#0b0b0b] text-brand-white md:w-[min(620px,40vw)]"
-            initial={{ x: "100%" }}
+            aria-label={t(item.name)}
+            className="absolute inset-y-0 end-0 flex w-full flex-col overflow-hidden bg-[#0b0b0b] text-brand-white md:w-[min(620px,40vw)]"
+            initial={{ x: off }}
             animate={{ x: "0%", transition: { duration: dur(0.8), ease: EASE, delay: dur(0.08) } }}
-            exit={{ x: "100%", transition: { duration: dur(0.7), ease: EASE } }}
+            exit={{ x: off, transition: { duration: dur(0.7), ease: EASE } }}
           >
             <button
               ref={closeRef}
               type="button"
               onClick={onClose}
-              aria-label="Close"
-              className="absolute right-5 top-4 z-10 flex size-8 items-center justify-center text-white/70 transition-[color,rotate] duration-300 hover:rotate-90 hover:text-white"
+              aria-label={t("Close")}
+              className="absolute end-5 top-4 z-10 flex size-8 items-center justify-center text-white/70 transition-[color,rotate] duration-300 hover:rotate-90 hover:text-white"
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
                 <path d="M3 3l14 14M17 3L3 17" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
@@ -139,7 +147,7 @@ export default function NeighborhoodDrawer({
                           initial={{ scale: reduce ? 1 : 1.15 }}
                           animate={{ scale: 1, transition: { duration: dur(1.6), ease: SOFT, delay: dur(0.35) } }}
                         >
-                          <Image src={item.image} alt={item.name} fill sizes="(min-width: 768px) 40vw, 100vw" quality={90} className="object-cover" />
+                          <Image src={item.image} alt={t(item.name)} fill sizes="(min-width: 768px) 40vw, 100vw" quality={90} className="object-cover" />
                         </motion.div>
                       </motion.div>
                     </div>
@@ -150,7 +158,7 @@ export default function NeighborhoodDrawer({
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0, transition: { duration: dur(0.6), ease: SOFT, delay: dur(0.55) } }}
                       >
-                        Neighborhood {pad(item.number)}
+                        {t("Neighborhood {n}", { n: pad(item.number) })}
                       </motion.span>
                       <h3 className="overflow-hidden pb-[0.08em] font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(2rem,3vw,3.25rem)]">
                         <motion.span
@@ -158,14 +166,14 @@ export default function NeighborhoodDrawer({
                           initial={{ y: reduce ? 0 : "105%" }}
                           animate={{ y: "0%", transition: { duration: dur(0.9), ease: SOFT, delay: dur(0.5) } }}
                         >
-                          {item.name}
+                          {t(item.name)}
                         </motion.span>
                       </h3>
                     </div>
 
                     <motion.div
                       aria-hidden
-                      className="h-px w-full origin-left bg-white/20"
+                      className="h-px w-full origin-left bg-white/20 rtl:origin-right"
                       initial={{ scaleX: 0 }}
                       animate={{ scaleX: 1, transition: { duration: dur(1), ease: EASE, delay: dur(0.65) } }}
                     />
@@ -175,7 +183,7 @@ export default function NeighborhoodDrawer({
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0, transition: { duration: dur(0.7), ease: SOFT, delay: dur(0.75) } }}
                     >
-                      {item.blurb}
+                      {t(item.blurb)}
                     </motion.p>
 
                     <motion.div
@@ -215,8 +223,10 @@ export default function NeighborhoodDrawer({
                     viewBox="0 0 12 24"
                     fill="none"
                     aria-hidden
-                    className={`shrink-0 self-center text-black/40 transition-[color,transform] duration-300 group-hover:text-black ${
-                      step < 0 ? "group-hover:-translate-x-1" : "group-hover:translate-x-1"
+                    className={`shrink-0 self-center text-black/40 transition-[color,transform] duration-300 group-hover:text-black rtl:-scale-x-100 ${
+                      step < 0
+                        ? "group-hover:-translate-x-1 rtl:group-hover:translate-x-1"
+                        : "group-hover:translate-x-1 rtl:group-hover:-translate-x-1"
                     }`}
                   >
                     <path
@@ -234,16 +244,16 @@ export default function NeighborhoodDrawer({
                     type="button"
                     onClick={() => onIndex(target)}
                     className={`group flex min-w-0 items-center gap-2.5 px-6 py-3 transition-colors duration-300 hover:bg-black/[0.03] ${
-                      step > 0 ? "justify-end border-l border-black/10 text-right" : "text-left"
+                      step > 0 ? "justify-end border-s border-black/10 text-end" : "text-start"
                     }`}
                   >
                     {step < 0 && chevron}
                     <span className="flex min-w-0 flex-col gap-0.5">
                       <span className="font-sans text-[9px] font-medium uppercase tracking-[0.14em] text-black/45">
-                        {step < 0 ? "Previous" : "Next"}
+                        {step < 0 ? t("Previous") : t("Next")}
                       </span>
                       <span className="truncate font-sans text-[11px] font-medium uppercase tracking-[0.06em] text-black/70 transition-colors duration-300 group-hover:text-black">
-                        <RollText>{items[target].name}</RollText>
+                        <RollText>{t(items[target].name)}</RollText>
                       </span>
                     </span>
                     {step > 0 && chevron}

@@ -1,5 +1,9 @@
+"use client";
+
 import PageHero from "@/components/PageHero";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function FaqsHero() {
-  return <PageHero eyebrow="Need Help?" lines={["Frequently Asked", "Questions"]} size="md" />;
+  const t = useT();
+  return <PageHero eyebrow={t("Need Help?")} lines={[t("Frequently Asked"), t("Questions")]} size="md" />;
 }

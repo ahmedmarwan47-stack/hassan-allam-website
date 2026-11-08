@@ -1,22 +1,23 @@
+"use client";
+
 import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
 import GrowReveal from "@/components/GrowReveal";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function VisionSection() {
+  const t = useT();
   return (
     <section
       data-nav-theme="dark"
       className="flex flex-col items-center gap-16 bg-brand-black px-6 py-20 text-brand-white md:gap-20 md:px-16 md:py-[180px]"
     >
-      <Reveal className="flex w-full max-w-[1144px] flex-col items-start gap-6 text-left md:items-center md:gap-10 md:text-center">
+      <Reveal className="flex w-full max-w-[1144px] flex-col items-start gap-6 text-start md:items-center md:gap-10 md:text-center">
         <p className="font-serif text-[2rem] leading-[1.1] tracking-[-0.02em] text-brand-white md:text-[3.875rem]">
-          Driven by a community-centric vision and a passion for individuality
+          {t("Driven by a community-centric vision and a passion for individuality")}
         </p>
         <p className="max-w-[644px] font-sans text-base leading-[1.4] text-brand-white/80">
-          The company boasts a wide diversified portfolio of first-class
-          residential communities and vacation homes catering to families in
-          search of exclusive experiences and private seaside getaways
-          throughout prime locations in Egypt.
+          {t("The company boasts a wide diversified portfolio of first-class residential communities and vacation homes catering to families in search of exclusive experiences and private seaside getaways throughout prime locations in Egypt.")}
         </p>
       </Reveal>
 
@@ -38,8 +39,7 @@ export default function VisionSection() {
             />
           </GrowReveal>
           <p className="max-w-[372px] font-sans text-base leading-[1.4] text-brand-white">
-            First-class residential communities set across Egypt&apos;s most
-            desirable addresses.
+            {t("First-class residential communities set across Egypt's most desirable addresses.")}
           </p>
         </div>
         <div className="flex w-full flex-col gap-5 md:w-[66.16%]">
@@ -58,8 +58,7 @@ export default function VisionSection() {
             />
           </GrowReveal>
           <p className="max-w-[424px] font-sans text-base leading-[1.4] text-brand-white">
-            Vacation homes and seaside getaways built for exclusive,
-            everyday living.
+            {t("Vacation homes and seaside getaways built for exclusive, everyday living.")}
           </p>
         </div>
       </div>

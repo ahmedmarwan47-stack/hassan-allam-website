@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/i18n/LocaleProvider";
+
 /**
  * Prev/next slider button — Figma "Slider arrow" (17145:2112).
  * Light theme sits on light sections, Dark on black/photo sections.
@@ -24,6 +26,7 @@ export default function SliderArrow({
   onClick: () => void;
   label?: string;
 }) {
+  const t = useT();
   const colors =
     theme === "dark"
       ? `${emphasis ? "border-white/60" : "border-white/20"} text-brand-white enabled:hover:border-brand-white enabled:hover:bg-brand-white enabled:hover:text-brand-black`
@@ -33,10 +36,10 @@ export default function SliderArrow({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      aria-label={label ?? (direction === "prev" ? "Previous" : "Next")}
+      aria-label={t(label ?? (direction === "prev" ? "Previous" : "Next"))}
       className={`flex shrink-0 items-center justify-center rounded-[2px] border transition-[background-color,border-color,color,opacity] duration-300 ease-out disabled:cursor-default disabled:opacity-30 ${size === "sm" ? "size-10" : "size-12 md:size-[54px]"} ${colors}`}
     >
-      <svg width={size === "sm" ? 20 : 24} height={size === "sm" ? 20 : 24} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <svg width={size === "sm" ? 20 : 24} height={size === "sm" ? 20 : 24} viewBox="0 0 24 24" fill="none" aria-hidden className="rtl:-scale-x-100">
         <path
           d={direction === "prev" ? "M15 18l-6-6 6-6" : "M9 6l6 6-6 6"}
           stroke="currentColor"

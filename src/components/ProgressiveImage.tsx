@@ -3,6 +3,7 @@
 import Image, { type ImageProps } from "next/image";
 import { useState } from "react";
 import { BLUR_PLACEHOLDERS } from "@/data/blurPlaceholders";
+import { useT } from "@/i18n/LocaleProvider";
 
 /**
  * Drop-in replacement for next/image that loads progressively: a tiny
@@ -17,7 +18,10 @@ import { BLUR_PLACEHOLDERS } from "@/data/blurPlaceholders";
  * image's own transitions — e.g. hover zoom — stay untouched). Sized images
  * use next/image's built-in blur placeholder.
  */
-export default function ProgressiveImage({ alt, onLoad, ...props }: ImageProps) {
+export default function ProgressiveImage({ alt: altEn, onLoad, ...props }: ImageProps) {
+  // Alt text is translated here, once, for every image on the site.
+  const t = useT();
+  const alt = altEn ? t(altEn) : altEn;
   const [loaded, setLoaded] = useState(false);
   const blur = placeholderFor(props.src);
 

@@ -1,9 +1,12 @@
+"use client";
+
 import MobileCarousel from "@/components/MobileCarousel";
 import ActionButton from "@/components/ActionButton";
 import { Reveal } from "@/components/Reveal";
 import SectionEyebrow from "@/components/SectionEyebrow";
 import NewsCard from "@/components/sections/news/NewsCard";
 import { NEWS } from "@/data/news";
+import { useT } from "@/i18n/LocaleProvider";
 
 /**
  * Homepage media teaser ("Media Center" eyebrow, "Stay Updated") — Figma
@@ -12,6 +15,7 @@ import { NEWS } from "@/data/news";
  * for the real NEWS entries, same as the /news page), then "Read all".
  */
 export default function HomeMediaCenter() {
+  const t = useT();
   const latest = NEWS.slice(0, 3).map((a) => ({ ...a, span: "third" as const }));
 
   return (
@@ -21,10 +25,10 @@ export default function HomeMediaCenter() {
     >
       <div className="flex flex-col items-start gap-10 md:items-center md:gap-10">
         <div className="flex w-full flex-col items-start gap-4 md:items-center">
-          <SectionEyebrow className="md:[&_p]:text-center">Media Center</SectionEyebrow>
+          <SectionEyebrow className="md:[&_p]:text-center">{t("Media Center")}</SectionEyebrow>
           <Reveal>
             <h2 className="font-serif md:text-center font-light uppercase leading-[1.16] tracking-[-0.02em] [font-size:clamp(2.5rem,4.3vw,3.875rem)]">
-              Stay Updated
+              {t("Stay Updated")}
             </h2>
           </Reveal>
         </div>
@@ -41,7 +45,7 @@ export default function HomeMediaCenter() {
           ))}
         </div>
 
-        <ActionButton label="Read more" href="/news" look="plain" />
+        <ActionButton label={t("Read more")} href="/news" look="plain" />
       </div>
     </section>
   );
