@@ -237,3 +237,10 @@ html[lang="ar"] p:not(.font-serif),
 html[lang="ar"] li {
   line-height: 1.75 !important;
 }
+/* Latin display bits kept in Eirlys on /ar (marked lang="en", e.g. the
+   history year): same size and leading as on the English site. */
+html[lang="ar"] .font-serif[lang="en"],
+html[lang="ar"] [lang="en"] .font-serif {
+  font-size-adjust: 0.45;
+  line-height: revert-layer !important;
+}

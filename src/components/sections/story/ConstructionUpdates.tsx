@@ -231,7 +231,9 @@ export default function ConstructionUpdates({ id }: { id?: string }) {
           {/* Year column — the year as a large display numeral, top-aligned
               with the image, rolling digit by digit. */}
           <div className="flex items-end justify-between gap-4 md:flex-col md:items-start md:justify-start">
+            {/* lang="en": the year keeps the English display numerals on /ar too. */}
             <p
+              lang="en"
               className="-mt-[0.12em] whitespace-nowrap font-serif font-light leading-none tracking-[-0.04em] [font-size:clamp(3.25rem,15vw,4.5rem)] md:[font-size:clamp(5rem,9.4vw,9rem)]"
             >
               <YearWheels value={step.year} />

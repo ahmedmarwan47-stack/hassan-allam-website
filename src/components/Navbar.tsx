@@ -133,9 +133,10 @@ export default function Navbar() {
           />
         </Link>
 
-        {/* Primary links (desktop) */}
+        {/* Primary links (desktop) — pinned to the exact centre of the bar,
+            whatever the widths of the logo and the hotline/CTA group. */}
         <ul
-          className={`hidden items-center gap-7 lg:flex xl:gap-[42px] ${TRANSITION} ${onDark ? "text-white" : "text-black"}`}
+          className={`hidden items-center gap-7 lg:absolute lg:left-1/2 lg:flex lg:-translate-x-1/2 xl:gap-[42px] ${TRANSITION} ${onDark ? "text-white" : "text-black"}`}
         >
           {NAV_LINKS.map((link) => (
             <li key={link.label}>
