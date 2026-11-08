@@ -1,7 +1,0 @@
-1:"$Sreact.fragment"
-2:I[22724,["/hassan-allam-website/_next/static/chunks/0im3bt74vvb2y.js","/hassan-allam-website/_next/static/chunks/14mrh2-p_w84d.js","/hassan-allam-website/_next/static/chunks/3aoqp_ijg6-7x.js","/hassan-allam-website/_next/static/chunks/2clp9f_p9v6o5.js","/hassan-allam-website/_next/static/chunks/28d1g8fezglfs.js"],"default"]
-3:I[13642,["/hassan-allam-website/_next/static/chunks/0im3bt74vvb2y.js","/hassan-allam-website/_next/static/chunks/14mrh2-p_w84d.js","/hassan-allam-website/_next/static/chunks/3aoqp_ijg6-7x.js","/hassan-allam-website/_next/static/chunks/2clp9f_p9v6o5.js","/hassan-allam-website/_next/static/chunks/28d1g8fezglfs.js"],"default"]
-4:I[97367,["/hassan-allam-website/_next/static/chunks/0im3bt74vvb2y.js","/hassan-allam-website/_next/static/chunks/14mrh2-p_w84d.js","/hassan-allam-website/_next/static/chunks/3aoqp_ijg6-7x.js"],"OutletBoundary"]
-5:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","main",null,{"children":[["$","$L2",null,{}],["$","$L3",null,{}]]}],[["$","script","script-0",{"src":"/hassan-allam-website/_next/static/chunks/2clp9f_p9v6o5.js","async":true}],["$","script","script-1",{"src":"/hassan-allam-website/_next/static/chunks/28d1g8fezglfs.js","async":true}]],["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"BgsBU6qPjiqu5O6OSng8Q"}
-6:null
