@@ -251,8 +251,8 @@ function LanguageSwitch({ className = "" }: { className?: string }) {
       href={withBasePath(switchHref(locale, pathname))}
       lang={toAr ? "ar" : "en"}
       hrefLang={toAr ? "ar" : "en"}
-      className={`text-sm font-medium opacity-70 transition-opacity duration-300 hover:opacity-100 ${
-        toAr ? "font-[family-name:var(--font-alexandria),sans-serif]" : "font-sans"
+      className={`text-sm opacity-70 transition-opacity duration-300 hover:opacity-100 ${
+        toAr ? "font-[family-name:var(--font-alexandria),sans-serif] font-light" : "font-sans font-medium"
       } ${className}`}
     >
       {toAr ? "العربية" : "English"}

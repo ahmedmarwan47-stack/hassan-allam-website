@@ -17,7 +17,7 @@ const manrope = Manrope({
 // Only for the small "العربية" switch in the header.
 const alexandria = Alexandria({
   subsets: ["arabic"],
-  weight: ["500"],
+  weight: ["300"],
   variable: "--font-alexandria",
   display: "swap",
 });
