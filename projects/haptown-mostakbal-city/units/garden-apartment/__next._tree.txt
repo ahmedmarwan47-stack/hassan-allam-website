@@ -1,9 +1,9 @@
 :HL["/hassan-allam-website/_next/static/chunks/3dyrsm9c2zo56.css","style"]
-:HL["/hassan-allam-website/_next/static/chunks/03el9mrg4fom9.css","style"]
+:HL["/hassan-allam-website/_next/static/chunks/2ptkaypui8j8o.css","style"]
 :HL["/hassan-allam-website/_next/static/media/57696fb0c8dcfe1f-s.p.29a202atpp3ye.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/hassan-allam-website/_next/static/media/8f2ca9bed5019488-s.p.1rne3a59172go.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/hassan-allam-website/_next/static/media/a343f882a40d2cc9-s.p.0p-wng2nn8o-p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/hassan-allam-website/_next/static/media/e3935e7036e900a6-s.p.2p5tx_nzqjw-6.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/hassan-allam-website/fonts/eirlys/eirlys-light.css","style"]
 :HL["/hassan-allam-website/fonts/eirlys/eirlys-light.woff2","font",{"crossOrigin":"anonymous","type":"font/woff2"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":0,"slots":{"children":{"name":"(en)","param":null,"prefetchHints":16,"slots":{"children":{"name":"projects","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"haptown-mostakbal-city","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"units","param":null,"prefetchHints":0,"slots":{"children":{"name":"unit","param":{"type":"d","key":"garden-apartment","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}}}}}}}},"staleTime":300,"buildId":"5kf9m8arq_MUsrgjo4TW3"}
+0:{"tree":{"name":"","param":null,"prefetchHints":0,"slots":{"children":{"name":"(en)","param":null,"prefetchHints":16,"slots":{"children":{"name":"projects","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"haptown-mostakbal-city","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"units","param":null,"prefetchHints":0,"slots":{"children":{"name":"unit","param":{"type":"d","key":"garden-apartment","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}}}}}}}},"staleTime":300,"buildId":"Yq-0DJE8aYULMK0ZT86r_"}
