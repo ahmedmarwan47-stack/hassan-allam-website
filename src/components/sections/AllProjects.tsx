@@ -8,7 +8,7 @@ import { projectHref } from "@/data/projectDetail";
 import GrowReveal from "@/components/GrowReveal";
 import { CATEGORY_LABEL, type Category } from "@/data/mapProjects";
 import { LIVE_PROJECTS } from "@/data/hapLive";
-import { useRtl, useT } from "@/i18n/LocaleProvider";
+import { useT } from "@/i18n/LocaleProvider";
 
 interface ProjectCard {
   id: string;
@@ -409,23 +409,16 @@ function GridView({
 }
 
 // ─── List view ───────────────────────────────────────────────────────────────
-// Desktop hover: the row's accent colour wipes up from its bottom edge while
-// the name and tags ease inward; one floating photo glides between rows and
-// cross-fades to the hovered project (instead of a new photo per row).
-const LIST_EASE = "cubic-bezier(0.65,0,0.35,1)";
+// Desktop hover: the same behaviour as the homepage Facts & Figures rows, in
+// the group's colour instead of black.
 
 function ListView({ projects, accent }: { projects: ProjectCard[]; accent: string }) {
   const t = useT();
-  const rtl = useRtl();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  // Centre (px from the list's top) of the row the photo sits on.
-  const [photoY, setPhotoY] = useState(0);
-  const hovered = projects.find((p) => p.id === hoveredId);
 
-  const enter = (id: string, row: HTMLElement) => {
+  const enter = (id: string) => {
     // Taps fire mouseenter too — only real hover pointers get the effect.
     if (!window.matchMedia("(hover: hover)").matches) return;
-    setPhotoY(row.offsetTop + row.offsetHeight / 2);
     setHoveredId(id);
   };
 
@@ -436,7 +429,7 @@ function ListView({ projects, accent }: { projects: ProjectCard[]; accent: strin
         const href = projectHref(p.id);
         const ink = `transition-colors duration-500 ${isHovered ? "text-white" : "text-black"}`;
         return (
-          <li key={p.id} onMouseEnter={(e) => enter(p.id, e.currentTarget)} className="relative">
+          <li key={p.id} onMouseEnter={() => enter(p.id)} className="relative">
             {i === 0 && <div className="h-px w-full bg-brand-black/15" />}
 
             {/* Phones: small photo at the start, name + tags beside it. */}
@@ -455,30 +448,28 @@ function ListView({ projects, accent }: { projects: ProjectCard[]; accent: strin
               </svg>
             </Link>
 
-            <Link href={href} className="relative hidden overflow-hidden md:block">
-              {/* Accent fill — wipes up from the row's bottom edge. */}
-              <span
-                aria-hidden
-                className="absolute inset-0"
-                style={{
-                  backgroundColor: accent,
-                  clipPath: isHovered ? "inset(0% 0% 0% 0%)" : "inset(100% 0% 0% 0%)",
-                  transition: `clip-path 0.6s ${LIST_EASE}`,
-                }}
-              />
+            {/* Desktop — the Facts & Figures hover: the row fills with the
+                group's colour (green in the city, blue by the sea), the photo
+                slides in from the start edge and the text turns white. */}
+            <Link
+              href={href}
+              className="relative hidden items-stretch transition-colors duration-500 md:flex"
+              style={{ backgroundColor: isHovered ? accent : "transparent" }}
+            >
               <div
-                className="relative flex items-center justify-between gap-6 py-10"
-                style={{
-                  // Eases inward — leftward on the mirrored (RTL) row.
-                  transform: `translateX(${isHovered ? (rtl ? -64 : 64) : 0}px)`,
-                  width: isHovered ? "calc(100% - 128px)" : "100%",
-                  transition: `transform 0.6s ${LIST_EASE}, width 0.6s ${LIST_EASE}`,
-                }}
+                className="relative shrink-0 overflow-hidden transition-all duration-500 ease-in-out"
+                style={{ width: isHovered ? 200 : 0, opacity: isHovered ? 1 : 0 }}
               >
-                <span className={`font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(1.25rem,2.2vw,2rem)] ${ink}`}>
+                <Image src={p.image} alt="" fill sizes="200px" className="object-cover" />
+              </div>
+              <div
+                className="flex min-w-0 flex-1 items-center justify-between gap-6 py-12 transition-all duration-500 ease-in-out"
+                style={{ paddingInlineStart: isHovered ? 48 : 0, paddingInlineEnd: isHovered ? 32 : 0 }}
+              >
+                <span className={`min-w-0 font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(1.5rem,2.6vw,2.5rem)] ${ink}`}>
                   {t(p.name)}
                 </span>
-                <span className={`w-[31.4%] max-w-[414px] whitespace-pre-wrap text-end font-sans text-sm font-medium leading-[1.3] ${ink}`}>
+                <span className={`shrink-0 whitespace-pre text-end font-sans text-base font-medium leading-[1.3] ${ink}`}>
                   {p.tags.map((tag) => t(TAG_LABEL[tag])).join("  |  ")}
                 </span>
               </div>
@@ -489,38 +480,6 @@ function ListView({ projects, accent }: { projects: ProjectCard[]; accent: strin
         );
       })}
 
-      {/* The floating photo — glides to the hovered row, cross-fading. */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 z-40 hidden h-[333px] w-[261px] overflow-hidden shadow-2xl md:block"
-        initial={false}
-        animate={{
-          y: photoY - 333 / 2,
-          x: "-50%",
-          opacity: hovered ? 1 : 0,
-          scale: hovered ? 1 : 0.94,
-        }}
-        transition={{
-          y: { type: "spring", stiffness: 170, damping: 26 },
-          opacity: { duration: 0.35, ease: "easeOut" },
-          scale: { duration: 0.5, ease: [0.32, 0.72, 0, 1] },
-        }}
-      >
-        <AnimatePresence initial={false}>
-          {hovered && (
-            <motion.div
-              key={hovered.id}
-              className="absolute inset-0"
-              initial={{ opacity: 0, scale: 1.08 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <Image src={hovered.image} alt="" fill sizes="261px" quality={95} className="object-cover" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
     </ul>
   );
 }
