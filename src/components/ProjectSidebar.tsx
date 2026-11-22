@@ -6,9 +6,17 @@ import Image from "@/components/ProgressiveImage";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { MapProject } from "@/data/mapProjects";
-import { projectHref } from "@/data/projectDetail";
+import { PROJECT_DETAILS, projectHref } from "@/data/projectDetail";
+import { withBasePath } from "@/lib/basePath";
 import SliderArrow from "@/components/SliderArrow";
 import { useRtl, useT } from "@/i18n/LocaleProvider";
+
+/** The project's brochure: the live hap.com.eg PDF where there is one,
+ *  otherwise a reserved file in /public/brochures/<project-id>.pdf (to be
+ *  added when the client supplies it). */
+function brochureHref(id: string) {
+  return PROJECT_DETAILS[id]?.brochureUrl ?? withBasePath(`/brochures/${id}.pdf`);
+}
 
 /**
  * ProjectSidebar — the slide-in panel that opens when a map pin is clicked.
@@ -61,7 +69,7 @@ export default function ProjectSidebar({
           />
           <motion.aside
             key="project-sidebar"
-            className="fixed inset-y-0 end-0 z-[70] flex w-full max-w-[500px] flex-col bg-brand-white"
+            className="fixed inset-y-0 end-0 z-[70] flex w-full max-w-[640px] flex-col bg-brand-white"
             initial={{ x: offscreen }}
             animate={{ x: 0 }}
             exit={{ x: offscreen }}
@@ -106,21 +114,39 @@ export default function ProjectSidebar({
                   <p className="mt-5 font-sans text-sm font-normal leading-[1.55] text-brand-black/85">
                     {t(project.description)}
                   </p>
-                  {/* Primary: straight to the interest form on the project's
-                      page; secondary: the project page itself. */}
-                  <div className="mt-6 flex flex-wrap gap-2.5">
-                    <ActionButton
-                      label={t("Request interest")}
-                      href={`${detailHref}#request-interest`}
-                      variant="solid"
-                      size="sm"
-                    />
-                    <ActionButton label={t("Discover the project")} href={detailHref} look="plain" size="sm" />
-                  </div>
                 </motion.div>
               </AnimatePresence>
             </div>
 
+            {/* Actions — fixed above the slider, the same place for every
+                project, under a light inset divider. */}
+            <div aria-hidden className="mx-6 h-px bg-brand-black/[0.08]" />
+            {/* Primary: straight to the interest form on the project's
+                page; secondary: the project page itself. */}
+            <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 px-6 pb-3 pt-5">
+              <div className="flex flex-wrap gap-2.5">
+                <ActionButton
+                  label={t("Request interest")}
+                  href={`${detailHref}#request-interest`}
+                  variant="solid"
+                  size="sm"
+                />
+                <ActionButton label={t("Discover the project")} href={detailHref} look="plain" size="sm" />
+              </div>
+              {/* Tertiary, at the end of the row: the project's brochure PDF —
+                  on its own centred line on phones. */}
+              <a
+                href={brochureHref(project.id)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/brochure inline-flex w-full items-center justify-center gap-2 font-sans text-sm sm:w-auto sm:justify-start font-medium text-brand-black/75 decoration-1 underline-offset-4 transition-colors duration-300 hover:text-brand-black hover:underline"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden className="transition-transform duration-300 group-hover/brochure:translate-y-0.5">
+                  <path d="M7 1v8m0 0L3.5 5.5M7 9l3.5-3.5M2 12.5h10" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {t("Download brochure")}
+              </a>
+            </div>
             {/* Footer: track + arrows — the homepage slider style, compact. */}
             <div className="flex items-center gap-5 px-6 pb-5 pt-3">
               <div className="relative h-[3px] flex-1 overflow-hidden bg-black/20">
@@ -183,7 +209,7 @@ function SidebarCarousel({ images, name }: { images: string[]; name: string }) {
             src={images[i]}
             alt={name}
             fill
-            sizes="500px"
+            sizes="640px"
             quality={95}
             className="pointer-events-none select-none object-cover"
           />

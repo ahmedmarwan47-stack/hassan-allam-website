@@ -1,6 +1,7 @@
 // Arabic translations — keyed by the exact English text.
 // Shell: navbar, footer, shared components (buttons, forms, sliders, maps).
 const ar: Record<string, string> = {
+  "Download brochure": "تحميل الكتيّب",
   // Navbar
   "Hassan Allam Properties — home": "حسن علام العقارية — الصفحة الرئيسية",
   "Hassan Allam Properties": "حسن علام العقارية",
