@@ -32,6 +32,7 @@ export default function NeighborhoodDrawer({
   onClose,
   onIndex,
   discoverHref,
+  brochureHref,
 }: {
   items: MasterPlanItem[];
   /** Open item, or null when closed. */
@@ -40,6 +41,8 @@ export default function NeighborhoodDrawer({
   onIndex: (i: number) => void;
   /** The neighborhood page for a list number, when there is one. */
   discoverHref?: (number: number) => string | undefined;
+  /** The neighborhood's brochure PDF. */
+  brochureHref?: (number: number) => string;
 }) {
   const reduce = useReducedMotion();
   const t = useT();
@@ -186,30 +189,48 @@ export default function NeighborhoodDrawer({
                       {t(item.blurb)}
                     </motion.p>
 
-                    <motion.div
-                      className="flex flex-wrap gap-2.5"
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0, transition: { duration: dur(0.6), ease: SOFT, delay: dur(0.85) } }}
-                    >
-                      {discoverHref?.(item.number) && (
-                        <ActionButton label="Discover more" tone="light" variant="solid" size="sm" href={discoverHref(item.number)} />
-                      )}
-                      {/* To the neighborhood's own interest form when it has a
-                          page; otherwise the project's form on this page. */}
-                      {discoverHref?.(item.number) ? (
-                        <ActionButton
-                          label="Request interest"
-                          tone="light"
-                          size="sm"
-                          href={`${discoverHref(item.number)}#request-interest`}
-                        />
-                      ) : (
-                        <ActionButton label="Request interest" tone="light" size="sm" onClick={requestInterest} />
-                      )}
-                    </motion.div>
                   </div>
                 </motion.div>
               </AnimatePresence>
+            </div>
+
+            {/* Actions — fixed above the prev/next footer, the same place for
+                every neighborhood (as in the project drawer), under a light
+                inset divider: Request interest + Discover more at the start,
+                the brochure link at the end (own centred line on phones). */}
+            <div aria-hidden className="mx-6 h-px bg-white/10" />
+            <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 px-6 pb-5 pt-5">
+              <div className="flex flex-wrap gap-2.5">
+                {/* To the neighborhood's own interest form when it has a
+                    page; otherwise the project's form on this page. */}
+                {discoverHref?.(item.number) ? (
+                  <ActionButton
+                    label="Request interest"
+                    tone="light"
+                    variant="solid"
+                    size="sm"
+                    href={`${discoverHref(item.number)}#request-interest`}
+                  />
+                ) : (
+                  <ActionButton label="Request interest" tone="light" variant="solid" size="sm" onClick={requestInterest} />
+                )}
+                {discoverHref?.(item.number) && (
+                  <ActionButton label="Discover more" tone="light" size="sm" href={discoverHref(item.number)} />
+                )}
+              </div>
+              {brochureHref && (
+                <a
+                  href={brochureHref(item.number)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/brochure inline-flex w-full items-center justify-center gap-2 font-sans text-sm font-medium text-white/75 decoration-1 underline-offset-4 transition-colors duration-300 hover:text-white hover:underline sm:w-auto sm:justify-start"
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden className="transition-transform duration-300 group-hover/brochure:translate-y-0.5">
+                    <path d="M7 1v8m0 0L3.5 5.5M7 9l3.5-3.5M2 12.5h10" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {t("Download brochure")}
+                </a>
+              )}
             </div>
 
             {/* Footer: previous / next neighborhood, on white. */}

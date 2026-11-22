@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lib/basePath";
 import Image from "@/components/ProgressiveImage";
 import { useEffect, useState } from "react";
 import type { MasterPlanItem } from "@/data/projectDetail";
@@ -219,6 +220,11 @@ export default function MasterPlan({
         onClose={() => setOpen(null)}
         onIndex={setOpen}
         discoverHref={(number) => neighborhoodHref(projectId, number)}
+        // Each neighborhood's brochure: /public/brochures/<project>--<neighborhood>.pdf
+        // (files to be added when the client supplies them).
+        brochureHref={(number) =>
+          withBasePath(`/brochures/${projectId}--${neighborhoodHref(projectId, number)?.split("/").pop() ?? number}.pdf`)
+        }
       />
     </section>
   );
