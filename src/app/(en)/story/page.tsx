@@ -13,8 +13,8 @@ import OurTeam from "@/components/sections/story/OurTeam";
 const SECTIONS = [
   { id: "overview", label: "Overview" },
   { id: "our-history", label: "Our History" },
-  { id: "chairman-message", label: "Chairman Message" },
-  { id: "people-behind-hap", label: "People Behind HAP" },
+  { id: "chairman-message", label: "Message from our CEO" },
+  { id: "people-behind-hap", label: "The People Behind HAP" },
   { id: "our-legacy", label: "Our Legacy" },
   { id: "facts-and-figures", label: "Facts and Figures" },
 ];

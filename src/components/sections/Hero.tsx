@@ -3,10 +3,24 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { withBasePath } from "@/lib/basePath";
 import { Reveal } from "@/components/Reveal";
 import RollText from "@/components/RollText";
 import { useT } from "@/i18n/LocaleProvider";
+
+// hap.com.eg's homepage film (from its CDN, as the live site serves it): the
+// 1080p cut on tablets and up, the lighter 400×700 cut on phones. It plays
+// both as the muted hero loop and, with sound, in the showreel.
+const HERO_FILM = {
+  wide: "https://lon1.digitaloceanspaces.com/hap-medias/1920_x_1080_8mbs_v2_1080p_f5f199c55e.mp4",
+  phone: "https://lon1.digitaloceanspaces.com/hap-medias/400_x_700_4mbs_v2_360p_c5202366ac.mp4",
+};
+// The browser plays the first <source> whose media query matches.
+const FilmSources = () => (
+  <>
+    <source media="(min-width: 768px)" src={HERO_FILM.wide} type="video/mp4" />
+    <source src={HERO_FILM.phone} type="video/mp4" />
+  </>
+);
 
 /**
  * Full-screen showreel player — the background loop plays muted with no
@@ -94,11 +108,12 @@ function ShowreelModal({ onClose }: { onClose: () => void }) {
         <video
           ref={videoRef}
           className="block max-h-[calc(100svh-2rem)] w-full bg-black md:max-h-[calc(100svh-8rem)]"
-          src={withBasePath("/videos/videocutHAP3.mp4")}
           controls
           playsInline
           preload="auto"
-        />
+        >
+          <FilmSources />
+        </video>
       </motion.div>
     </motion.div>
   );
@@ -110,8 +125,8 @@ function ShowreelModal({ onClose }: { onClose: () => void }) {
  * (white) state because the footage is dark/colourful, so the section is
  * tagged data-nav-theme="dark".
  *
- * The film is public/videos/videocutHAP3.mp4; the hero shows plain black
- * until it can play.
+ * The film is hap.com.eg's homepage film (HERO_FILM above); the hero shows
+ * plain black until it can play.
  */
 export default function Hero() {
   const t = useT();
@@ -151,10 +166,11 @@ export default function Hero() {
         loop
         playsInline
         preload="auto"
-        src={withBasePath("/videos/videocutHAP3.mp4")}
         onCanPlay={() => setCanPlay(true)}
         aria-hidden
-      />
+      >
+        <FilmSources />
+      </video>
 
       {/* Subtle bottom scrim so the headline + showreel link stay legible. */}
       <div
@@ -168,9 +184,9 @@ export default function Hero() {
         <div className="mt-auto flex w-full flex-col items-start gap-6 px-6 pb-12 md:flex-row md:items-end md:justify-between md:px-12 md:pb-16 lg:px-16">
           <Reveal delay={0.3}>
             <h1 className="max-w-[20ch] font-serif text-[clamp(2.5rem,4.2vw,3.5rem)] font-normal uppercase leading-none tracking-[-0.02em] text-white">
-              {t("From Our")}
+              {t("The Luxury")}
               <br />
-              {t("Family, to Yours.")}
+              {t("of Certainty.")}
             </h1>
           </Reveal>
           <Reveal delay={0.4}>

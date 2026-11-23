@@ -342,8 +342,8 @@ export default function Footer() {
         <div className="flex flex-col gap-4 font-sans text-xs font-normal leading-[1.4] md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-7">
             <p>&copy; {new Date().getFullYear()} HAP</p>
-            <a href="https://www.hap.com.eg/legals/terms-of-use/" target="_blank" rel="noopener noreferrer" className="text-white/75 transition-colors duration-300 hover:text-white">{t("Terms of Use")}</a>
-            <a href="https://www.hap.com.eg/legals/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-white/75 transition-colors duration-300 hover:text-white">{t("Privacy policy")}</a>
+            <Link href="/legals/terms-of-use" className="text-white/75 transition-colors duration-300 hover:text-white">{t("Terms of Use")}</Link>
+            <Link href="/legals/privacy-policy" className="text-white/75 transition-colors duration-300 hover:text-white">{t("Privacy policy")}</Link>
           </div>
           <p className="uppercase">{t("Web Design & Development by MitchDesigns")}</p>
         </div>

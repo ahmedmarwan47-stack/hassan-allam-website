@@ -18,10 +18,10 @@ export type FilterValue = "all" | Category;
  *  17043:545) — used on the project cards and the project page hero. */
 export const CATEGORY_LABEL: Record<Category, string> = {
   Residential: "Residential",
-  "Hospitality & Leisure": "Hospitality and Leisure",
+  "Hospitality & Leisure": "Hospitality & Leisure",
   Retail: "Curated Retail & Dining",
   "Office Space": "Office Space",
-  "Sports & Wellness": "Sports and Wellness",
+  "Sports & Wellness": "Sports & Wellness",
 };
 
 /** "In the City" (green pin) or "By the Sea" (blue pin). */
@@ -77,9 +77,28 @@ export const MAP_PROJECTS: MapProject[] = LIVE_PROJECTS.map((p) => {
 
 export const MAP_FILTERS: { label: string; value: FilterValue }[] = [
   { label: `All projects (${MAP_PROJECTS.length})`, value: "all" },
-  { label: "Residential", value: "Residential" },
-  { label: "Office Space", value: "Office Space" },
-  { label: "Retail", value: "Retail" },
-  { label: "Hospitality & Leisure", value: "Hospitality & Leisure" },
-  { label: "Sports & Wellness", value: "Sports & Wellness" },
+  // Names and order as on hap.com.eg.
+  { label: CATEGORY_LABEL.Residential, value: "Residential" },
+  { label: CATEGORY_LABEL["Hospitality & Leisure"], value: "Hospitality & Leisure" },
+  { label: CATEGORY_LABEL.Retail, value: "Retail" },
+  { label: CATEGORY_LABEL["Sports & Wellness"], value: "Sports & Wellness" },
+  { label: CATEGORY_LABEL["Office Space"], value: "Office Space" },
 ];
+
+/** The Projects page intro as on hap.com.eg. It always shows; picking an
+ *  asset class adds that class's paragraph below it, as the live page does. */
+export const PROJECTS_INTRO =
+  "At Hassan Allam Properties, we go beyond developments, we craft destinations. Our mixed-use communities blend homes, workspaces, retail, hospitality, sports, and leisure into vibrant hubs designed for modern living. With a legacy of excellence and a future-driven vision, we offer uncompromised exclusivity rooted in quality, crafted with purpose, and built to last.";
+
+export const CATEGORY_INTRO: Record<Category, string> = {
+  Residential:
+    "At Hassan Allam Properties, we craft more than homes, we build communities where families thrive. Blending timeless design with green open spaces, our developments offer privacy, security, and a true sense of belonging. From prime suburban locations to serene coastal escapes, every home reflects our commitment to comfort, connection, and lasting value.",
+  "Hospitality & Leisure":
+    "Our hospitality and leisure destinations go beyond accommodation, delivering immersive experiences that celebrate refined living. From luxury boutique hotels and resort-style escapes to distinguished fine dining and vibrant social venues, every space is thoughtfully designed to inspire relaxation, connection, and cultural discovery, redefining modern hospitality with elegance, authenticity, and exceptional service.",
+  Retail:
+    "Our retail and dining spaces are more than amenities, they’re destinations. Thoughtfully curated with a handpicked mix of premium brands, signature restaurants, fine diners and local favorites, they offer convenience wrapped in experience. Designed to bring life, flavor, and style together, these vibrant hubs elevate everyday living and foster meaningful connections within our communities.",
+  "Sports & Wellness":
+    "At Hassan Allam Properties, wellbeing is not an add-on, it’s at the heart of our communities. Through world-class sports clubs, wellness amenities, and expansive green spaces, we create environments designed to enrich body, mind, and soul. Every detail is thoughtfully curated to inspire movement, connection, and a lifestyle rooted in vitality and balance.",
+  "Office Space":
+    "Hassan Allam Properties delivers dynamic, professional environments that empower productivity and inspire success. From corporate headquarters to creative campuses and flexible workspaces, our office destinations are designed with accessibility, sustainability, and innovation in mind. We provide the infrastructure businesses need to grow and lead with confidence in today’s fast-paced, ever-evolving economic landscape.",
+};

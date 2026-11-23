@@ -2,7 +2,7 @@
 
 import { FactRow } from "@/components/sections/FactsFigures";
 import { Reveal } from "@/components/Reveal";
-import { FACTS } from "@/data/facts";
+import { STORY_FACTS } from "@/data/facts";
 import { useT } from "@/i18n/LocaleProvider";
 
 // Reuses the homepage Facts & Figures hover/scroll photo-reveal effect and
@@ -22,7 +22,7 @@ export default function FactsList({ id }: { id?: string }) {
       </Reveal>
 
       <div className="flex w-full flex-col">
-        {FACTS.map((fact) => (
+        {STORY_FACTS.map((fact) => (
           <FactRow key={fact.label} {...fact} />
         ))}
         <div className="h-px w-full bg-grey-300" />

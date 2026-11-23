@@ -75,8 +75,10 @@ export default function ProjectsHero({
 
         {/* Bottom bar */}
         <div className="absolute bottom-16 left-16 right-16 flex flex-col gap-6">
-          <div className="flex h-12 items-center justify-between bg-brand-white px-16">
-            <div className="flex items-center gap-8">
+          {/* Fits on one line from 1320px; below that the filter list
+              scrolls sideways (faded at its end) instead of overlapping. */}
+          <div className="flex h-12 items-center justify-between gap-8 bg-brand-white px-8 min-[1440px]:px-16">
+            <div className="flex shrink-0 items-center gap-8">
               <span className="whitespace-nowrap font-sans text-base font-medium text-brand-black">
                 {t("Filters")}
               </span>
@@ -94,14 +96,14 @@ export default function ProjectsHero({
                 ))}
               </div>
             </div>
-            <div className="flex h-full items-center gap-[3.5vw]">
+            <div className="flex h-full min-w-0 items-center gap-8 overflow-x-auto [mask-image:linear-gradient(to_right,black_calc(100%-40px),transparent)] [scrollbar-width:none] min-[1320px]:overflow-visible min-[1320px]:[mask-image:none] rtl:[mask-image:linear-gradient(to_left,black_calc(100%-40px),transparent)] min-[1320px]:rtl:[mask-image:none]">
               {MAP_FILTERS.map(({ label, value }) => (
                 <button
                   key={value}
                   type="button"
                   onClick={() => onFilterChange(value)}
                   className={[
-                    "relative h-full whitespace-nowrap font-sans text-sm font-medium transition-colors duration-200",
+                    "relative h-full shrink-0 whitespace-nowrap font-sans text-sm font-medium transition-colors duration-200",
                     activeFilter === value
                       ? "text-brand-black after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-brand-black"
                       : "text-grey-500 hover:text-brand-black",

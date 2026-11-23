@@ -7,6 +7,8 @@ import ProjectHero from "./ProjectHero";
 import ProjectIntro from "./ProjectIntro";
 import MasterPlan from "./MasterPlan";
 import ImageShowcase from "./ImageShowcase";
+import MoreGallery from "./MoreGallery";
+import ProjectVideo from "./ProjectVideo";
 import AmenitiesSection from "./AmenitiesSection";
 import ProjectStory from "./ProjectStory";
 import UnitTypesSection from "./UnitTypesSection";
@@ -23,14 +25,19 @@ import { useT } from "@/i18n/LocaleProvider";
  */
 export default function ProjectDetailTemplate({ data }: { data: ProjectDetailData }) {
   const t = useT();
+  const hasAmenities = data.amenities.length > 0;
+  const hasStory = data.storyParagraphs.length > 0;
+  const hasHomes = data.hasHomes !== false;
   // In-page navigation (same bar as Our Story); Master Plan only when present.
   const sections = [
     { id: "overview", label: "Overview" },
+    ...(data.videoUrl ? [{ id: "video", label: "Video" }] : []),
     ...(data.masterPlan ? [{ id: "master-plan", label: "Master Plan" }] : []),
     { id: "gallery", label: "Gallery" },
-    { id: "amenities", label: "Amenities" },
-    { id: "the-story", label: "The Story" },
-    { id: "homes", label: "Homes" },
+    // Amenities, story and homes only when the project has them.
+    ...(hasAmenities ? [{ id: "amenities", label: "Amenities" }] : []),
+    ...(hasStory ? [{ id: "the-story", label: "The Story" }] : []),
+    ...(hasHomes ? [{ id: "homes", label: "Homes" }] : []),
     { id: "construction-updates", label: "Construction Updates" },
     { id: "request-interest", label: "Request Interest" },
   ].map((s) => ({ ...s, label: t(s.label) }));
@@ -39,6 +46,8 @@ export default function ProjectDetailTemplate({ data }: { data: ProjectDetailDat
     <main>
       <ProjectHero data={data} />
       <ProjectIntro id="overview" data={data} />
+      {/* The fly-through, right after the intro as on hap.com.eg. */}
+      {data.videoUrl && <ProjectVideo id="video" src={data.videoUrl} poster={data.videoPoster ?? data.introImages[1]} />}
       {data.masterPlan && (
         <MasterPlan
           id="master-plan"
@@ -50,20 +59,25 @@ export default function ProjectDetailTemplate({ data }: { data: ProjectDetailDat
         />
       )}
       <ImageShowcase id="gallery" {...data.showcase} />
-      <AmenitiesSection id="amenities" heading={data.amenitiesHeading} items={data.amenities} />
-      <ProjectStory
-        id="the-story"
-        images={data.storyImages}
-        heading={data.storyHeading}
-        paragraphs={data.storyParagraphs}
-      />
-      <UnitTypesSection
-        id="homes"
-        projectId={data.id}
-        heading={data.productsHeading}
-        intro={t("From garden apartments to standalone villas — every home is designed around light, privacy and outdoor living.")}
-        units={UNIT_TYPES}
-      />
+      {hasAmenities && <AmenitiesSection id="amenities" heading={data.amenitiesHeading} items={data.amenities} />}
+      {hasStory && (
+        <ProjectStory
+          id="the-story"
+          images={data.storyImages}
+          heading={data.storyHeading}
+          paragraphs={data.storyParagraphs}
+        />
+      )}
+      {!!data.moreImages?.length && <MoreGallery images={data.moreImages} />}
+      {hasHomes && (
+        <UnitTypesSection
+          id="homes"
+          projectId={data.id}
+          heading={data.productsHeading}
+          intro={t("From garden apartments to standalone villas — every home is designed around light, privacy and outdoor living.")}
+          units={UNIT_TYPES}
+        />
+      )}
       <ConstructionTimeline data={data.construction} />
       <RequestInterestForm projectName={data.name.join(" ")} image={data.showcase.full} />
       <Footer />

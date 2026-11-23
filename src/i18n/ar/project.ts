@@ -15,6 +15,9 @@ const ar: Record<string, string> = {
   // Project page copy
   "From garden apartments to standalone villas — every home is designed around light, privacy and outdoor living.":
     "من شقق الحدائق إلى الفيلات المستقلة — صُمّم كل منزل حول الضوء والخصوصية والحياة في الهواء الطلق.",
+  "Watch the fly-through": "شاهد الجولة الجوية",
+  "Play the fly-through video": "شغّل فيديو الجولة الجوية",
+  Video: "الفيديو",
   "Please send me the project brochure.": "أرجو إرسال كتيّب المشروع إليّ.",
 
   // Master plan + drawer

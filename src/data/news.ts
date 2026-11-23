@@ -93,6 +93,14 @@ export const NEWS: NewsArticle[] = [
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+/** Dates are stored day first ("09.03.2025"). English shows them month
+ *  first as on hap.com.eg ("03.09.2025"); Arabic keeps day first. */
+export function displayNewsDate(date: string, rtl = false): string {
+  if (rtl) return date;
+  const [d, m, y] = date.split(".");
+  return `${m}.${d}.${y}`;
+}
+
 /** "09.03.2025" → "9 March 2025". */
 export function formatNewsDate(date: string): string {
   const [d, m, y] = date.split(".").map(Number);

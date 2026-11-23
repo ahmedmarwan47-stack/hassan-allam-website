@@ -59,11 +59,15 @@ export interface ProjectDetailData {
   tagline: string;
   communityLabel: string;
   communityHeading: RichSegment[];
+  /** A second, uppercase line the live page sets apart from the overview
+   *  (XCHANGE's "THE INVISIBLE TRADE…"). */
+  communityTagline?: string;
   brochureLabel: string;
   /** The live brochure file (hap.com.eg CDN), when there is one. */
   brochureUrl?: string;
   /** The live fly-through video (hap.com.eg CDN), when there is one. */
   videoUrl?: string;
+  videoPoster?: string;
 
   masterPlan?: {
     items: MasterPlanItem[];
@@ -82,6 +86,8 @@ export interface ProjectDetailData {
   amenities: FeatureItem[];
 
   storyImages: [string, string];
+  /** Gallery photos not used above, shown in a closing gallery block. */
+  moreImages?: string[];
   storyHeading: string;
   storyParagraphs: string[];
 
@@ -91,6 +97,8 @@ export interface ProjectDetailData {
   };
   productsHeading: string;
   products: FeatureItem[];
+  /** Home types only on residential projects (not XCHANGE). */
+  hasHomes?: boolean;
 
   construction: ConstructionUpdates;
 
@@ -98,15 +106,6 @@ export interface ProjectDetailData {
   ctaParagraph: string;
   ctaButtonLabel: string;
 }
-
-const SLR_AMENITIES: FeatureItem[] = [
-  { icon: "office", title: "Office Park", description: "A welcoming hub for meeting and unwinding." },
-  { icon: "retail", title: "Retail Hub", description: "Boutique storefronts for everyday errands and leisure shopping." },
-  { icon: "dining", title: "Entertainment", description: "A refined table offering a varied, elevated cuisine." },
-  { icon: "hospitality", title: "Hospitality", description: "A poolside bar perfect for cocktails in the sun." },
-  { icon: "leisure", title: "Leisure Component", description: "A high-end culinary experience in an elegant setting." },
-  { icon: "fitness", title: "Fitness Facility", description: "A fully equipped gym to keep residents in shape." },
-];
 
 // Home types on offer, shared by every project page (placeholder copy) —
 // distinct from the amenities.
@@ -204,16 +203,6 @@ const FILLER_IMAGES = [
   "/images/image 401.jpg", "/images/image 402.jpg",
 ];
 
-// Generated amenities, by asset class, for projects the live site lists none
-// for (PLACEHOLDER copy).
-const AMENITIES_BY_TYPE: Record<Category, FeatureItem> = {
-  Residential: { icon: "leisure", title: "Landscaped Parks", description: "Green open spaces and walking trails between the neighborhoods." },
-  "Office Space": { icon: "office", title: "Business Park", description: "Grade-A offices with flexible floor plates and on-site services." },
-  Retail: { icon: "retail", title: "Curated Retail", description: "Hand-picked brands and everyday essentials along a walkable promenade." },
-  "Hospitality & Leisure": { icon: "hospitality", title: "Hospitality", description: "Cafés, restaurants and hospitality spaces for every time of day." },
-  "Sports & Wellness": { icon: "fitness", title: "Sports & Wellness", description: "A sports club with courts, a fitness centre and family pools." },
-};
-
 /**
  * A project page from the live site's content (src/data/hapLive.ts, generated
  * from hap.com.eg): real name, asset classes, intro, overview, galleries,
@@ -232,6 +221,13 @@ function fromLive(p: LiveProject): ProjectDetailData {
   ].filter((x): x is string => !!x);
   const imgs = [...new Set([...own, ...FILLER_IMAGES])];
   const pick = (i: number) => imgs[i % imgs.length];
+  // Photo slots follow hap.com.eg: the intro pair is the cover (narrow) and
+  // the intro photo (wide); the gallery photos then fill the showcase, the
+  // story pair and a closing gallery block, in the live page's order, so
+  // every live photo appears once.
+  const gallery = [...new Set(p.galleries.flat())].filter((x) => x !== p.cover && x !== p.thumbnail);
+  const gp = (i: number) => gallery[i] ?? pick(i + 2);
+  const hasStory = !!p.diptych?.text.length;
   const list = p.lists[0];
   const group = p.group === "sea" ? "By The Sea" : "In The City";
   const plan = p.masterplan;
@@ -244,15 +240,20 @@ function fromLive(p: LiveProject): ProjectDetailData {
 
     scrollLabel: "Scroll",
     introParagraphs: [p.intro[0] ?? p.overview[0] ?? "", p.intro.slice(1).join(" ")],
-    introImages: [pick(0), pick(1)],
+    introImages: [p.thumbnail ?? pick(0), p.cover ?? pick(1)],
 
     tag: p.abbreviation ?? p.name,
     tagline: p.types.map((t) => CATEGORY_LABEL[t]).join(" · "),
     communityLabel: group,
-    communityHeading: [{ text: (p.overview.length ? p.overview : p.intro).join(" ") }],
+    // The overview's first paragraph; a second one is the live page's
+    // separate tagline, shown on its own below.
+    communityHeading: [{ text: (p.overview.length ? p.overview.slice(0, 1) : p.intro).join(" ") }],
+    communityTagline: p.overview.slice(1).join(" ") || undefined,
     brochureLabel: p.brochure?.label ?? "Download our brochure",
     brochureUrl: p.brochure?.url,
     videoUrl: p.video ?? undefined,
+    // Still for the video before it plays: the project's intro photo.
+    videoPoster: p.cover ?? pick(1),
 
     masterPlan: plan
       ? {
@@ -270,32 +271,23 @@ function fromLive(p: LiveProject): ProjectDetailData {
         }
       : undefined,
 
-    showcase: { full: pick(2), half: pick(3), wide: pick(4) },
+    showcase: { full: gp(0), half: gp(1), wide: gp(2) },
 
     amenitiesHeading: list?.title ? halves(list.title) : ["Exceptional Amenities for", "a Unique Living Experience"],
-    amenities: list?.items.length
-      ? list.items.map((i) => ({ icon: i.icon, title: i.label, description: i.description }))
-      : p.types.length
-        ? [...p.types.map((t) => AMENITIES_BY_TYPE[t]), AMENITIES_BY_TYPE.Residential].filter(
-            (a, i, all) => all.indexOf(a) === i,
-          )
-        : SLR_AMENITIES,
+    // Only the live site's amenities; none listed → the section is hidden.
+    amenities: (list?.items ?? []).map((i) => ({ icon: i.icon, title: i.label, description: i.description })),
 
-    storyImages: [pick(5), pick(6)],
-    storyHeading: p.diptych?.title || `Life at ${p.name}`,
-    // Generated when the live site has no story block (PLACEHOLDER copy).
-    storyParagraphs: p.diptych?.text.length
-      ? p.diptych.text
-      : [
-          `${p.name} brings together ${p.types.map((t) => CATEGORY_LABEL[t].toLowerCase()).join(", ")} in one ${
-            p.group === "sea" ? "coastal destination" : "connected city address"
-          }, designed around the way people live, work and gather.`,
-          "Every space is shaped with the same care for quality, privacy and enduring value that defines Hassan Allam Properties' communities.",
-        ],
+    storyImages: [gp(3), gp(4)],
+    // The live gallery's remaining photos (usually 3), after the story.
+    moreImages: gallery.slice(hasStory ? 5 : 3),
+    // Only the live site's story block; none → the section is hidden.
+    storyHeading: p.diptych?.title ?? "",
+    storyParagraphs: p.diptych?.text ?? [],
 
     productsImages: { half: pick(7), wide: pick(8) },
     productsHeading: "Homes to Choose From",
     products: HOME_TYPES,
+    hasHomes: p.types.includes("Residential"),
 
     construction: SAMPLE_CONSTRUCTION,
 

@@ -32,6 +32,13 @@ const ar: Record<string, string> = {
   "You’re subscribed — welcome to HAP.": "تم اشتراكك — أهلاً بك في HAP.",
   "Terms of Use": "شروط الاستخدام",
   "Privacy policy": "سياسة الخصوصية",
+  Legal: "قانوني",
+  Contents: "المحتويات",
+  Privacy: "سياسة",
+  Policy: "الخصوصية",
+  Terms: "شروط",
+  "of Use": "الاستخدام",
+  "Privacy Policy": "سياسة الخصوصية",
   "Web Design & Development by MitchDesigns": "تصميم وتطوير الموقع: MitchDesigns",
 
   // Shared buttons / sections

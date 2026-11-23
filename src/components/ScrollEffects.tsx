@@ -78,9 +78,14 @@ export default function ScrollEffects() {
     // Backup for observer misses (fast scrolls, clipped targets): anything
     // pending whose top has reached the viewport — or that was scrolled
     // past entirely — plays on the next scroll frame.
+    // At the very end of the page, text in the bottom 8% (the footer's
+    // "© HAP" line) can never rise past the trigger line, so anything on
+    // screen plays then.
     const sweep = () => {
       const vh = window.innerHeight;
-      const due = [...pending].filter((el) => el.getBoundingClientRect().top < vh * 0.92);
+      const atEnd = window.scrollY + vh >= document.documentElement.scrollHeight - 2;
+      const line = atEnd ? vh : vh * 0.92;
+      const due = [...pending].filter((el) => el.getBoundingClientRect().top < line);
       if (due.length) play(due);
     };
 

@@ -132,7 +132,7 @@ export default function FactsFigures() {
               )}
           </p>
           <p className="font-sans text-base font-medium leading-[1.4]">
-            {t("Mohamed Allam — CEO")}
+            {t("Mohamed Allam — CEO & Vice Chairman")}
           </p>
         </Reveal>
 
@@ -151,7 +151,7 @@ export default function FactsFigures() {
           <Reveal delay={0.1}>
             <p className="max-w-[543px] text-start font-serif font-light uppercase leading-[1.2] tracking-[-0.02em] [font-size:clamp(1rem,1.5vw,1.375rem)] md:text-center md:leading-none">
               {t(
-                "Since its inception in the 1990's, Hassan Allam Properties has carved an enviable niche for itself as an exclusive boutique developer, building intimate communities where families always come first.",
+                "Since the 1990s, Hassan Allam Properties has shaped a distinguished presence in Egypt’s real estate landscape, known for crafting intimate, high-quality communities where families come first.",
               )}
             </p>
           </Reveal>

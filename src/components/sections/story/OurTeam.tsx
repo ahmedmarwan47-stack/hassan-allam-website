@@ -50,7 +50,7 @@ export default function OurTeam({ id }: { id?: string }) {
       data-nav-theme="light"
       className="flex flex-col gap-10 bg-brand-white px-6 pb-20 pt-16 text-brand-black md:gap-16 md:px-16 md:pb-24 md:pt-24"
     >
-      <SectionEyebrow>{t("People Behind HAP")}</SectionEyebrow>
+      <SectionEyebrow>{t("The People Behind HAP")}</SectionEyebrow>
 
       {/* Title on the eyebrow's left edge; the intro stacked on the right. */}
       <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between md:gap-16">

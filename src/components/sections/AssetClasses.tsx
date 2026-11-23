@@ -35,12 +35,13 @@ import { useRtl, useT } from "@/i18n/LocaleProvider";
  * with the arrows.
  */
 
+// Order as on hap.com.eg; names use "&" throughout. `filter` is the category key.
 const CARDS = [
   { label: "Residential", src: "/images/residential.jpg", filter: "Residential" },
-  { label: "Office Spaces", src: "/images/office.jpg", filter: "Office Space" },
   { label: "Hospitality & Leisure", src: "/images/hospitality.jpg", filter: "Hospitality & Leisure" },
+  { label: "Curated Retail & Dining", src: "/images/retail.jpg", filter: "Retail" },
   { label: "Sports & Wellness", src: "/images/sports.jpg", filter: "Sports & Wellness" },
-  { label: "Retail", src: "/images/retail.jpg", filter: "Retail" },
+  { label: "Office Space", src: "/images/office.jpg", filter: "Office Space" },
 ];
 
 const projectsHref = (filter: string) =>
@@ -195,7 +196,7 @@ export default function AssetClasses() {
         />
         <Reveal className="relative z-10">
           <h2 className="font-serif text-[1.875rem] font-light uppercase leading-[1.1] tracking-[-0.02em] text-black">
-            {t("Asset Classes Designed for Future Lifestyles")}
+            {t("Asset Classes, Tailored for the Way You Live.")}
           </h2>
         </Reveal>
 
@@ -232,9 +233,9 @@ export default function AssetClasses() {
           <Reveal className="relative z-10 flex justify-end">
             {/* Three set lines, right-aligned. */}
             <h2 className="text-end font-serif text-[62px] font-light uppercase leading-[68px] tracking-[-0.02em] text-black">
-              <span className="block whitespace-nowrap">{t("Asset Classes")}</span>
-              <span className="block whitespace-nowrap">{t("Designed for")}</span>
-              <span className="block whitespace-nowrap">{t("Future Lifestyles")}</span>
+              <span className="block whitespace-nowrap">{t("Asset Classes,")}</span>
+              <span className="block whitespace-nowrap">{t("Tailored for")}</span>
+              <span className="block whitespace-nowrap">{t("the Way You Live.")}</span>
             </h2>
           </Reveal>
 

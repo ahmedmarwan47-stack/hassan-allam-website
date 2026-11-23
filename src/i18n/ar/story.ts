@@ -14,7 +14,7 @@ const ar: Record<string, string> = {
     "تُبنى مجتمعاتنا بعناية في أرقى المواقع، لتجمع جيرانًا يتشاركون القيم نفسها ويصبحون مع الوقت أصدقاء العمر. هذه الروابط العميقة وأسلوب الحياة السلس يضيفان قيمة دائمة، لا للمنازل فحسب، بل للحياة اليومية نفسها. أهلًا بك في دائرة الثقة لدى حسن علام العقارية، حيث يصنع السحر والانسجام والشعور بالانتماء تفاصيل الحياة كل يوم.",
 
   /* ─── Our Story: chairman message ─── */
-  "Chairman Message": "كلمة رئيس مجلس الإدارة",
+  "Message from our CEO": "كلمة الرئيس التنفيذي",
   "“Legacy isn’t just what we build,": "«الإرث ليس فقط ما نبنيه،",
   "it’s ": "بل ",
   "who we build it for.”": "هو مَن نبنيه لأجلهم.»",
@@ -70,7 +70,7 @@ const ar: Record<string, string> = {
     "مع HAPTOWN وThe Valleys وإطلاق Park Central — الذي كُشف عنه أمام أكثر من 4,000 شريك — تشكّل HAP جيلها القادم من المجتمعات في مستقبل سيتي.",
 
   /* ─── Our Story: team ─── */
-  "People Behind HAP": "الفريق وراء HAP",
+  "The People Behind HAP": "الفريق وراء HAP",
   "Our Team": "فريقنا",
   "Behind every HAP development is a dedicated team of experts; architects, planners, creatives, and visionaries, driven by a shared passion for excellence.":
     "وراء كل مشروع من مشروعات HAP فريق متفانٍ من الخبراء؛ معماريون ومخططون ومبدعون وأصحاب رؤى، يجمعهم شغف مشترك بالتميّز.",

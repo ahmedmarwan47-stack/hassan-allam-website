@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { projectHref } from "@/data/projectDetail";
 import GrowReveal from "@/components/GrowReveal";
-import { CATEGORY_LABEL, type Category } from "@/data/mapProjects";
+import { CATEGORY_INTRO, CATEGORY_LABEL, PROJECTS_INTRO, type Category } from "@/data/mapProjects";
 import { LIVE_PROJECTS } from "@/data/hapLive";
 import { useT } from "@/i18n/LocaleProvider";
 
@@ -121,7 +121,8 @@ export default function AllProjects({
     (p) => p.group === "sea" && (activeFilter === "all" || p.tags.includes(activeFilter)),
   );
 
-  const filterLabel = activeFilter === "all" ? t("All projects") : t(activeFilter);
+  const filterLabel = activeFilter === "all" ? t("All projects") : t(CATEGORY_LABEL[activeFilter]);
+  const categoryText = activeFilter === "all" ? null : CATEGORY_INTRO[activeFilter];
 
   return (
     <section
@@ -135,10 +136,13 @@ export default function AllProjects({
           {filterLabel}
         </p>
         <p className="mt-10 max-w-[857px] font-serif font-light uppercase leading-[1.2] tracking-[-0.02em] [font-size:clamp(1.5rem,3vw,2.625rem)] md:mt-14">
-          {t(
-            "Our refined expertise lies in the art of designing and transforming living spaces, from elegant residences to exclusive coastal destinations, from visionary neighborhoods to established communities.",
-          )}
+          {t(PROJECTS_INTRO)}
         </p>
+        {categoryText && (
+          <p className="mt-8 max-w-[640px] font-sans text-base leading-6 text-brand-black/80 md:mt-10 md:text-lg md:leading-7">
+            {t(categoryText)}
+          </p>
+        )}
       </div>
 
       {/* ── Communities — one sticky bar shared by both groups (Figma

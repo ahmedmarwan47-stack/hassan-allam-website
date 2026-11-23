@@ -4,6 +4,7 @@ import type { ProjectDetailData } from "@/data/projectDetail";
 import GrowImagePair from "./GrowImagePair";
 import { Reveal } from "@/components/Reveal";
 import { BrochureButton, NeighborhoodLink } from "./ProjectActions";
+import TextLines from "@/components/TextLines";
 import { useT } from "@/i18n/LocaleProvider";
 
 export default function ProjectIntro({ id, data }: { id?: string; data: ProjectDetailData }) {
@@ -76,6 +77,14 @@ export default function ProjectIntro({ id, data }: { id?: string; data: ProjectD
             })}
           </p>
           </Reveal>
+          {/* XCHANGE's tagline: its own block, as on hap.com.eg. */}
+          {data.communityTagline && (
+            <Reveal delay={0.15}>
+              <p className="max-w-[760px] font-serif text-2xl font-light uppercase leading-8 tracking-[-0.01em] text-brand-black md:text-[32px] md:leading-9">
+                <TextLines text={t(data.communityTagline)} />
+              </p>
+            </Reveal>
+          )}
           <Reveal delay={0.2} className="flex flex-wrap gap-3">
             <BrochureButton label={data.brochureLabel} url={data.brochureUrl} />
           </Reveal>

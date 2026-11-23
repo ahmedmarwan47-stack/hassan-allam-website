@@ -2,15 +2,15 @@
 
 import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
-import { formatNewsDate, type NewsArticle } from "@/data/news";
+import { displayNewsDate, type NewsArticle } from "@/data/news";
 import type { NewsDetail } from "@/data/newsDetail";
 import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 const AR_MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
-/** "09.03.2025" → "9 March 2025", or "9 مارس 2025" on /ar. */
+/** "09.03.2025" → "03.09.2025" as on hap.com.eg, or "9 مارس 2025" on /ar. */
 function localNewsDate(date: string, rtl: boolean) {
-  if (!rtl) return formatNewsDate(date);
+  if (!rtl) return displayNewsDate(date);
   const [d, m, y] = date.split(".").map(Number);
   return `${d} ${AR_MONTHS[m - 1]} ${y}`;
 }

@@ -12,9 +12,9 @@ import { useT } from "@/i18n/LocaleProvider";
 const APP_DOWNLOAD_URL = "https://google.com";
 
 const KEY_BENEFITS = [
-  "Effortlessly explore your community",
-  "Instantly request home services with ease",
-  "Pay your utility bills anytime, anywhere",
+  "Explore Your Community",
+  "Request Home Services Instantly",
+  "Pay Bills with Ease",
 ];
 
 function StoreBadges() {
@@ -83,9 +83,8 @@ export default function AppCta() {
   const t = useT();
   const intro = (
     <>
-      <span>{t("HAP Family App ")}</span>
-      <strong className="font-bold">{t("enables homeowners")}</strong>
-      <span>{t(" to seamlessly manage their properties from their phones.")}</span>
+      <strong className="font-bold">{t("HAP Family App")}</strong>{" "}
+      <span>{t("Manage your property seamlessly, anytime, from your phone.")}</span>
     </>
   );
   return (
@@ -105,7 +104,7 @@ export default function AppCta() {
         <div className="relative z-10 flex flex-col gap-8 px-6 pb-10 pt-28">
           <Reveal>
             <h2 className="font-serif text-[2.5rem] font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black">
-              {t("Manage your home anytime with HAP Family App")}
+              {t("Stay connected with HAP Family App.")}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
@@ -144,7 +143,7 @@ export default function AppCta() {
           style={{ left: "50.7%", top: "17.95%", width: "35.35%" }}
         >
           <h2 className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(2rem,4.3vw,3.875rem)]">
-            {t("Manage your home anytime with HAP Family App")}
+            {t("Stay connected with HAP Family App.")}
           </h2>
           <StoreBadges />
         </Reveal>

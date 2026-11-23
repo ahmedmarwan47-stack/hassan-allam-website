@@ -5,6 +5,7 @@ import { FeatureIcon } from "./icons";
 import type { FeatureItem } from "@/data/projectDetail";
 import { RequestInterest } from "@/components/ActionButton";
 import { useT } from "@/i18n/LocaleProvider";
+import TextLines from "@/components/TextLines";
 
 export default function FeatureGrid({
   heading,
@@ -52,7 +53,7 @@ export default function FeatureGrid({
                 {t(item.title)}
               </p>
               <p className="font-sans text-base leading-[1.4]">
-                {t(item.description)}
+                <TextLines text={t(item.description)} />
               </p>
             </div>
           </Reveal>

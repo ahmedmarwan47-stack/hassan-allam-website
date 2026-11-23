@@ -12,7 +12,7 @@ import { useT } from "@/i18n/LocaleProvider";
 
 const HEADING = "25 Strategic Mixed Use Developments with a Nationwide Footprint.";
 const BODY =
-  "Hassan Allam Properties offers an exceptional portfolio of 25 projects located in strategic locations, both in the heart of dynamic urban centers and along the coastline.";
+  "With 25 developments and sub-developments across Egypt, Hassan Allam Properties leaves a thoughtful mark, spanning vibrant cities and coastal escapes, each shaped by vision, design integrity, and long-term value.";
 
 const DIM = 0.18; // unlit word opacity
 

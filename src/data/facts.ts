@@ -1,7 +1,9 @@
 /**
  * Facts and Figures — wording and values as on hap.com.eg. Shared by the
- * homepage and Our Story so the two never drift apart. (The live Story page
- * shows 980,000 Sqm for the commercial figure; we follow the live homepage.)
+ * homepage and Our Story. hap.com.eg itself gives two values for the
+ * commercial figure: 1,000,000 Sqm on its homepage and 980,000 Sqm on its
+ * Story page. Each page follows its live counterpart (STORY_FACTS below)
+ * until HAP confirms which one is right.
  */
 export interface Fact {
   label: string;
@@ -30,3 +32,8 @@ export const FACTS: Fact[] = [
     image: "/images/SLG-17 1.jpg",
   },
 ];
+
+/** Our Story: the live Story page's figures (980,000 Sqm commercial). */
+export const STORY_FACTS: Fact[] = FACTS.map((f) =>
+  f.label === "Commercial and Hospitality asset classes" ? { ...f, value: "980,000" } : f,
+);

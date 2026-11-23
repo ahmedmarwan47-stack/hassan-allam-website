@@ -145,7 +145,7 @@ export default function CeoQuote({ id }: { id?: string }) {
     >
       {/* Eyebrow + headline quote, left, beside the portrait's head. */}
       <div className="flex flex-col items-start gap-6 px-6 pb-14 pt-16 text-start md:min-h-[var(--rise)] md:justify-center md:gap-7 md:px-16 md:py-[clamp(2.5rem,3vw,3.5rem)]">
-        <SectionEyebrow>{t("Chairman Message")}</SectionEyebrow>
+        <SectionEyebrow>{t("Message from our CEO")}</SectionEyebrow>
         {/* Written in letter by letter, each letter rising out of a soft
             blur — the italic half follows straight on. */}
         <WrittenQuote />

@@ -3,9 +3,9 @@
 import Image from "@/components/ProgressiveImage";
 import Link from "@/components/LocaleLink";
 import GrowReveal from "@/components/GrowReveal";
-import type { NewsArticle } from "@/data/news";
+import { displayNewsDate, type NewsArticle } from "@/data/news";
 import { NEWS_DETAILS } from "@/data/newsDetail";
-import { useT } from "@/i18n/LocaleProvider";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 // Desktop grid span → column span + image aspect ratio. Mobile always stacks
 // full width at 3:4 for visual consistency, so the desktop aspect only kicks
@@ -66,6 +66,7 @@ const COMPACT_ASPECT = "aspect-[4/3] md:max-h-[max(260px,calc(100svh-520px))]";
 
 export default function NewsCard({ article, compact = false }: { article: NewsArticle; compact?: boolean }) {
   const t = useT();
+  const rtl = useRtl();
   const title = t(article.title);
   const href = NEWS_DETAILS[article.id] ? `/news/${article.id}` : "#";
   return (
@@ -87,7 +88,7 @@ export default function NewsCard({ article, compact = false }: { article: NewsAr
 
           {/* Date pill — top right */}
           <span className="absolute end-4 top-4 inline-flex items-center bg-brand-white px-3 py-[9px] font-sans text-sm font-medium text-brand-black md:text-base">
-            {article.date}
+            {displayNewsDate(article.date, rtl)}
           </span>
 
           {/* Arrow button — bottom right */}

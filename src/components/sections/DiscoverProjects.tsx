@@ -61,11 +61,11 @@ export default function DiscoverProjects() {
            (scroll/drag to navigate) left clear for the pins ── */}
       <div className="bg-brand-black px-6 pb-8 pt-20 text-white md:hidden">
         <h2 data-no-fx="" className="font-serif text-[2rem] font-light uppercase leading-[1.05] tracking-[-0.02em]">
-          <RiseWords text={t("Discover our projects in Egypt")} />
+          <RiseWords text={t("Discover a portfolio that moves with the nation.")} />
         </h2>
         <p data-no-fx="" className="mt-4 font-sans text-sm leading-[1.5] text-white/70">
           <RiseWords
-            text={t("Choose between In The City and By The Sea to discover current and upcoming projects tailored to your preferences.")}
+            text={t("Navigate our portfolio with ease. Filter by “In the City” or “By the Sea” to find developments that reflect your way of living.")}
             delay={350}
             stagger={18}
             duration={800}
@@ -106,14 +106,15 @@ export default function DiscoverProjects() {
         {/* Heading — top right, over the blue sky area */}
         <motion.div
           className="pointer-events-none absolute"
-          style={{ left: "50.4%", top: "14.3%", width: "32%", y: headingY }}
+          // Wider than the old 3-line heading's 32%: the live wording is longer.
+          style={{ left: "50.4%", top: "14.3%", width: "42%", y: headingY }}
         >
         <h2
           data-no-fx=""
           className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-white"
           style={{ fontSize: "clamp(2rem, 4.3vw, 3.875rem)" }}
         >
-          <RiseWords text={t("Discover our projects in Egypt")} stagger={60} duration={1000} />
+          <RiseWords text={t("Discover a portfolio that moves with the nation.")} stagger={60} duration={1000} />
         </h2>
         </motion.div>
 
@@ -128,7 +129,7 @@ export default function DiscoverProjects() {
           style={{ fontSize: "clamp(0.875rem, 1.5vw, 1.375rem)" }}
         >
           <RiseWords
-            text={t("Choose between In The City and By The Sea to discover current and upcoming projects tailored to your preferences using two intuitive filters.")}
+            text={t("Navigate our portfolio with ease. Filter by “In the City” or “By the Sea” to find developments that reflect your way of living.")}
             delay={400}
             stagger={22}
             duration={850}
@@ -139,8 +140,10 @@ export default function DiscoverProjects() {
         {/* Bottom bar */}
         <div className="absolute bottom-16 left-16 right-16 flex flex-col gap-6">
           {/* Filter bar */}
-          <div className="flex h-12 items-center justify-between bg-brand-white px-16">
-            <div className="flex items-center gap-8">
+          {/* Fits on one line from 1320px; below that the filter list
+              scrolls sideways (faded at its end) instead of overlapping. */}
+          <div className="flex h-12 items-center justify-between gap-8 bg-brand-white px-8 min-[1440px]:px-16">
+            <div className="flex shrink-0 items-center gap-8">
               <span className="whitespace-nowrap font-sans text-base font-medium text-brand-black">
                 {t("Filters")}
               </span>
@@ -158,14 +161,14 @@ export default function DiscoverProjects() {
                 ))}
               </div>
             </div>
-            <div className="flex h-full items-center gap-[3.5vw]">
+            <div className="flex h-full min-w-0 items-center gap-8 overflow-x-auto [mask-image:linear-gradient(to_right,black_calc(100%-40px),transparent)] [scrollbar-width:none] min-[1320px]:overflow-visible min-[1320px]:[mask-image:none] rtl:[mask-image:linear-gradient(to_left,black_calc(100%-40px),transparent)] min-[1320px]:rtl:[mask-image:none]">
               {MAP_FILTERS.map(({ label, value }) => (
                 <button
                   key={value}
                   type="button"
                   onClick={() => setActiveFilter(value)}
                   className={[
-                    "relative h-full whitespace-nowrap font-sans text-sm font-medium transition-colors duration-200",
+                    "relative h-full shrink-0 whitespace-nowrap font-sans text-sm font-medium transition-colors duration-200",
                     activeFilter === value
                       ? "text-brand-black after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-brand-black"
                       : "text-grey-500 hover:text-brand-black",
