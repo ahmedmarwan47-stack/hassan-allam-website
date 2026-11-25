@@ -7,12 +7,16 @@
 // prefix.
 export default function imageLoader({ src, width }: { src: string; width: number }) {
   const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  // Images may live under a different base (a branch preview reuses the live
+  // site's /_img and /images).
+  const assetBase = process.env.NEXT_PUBLIC_ASSET_BASE || base;
   // The Egypt map is shown zoomed in, so it keeps its full-size original
   // (already a compact WebP); everything else uses the resized copies.
   if (src.startsWith("/images/") && !src.startsWith("/images/map/egypt-map")) {
     const rel = src.slice("/images/".length).replace(/\.[^./]+$/, "");
     // Encode (file names contain spaces) so srcset entries stay intact.
-    return encodeURI(`${base}/_img/${rel}-${width}.webp`);
+    return encodeURI(`${assetBase}/_img/${rel}-${width}.webp`);
   }
+  if (src.startsWith("/images/")) return `${assetBase}${src}`;
   return src.startsWith("/") ? `${base}${src}` : src;
 }

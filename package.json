@@ -10,7 +10,8 @@
     "deploy": "bash scripts/deploy.sh",
     "blur": "node scripts/gen-blur-placeholders.mjs",
     "images": "node scripts/optimize-images.mjs",
-    "qr": "node scripts/gen-app-qr.mjs"
+    "qr": "node scripts/gen-app-qr.mjs",
+    "deploy:preview": "bash scripts/deploy-preview.sh"
   },
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.2.1",

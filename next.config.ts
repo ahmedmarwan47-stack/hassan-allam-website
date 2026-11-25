@@ -4,7 +4,11 @@ import type { NextConfig } from "next";
 // basePath + static export. Local `next dev` / plain builds stay untouched —
 // gate everything behind DEPLOY_TARGET=gh-pages.
 const isPagesDeploy = process.env.DEPLOY_TARGET === "gh-pages";
-const basePath = isPagesDeploy ? "/hassan-allam-website" : "";
+// A branch preview is the same export under a sub-path (PAGES_BASE_PATH, e.g.
+// /hassan-allam-website/preview/arabic-review) that reuses the live site's
+// images (PAGES_ASSET_BASE) instead of shipping a second copy of them.
+const basePath = isPagesDeploy ? (process.env.PAGES_BASE_PATH ?? "/hassan-allam-website") : "";
+const assetBase = isPagesDeploy ? (process.env.PAGES_ASSET_BASE ?? basePath) : "";
 
 const nextConfig: NextConfig = {
   ...(isPagesDeploy
@@ -27,6 +31,7 @@ const nextConfig: NextConfig = {
     : {}),
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
+    NEXT_PUBLIC_ASSET_BASE: assetBase,
   },
 };
 

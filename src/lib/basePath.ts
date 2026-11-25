@@ -6,5 +6,9 @@
  */
 export function withBasePath(path: string): string {
   const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  // Images can come from a different base (a branch preview reuses the live
+  // site's /images and /_img).
+  const assetBase = process.env.NEXT_PUBLIC_ASSET_BASE || base;
+  if (path.startsWith("/images/") || path.startsWith("/_img/")) return `${assetBase}${path}`;
   return path.startsWith("/") ? `${base}${path}` : path;
 }

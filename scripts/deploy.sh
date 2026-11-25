@@ -37,7 +37,8 @@ else
   git -C "$DEPLOY_DIR" reset --hard origin/gh-pages
 fi
 
-rsync -a --delete --exclude .git out/ "$DEPLOY_DIR/"
+# Branch previews (scripts/deploy-preview.sh) live in /preview — keep them.
+rsync -a --delete --exclude .git --exclude /preview out/ "$DEPLOY_DIR/"
 git -C "$DEPLOY_DIR" add -A
 if git -C "$DEPLOY_DIR" diff --cached --quiet; then
   echo "Nothing changed — already deployed."
