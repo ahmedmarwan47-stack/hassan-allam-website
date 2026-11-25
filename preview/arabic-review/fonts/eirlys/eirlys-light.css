@@ -1,0 +1,24 @@
+/*
+Font: 		Eirlys
+Style: 		
+URL: 		https://youworkforthem.com/font/T7233/eirlys
+Foundry: 	Typomancer
+Foundry: 	https://youworkforthem.com/designer/337/typomancer
+Copyright:	Copyright © 2016 by Typomancer. All rights reserved.
+Version: 	18
+Created:	April 02, 2026
+License: 	https://www.youworkforthem.com/font-license 
+License: 	The WebFont(s) listed in this document must follow the YouWorkForThem
+			WebFont license rules. All other parties are strictly restricted 
+			from using the WebFonts(s) listed without a purchased license. 
+			All details above must always remain unaltered and visible in your CSS.
+*/
+
+@font-face {
+	font-family: 'Eirlys-Light';
+	src: url('eirlys-light.woff2') format('woff2'),
+	     url('eirlys-light.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
