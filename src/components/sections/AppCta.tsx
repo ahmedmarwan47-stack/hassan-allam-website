@@ -4,7 +4,7 @@ import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
 import ActionButton from "@/components/ActionButton";
 import { withBasePath } from "@/lib/basePath";
-import { useT } from "@/i18n/LocaleProvider";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 // Where "Scan to download" (desktop QR) and "Download app" (mobile) lead.
 // Placeholder until the store link is ready — regenerate the QR with
@@ -59,13 +59,22 @@ function StoreBadges() {
   );
 }
 
-function KeyBenefits() {
+function KeyBenefits({ desktop = false }: { desktop?: boolean }) {
   const t = useT();
+  const rtl = useRtl();
+  // On /ar the desktop block carries the SEO document's section 11 ("Mobile
+  // app"): its heading as the title and its paragraph under it.
+  const docBlock = desktop && rtl;
   return (
     <div className="flex w-full flex-col gap-5">
-      <p className="font-sans text-[1.25rem] font-medium uppercase leading-[1.1] text-brand-black">
-        {t("Key Benefits")}
+      <p className="font-sans text-[1.25rem] font-medium uppercase leading-[1.1] text-brand-black rtl:normal-case">
+        {docBlock ? t("Stay connected with HAP Family App.", { _ctx: "app-mobile" }) : t("Key Benefits")}
       </p>
+      {docBlock && (
+        <p className="font-sans text-base leading-[1.5] text-brand-black/75">
+          {t("Manage your property seamlessly, anytime, from your phone.", { _ctx: "app-mobile" })}
+        </p>
+      )}
       <div className="h-px w-full bg-black/10" />
       {KEY_BENEFITS.map((benefit) => (
         <div key={benefit} className="flex flex-col gap-5">
@@ -81,10 +90,14 @@ function KeyBenefits() {
 
 export default function AppCta() {
   const t = useT();
-  const intro = (
+  const rtl = useRtl();
+  // On /ar the document's sentence already names the app, so no bold lead.
+  // The phone layout and the desktop one carry different copy on /ar (the
+  // SEO document's sections 11 and 12), hence the context.
+  const intro = (ctx: "app-mobile" | "app-desktop") => (
     <>
-      <strong className="font-bold">{t("HAP Family App")}</strong>{" "}
-      <span>{t("Manage your property seamlessly, anytime, from your phone.")}</span>
+      {!rtl && <><strong className="font-bold">{t("HAP Family App")}</strong>{" "}</>}
+      <span>{t("Manage your property seamlessly, anytime, from your phone.", { _ctx: ctx })}</span>
     </>
   );
   return (
@@ -103,16 +116,16 @@ export default function AppCta() {
         />
         <div className="relative z-10 flex flex-col gap-8 px-6 pb-10 pt-28">
           <Reveal>
-            <h2 className="font-serif text-[2.5rem] font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black">
-              {t("Stay connected with HAP Family App.")}
+            <h2 className="font-serif text-[2.5rem] font-light uppercase leading-[1.1] rtl:normal-case tracking-[-0.02em] text-brand-black">
+              {t("Stay connected with HAP Family App.", { _ctx: "app-mobile" })}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <StoreBadges />
           </Reveal>
           <Reveal delay={0.15} className="flex flex-col items-stretch gap-6">
-            <p className="font-serif text-[1.375rem] font-medium capitalize leading-[1.2] tracking-[-0.02em] text-brand-black">
-              {intro}
+            <p className="font-serif text-[1.375rem] font-medium capitalize leading-[1.2] rtl:normal-case tracking-[-0.02em] text-brand-black">
+              {intro("app-mobile")}
             </p>
             <ActionButton label={t("Download app")} href={APP_DOWNLOAD_URL} variant="solid" look="arrow" className="w-full justify-center" />
           </Reveal>
@@ -142,8 +155,8 @@ export default function AppCta() {
           className="absolute flex flex-col items-start gap-[38px]"
           style={{ left: "50.7%", top: "17.95%", width: "35.35%" }}
         >
-          <h2 className="font-serif font-light uppercase leading-[1.1] tracking-[-0.02em] text-brand-black [font-size:clamp(2rem,4.3vw,3.875rem)]">
-            {t("Stay connected with HAP Family App.")}
+          <h2 className="font-serif font-light uppercase leading-[1.1] rtl:normal-case tracking-[-0.02em] text-brand-black [font-size:clamp(2rem,4.3vw,3.875rem)]">
+            {t("Stay connected with HAP Family App.", { _ctx: "app-desktop" })}
           </h2>
           <StoreBadges />
         </Reveal>
@@ -154,8 +167,8 @@ export default function AppCta() {
           className="absolute"
           style={{ left: "4rem", top: "38.73%", width: "27.85%" }}
         >
-          <p className="font-serif text-[1.625rem] font-medium capitalize leading-[1.2] tracking-[-0.02em] text-brand-black">
-            {intro}
+          <p className="font-serif text-[1.625rem] font-medium capitalize leading-[1.2] rtl:normal-case tracking-[-0.02em] text-brand-black">
+            {intro("app-desktop")}
           </p>
         </Reveal>
 
@@ -174,7 +187,7 @@ export default function AppCta() {
           style={{ left: "4rem", right: "4rem", top: "79.23%" }}
         >
           <Reveal delay={0.15} style={{ width: "30.9vw" }}>
-            <KeyBenefits />
+            <KeyBenefits desktop />
           </Reveal>
           <Reveal delay={0.2}>
             <a
@@ -194,7 +207,7 @@ export default function AppCta() {
               />
               {/* Sets the block's width, so the QR spans exactly the label;
                   the negative margin drops the last letter's tracking. */}
-              <span className="-me-[0.12em] whitespace-nowrap rtl:me-0 font-sans text-sm font-medium uppercase leading-none tracking-[0.12em] text-white">
+              <span className="-me-[0.12em] whitespace-nowrap rtl:me-0 font-sans text-sm font-medium uppercase leading-none tracking-[0.12em] text-white rtl:normal-case">
                 {t("Scan to download")}
               </span>
             </a>

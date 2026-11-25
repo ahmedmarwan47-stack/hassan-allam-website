@@ -45,7 +45,7 @@ export default function HomeMediaCenter() {
           ))}
         </div>
 
-        <ActionButton label={t("Read more")} href="/news" look="plain" />
+        <ActionButton label={t("Read more", { _ctx: "home-news" })} href="/news" look="plain" />
       </div>
     </section>
   );

@@ -65,9 +65,10 @@ function ArrowUpRight() {
 const COMPACT_ASPECT = "aspect-[4/3] md:max-h-[max(260px,calc(100svh-520px))]";
 
 export default function NewsCard({ article, compact = false }: { article: NewsArticle; compact?: boolean }) {
+  // The homepage teaser (compact) uses the homepage wording on /ar.
   const t = useT();
   const rtl = useRtl();
-  const title = t(article.title);
+  const title = t(article.title, compact ? { _ctx: "home" } : undefined);
   const href = NEWS_DETAILS[article.id] ? `/news/${article.id}` : "#";
   return (
     <div className={`group flex flex-col gap-5 ${SPAN_CLASSES[article.span]}`}>

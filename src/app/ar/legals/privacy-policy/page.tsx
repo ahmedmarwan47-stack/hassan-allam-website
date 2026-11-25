@@ -1,7 +1,8 @@
-// Arabic route — the English page rendered under the "ar" locale. The legal
-// text itself has no Arabic translation yet, so it shows in English.
+// Arabic route — the English page rendered under the "ar" locale.
+import type { Metadata } from "next";
 import { arMetadata } from "@/i18n/metadata";
 import { metadata as enMetadata } from "@/app/(en)/legals/privacy-policy/page";
 export { default } from "@/app/(en)/legals/privacy-policy/page";
 
-export const metadata = arMetadata(enMetadata);
+// Page-specific SEO title/description from the client's document win (META_TITLE@<page>).
+export const metadata: Metadata = arMetadata(enMetadata, "/legals/privacy-policy");

@@ -47,9 +47,9 @@ export default function UnitTemplate({ unit, project }: { unit: UnitType; projec
   const specs = [
     { label: "Type", value: t(unit.category) },
     { label: "Bedrooms", value: t("{n} Bedrooms", { n: unit.bedrooms }) },
-    { label: "Total built-up area", value: `${unit.area} m²` },
+    { label: "Total built-up area", value: t("{area} m²", { area: unit.area }) },
     { label: "Bathrooms", value: t("{n} Bathrooms", { n: unit.bathrooms }) },
-    ...(unit.land ? [{ label: "Land area", value: `${unit.land} m²` }] : []),
+    ...(unit.land ? [{ label: "Land area", value: t("{land} m²", { land: unit.land }) }] : []),
   ];
 
   return (
@@ -64,7 +64,7 @@ export default function UnitTemplate({ unit, project }: { unit: UnitType; projec
           <UnitBackLink project={{ label: projectName, href: `${projectHref(project.id)}#homes` }} neighborhoods={backTo} />
           <div className="flex flex-col gap-5">
             <h1 className="font-serif font-light uppercase leading-[0.95] tracking-[-0.02em] [font-size:clamp(2.75rem,6.5vw,6.5rem)]">
-              {t(unit.name)}
+              {t(unit.name, { _ctx: "unit-h1" })}
             </h1>
             <p className="max-w-[520px] font-sans text-base leading-[1.6] text-white/75 md:text-lg">{t(unit.summary)}</p>
           </div>
@@ -79,7 +79,7 @@ export default function UnitTemplate({ unit, project }: { unit: UnitType; projec
           <RequestInterest tone="light" className="self-start" />
         </Reveal>
         <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2px] md:aspect-auto md:min-h-[640px] md:flex-1">
-          <ParallaxImage src={unit.image} alt={t(unit.name)} sizes="(min-width: 768px) 55vw, 100vw" quality={90} />
+          <ParallaxImage src={unit.image} alt={t(unit.name, { _ctx: "unit-h1" })} sizes="(min-width: 768px) 55vw, 100vw" quality={90} />
         </div>
       </section>
 

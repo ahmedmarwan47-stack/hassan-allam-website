@@ -6,8 +6,17 @@ import story from "./story";
 import dataLive from "./data-live";
 import dataContent from "./data-content";
 import names from "./names";
+import homeSeo from "./home-seo";
+import seoMain from "./seo-main";
+import seoProjectsA from "./seo-projects-a";
+import seoProjectsB from "./seo-projects-b";
+import seoNews from "./seo-news";
+import seoUnits from "./seo-units";
 
+// My drafts (names inside sentences get Arabic script below)…
 const merged: Record<string, string> = { ...dataLive, ...dataContent, ...home, ...project, ...story, ...shell, ...names };
+// …and the client's SEO copy, used word for word (never rewritten).
+const fromDocument: Record<string, string> = { ...homeSeo, ...seoMain, ...seoProjectsA, ...seoProjectsB, ...seoNews, ...seoUnits };
 
 // Project and brand names also appear in Latin inside translated sentences
 // ("في قلب SwanLake Residences …") — write them in Arabic script there too.
@@ -37,10 +46,10 @@ const IN_SENTENCE: [RegExp, string][] = (
   ] as const
 ).map(([en, ar]) => [new RegExp(en.replace(/\s+/g, "\\s+"), "g"), ar]);
 
-const AR: Record<string, string> = Object.fromEntries(
-  Object.entries(merged).map(([en, ar]) => [
-    en,
-    IN_SENTENCE.reduce((s, [re, to]) => s.replace(re, to), ar),
-  ]),
-);
+const AR: Record<string, string> = {
+  ...Object.fromEntries(
+    Object.entries(merged).map(([en, ar]) => [en, IN_SENTENCE.reduce((s, [re, to]) => s.replace(re, to), ar)]),
+  ),
+  ...fromDocument,
+};
 export default AR;

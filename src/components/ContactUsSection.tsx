@@ -29,7 +29,7 @@ export default function ContactUsSection() {
       <div className="relative z-10 flex flex-col items-start gap-8 md:items-center md:gap-14">
         <Reveal>
           <h2 className="font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(2.75rem,7.5vw,8.5rem)]">
-            {t("Contact Us")}
+            {t("Contact Us", { _ctx: "contact-section" })}
           </h2>
         </Reveal>
         <Reveal delay={0.08}>

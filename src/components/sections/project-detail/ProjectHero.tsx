@@ -41,7 +41,7 @@ export default function ProjectHero({ data }: { data: ProjectDetailData }) {
           {/* Arabic: the full name in Arabic script on one flowing line;
               English: the two designed lines. */}
           {rtl ? (
-            <span className="block">{t(data.name.join(" ").trim())}</span>
+            <span className="block">{t(data.name.join(" ").trim(), { _ctx: "hero-h1" })}</span>
           ) : (
             <>
               <span className="block">{data.name[0]}</span>

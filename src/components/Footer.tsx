@@ -260,16 +260,16 @@ export default function Footer() {
             {/* Project listings — accordions on mobile, three columns on desktop */}
             <div className="font-sans font-medium">
               <div className="flex flex-col md:hidden">
-                <FooterAccordion title={t("In the City")} items={IN_THE_CITY} />
-                <FooterAccordion title={t("By the Sea")} items={BY_THE_SEA} />
+                <FooterAccordion title={t("In the City", { _ctx: "footer" })} items={IN_THE_CITY} />
+                <FooterAccordion title={t("By the Sea", { _ctx: "footer" })} items={BY_THE_SEA} />
               </div>
               <div className="flex flex-col gap-10 md:flex-row md:items-start md:gap-[66px]">
                 <div className="hidden flex-1 flex-col gap-7 md:flex">
-                  <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">{t("In the City")}</p>
+                  <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">{t("In the City", { _ctx: "footer" })}</p>
                   <ProjectLinks items={IN_THE_CITY} />
                 </div>
                 <div className="hidden flex-1 flex-col gap-7 md:flex">
-                  <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">{t("By the Sea")}</p>
+                  <p className="text-[1.375rem] leading-[1.3] md:text-[1.625rem]">{t("By the Sea", { _ctx: "footer" })}</p>
                   <ProjectLinks items={BY_THE_SEA} />
                 </div>
 
@@ -341,7 +341,7 @@ export default function Footer() {
         {/* ── Bottom bar ── */}
         <div className="flex flex-col gap-4 font-sans text-xs font-normal leading-[1.4] md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-7">
-            <p>&copy; {new Date().getFullYear()} HAP</p>
+            <p>{t("© {year} HAP", { year: new Date().getFullYear() })}</p>
             <Link href="/legals/terms-of-use" className="text-white/75 transition-colors duration-300 hover:text-white">{t("Terms of Use")}</Link>
             <Link href="/legals/privacy-policy" className="text-white/75 transition-colors duration-300 hover:text-white">{t("Privacy policy")}</Link>
           </div>

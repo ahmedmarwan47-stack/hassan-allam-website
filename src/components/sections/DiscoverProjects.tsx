@@ -175,7 +175,7 @@ export default function DiscoverProjects() {
                   ].join(" ")}
                 >
                   {value === "all"
-                    ? t("All projects ({count})", { count: MAP_PROJECTS.length })
+                    ? t("All projects ({count})", { count: MAP_PROJECTS.length, _ctx: "home-map" })
                     : t(label)}
                 </button>
               ))}

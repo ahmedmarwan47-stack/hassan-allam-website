@@ -36,12 +36,15 @@ export function FactRow({
   value,
   unit,
   image,
+  ctx,
 }: {
   label: string;
   value: string;
   /** Small unit set beside the figure's top (e.g. "Sqm"). */
   unit?: string;
   image: string;
+  /** Translation context — "home" picks the homepage wording on /ar. */
+  ctx?: string;
 }) {
   // Desktop: hovering the row inverts it to black and slides the photo in.
   // Phones (no hover): a compact row — a small square photo, then the
@@ -67,9 +70,9 @@ export function FactRow({
         <div className="flex min-w-0 flex-col gap-1.5">
           <p className="flex items-start gap-1.5 font-serif text-[2.25rem] font-light leading-none tracking-[-0.02em] text-brand-black">
             {value}
-            {unit && <span className="pt-1 font-sans text-xs font-medium tracking-normal">{t(unit)}</span>}
+            {unit && <span className="pt-1 font-sans text-xs font-medium tracking-normal">{t(unit, { _ctx: ctx ?? "" })}</span>}
           </p>
-          <p className="font-sans text-sm font-medium leading-[1.3] text-brand-black/70">{t(label)}</p>
+          <p className="font-sans text-sm font-medium leading-[1.3] text-brand-black/70">{t(label, { _ctx: ctx ?? "" })}</p>
         </div>
       </div>
 
@@ -81,14 +84,14 @@ export function FactRow({
             className="relative shrink-0 overflow-hidden transition-all duration-500 ease-in-out"
             style={{ width: hovered ? 200 : 0, height: 200, opacity: hovered ? 1 : 0 }}
           >
-            <Image src={image} alt={t(label)} fill className="object-cover" sizes="200px" />
+            <Image src={image} alt={t(label, { _ctx: ctx ?? "" })} fill className="object-cover" sizes="200px" />
           </div>
           <div className="transition-all duration-500 ease-in-out" style={{ paddingInlineStart: hovered ? 60 : 0 }}>
             <p
               className="w-[280px] whitespace-pre-line font-sans text-[1.25rem] font-medium leading-[1.25] transition-colors duration-500"
               style={{ color: hovered ? "#fff" : "#000" }}
             >
-              {t(label)}
+              {t(label, { _ctx: ctx ?? "" })}
             </p>
           </div>
         </div>
@@ -99,7 +102,7 @@ export function FactRow({
             style={{ color: hovered ? "#fff" : "#000" }}
           >
             {value}
-            {unit && <span className="pt-3 font-sans text-xl font-medium tracking-normal">{t(unit)}</span>}
+            {unit && <span className="pt-3 font-sans text-xl font-medium tracking-normal">{t(unit, { _ctx: ctx ?? "" })}</span>}
           </p>
         </div>
       </div>
@@ -141,7 +144,7 @@ export default function FactsFigures() {
           <div className="flex w-full flex-col items-start gap-5 md:items-center">
             <Reveal>
               <h2 className="font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(3rem,14vw,12.625rem)]">
-                {t("The Story")}
+                {t("The Story", { _ctx: "home" })}
               </h2>
             </Reveal>
 
@@ -164,13 +167,13 @@ export default function FactsFigures() {
         <div className="flex w-full flex-col items-start gap-10 md:items-center md:gap-[70px]">
           <Reveal className="w-full">
             <h2 className="w-full text-start font-serif font-light uppercase leading-none tracking-[-0.02em] [font-size:clamp(2.75rem,9.2vw,8.25rem)] md:text-center">
-              {t("Facts and Figures")}
+              {t("Facts and Figures", { _ctx: "home" })}
             </h2>
           </Reveal>
 
           <div className="flex w-full flex-col">
             {FACTS.map((fact, i) => (
-              <FactRow key={i} {...fact} />
+              <FactRow key={i} {...fact} ctx="home" />
             ))}
             <div className="h-px w-full bg-grey-300" />
           </div>

@@ -227,13 +227,16 @@ export default function Navbar() {
               </span>
             ))}
           </nav>
-          <a
-            href="tel:19172"
+          {/* Bottom row: hotline, and the language switch at the end. */}
+          <div
             style={{ transitionDelay: menuOpen ? "700ms" : "0ms" }}
-            className={`mt-auto font-sans text-base font-medium text-black transition-opacity duration-500 ${menuOpen ? "opacity-100" : "opacity-0"}`}
+            className={`mt-auto flex items-center justify-between gap-4 text-black transition-opacity duration-500 ${menuOpen ? "opacity-100" : "opacity-0"}`}
           >
-            {t("Call our hotline 19172")}
-          </a>
+            <a href="tel:19172" className="font-sans text-base font-medium">
+              {t("Call our hotline 19172")}
+            </a>
+            <LanguageSwitch className="!text-base !opacity-100 underline decoration-1 underline-offset-4" />
+          </div>
         </div>
       </div>
     </header>

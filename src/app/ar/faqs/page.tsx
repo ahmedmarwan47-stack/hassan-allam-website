@@ -1,6 +1,8 @@
 // Arabic route — the English page rendered under the "ar" locale.
+import type { Metadata } from "next";
 import { arMetadata } from "@/i18n/metadata";
 import { metadata as enMetadata } from "@/app/(en)/faqs/page";
 export { default } from "@/app/(en)/faqs/page";
 
-export const metadata = arMetadata(enMetadata);
+// Page-specific SEO title/description from the client's document win (META_TITLE@<page>).
+export const metadata: Metadata = arMetadata(enMetadata, "/faqs");

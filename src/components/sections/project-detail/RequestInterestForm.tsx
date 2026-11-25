@@ -171,7 +171,7 @@ export default function RequestInterestForm({
                     label={t("Interested in")}
                     value={values.units}
                     onValueChange={(v) => setValues((s) => ({ ...s, units: v }))}
-                    options={UNIT_TYPES.map((o) => ({ ...o, label: t(o.label) }))}
+                    options={UNIT_TYPES.map((o) => ({ ...o, label: t(o.label, { _noPage: 1 }) }))}
                   />
 
                   <fieldset className="flex flex-col gap-2 md:gap-3">

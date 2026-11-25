@@ -204,9 +204,9 @@ export default function AssetClasses() {
           {CARDS.map((card) => (
             <Link key={card.label} href={projectsHref(card.filter)} className="flex flex-col gap-3">
               <GrowReveal axis="height" className="relative aspect-[4/5] w-full overflow-hidden rounded-[2px]">
-                <Image src={card.src} alt={t(card.label)} fill sizes="82vw" className="object-cover" />
+                <Image src={card.src} alt={t(card.label, { _ctx: "asset" })} fill sizes="82vw" className="object-cover" />
               </GrowReveal>
-              <figcaption className="font-sans text-base font-medium leading-[1.3] text-black">{t(card.label)}</figcaption>
+              <figcaption className="font-sans text-base font-medium leading-[1.3] text-black">{t(card.label, { _ctx: "asset" })}</figcaption>
             </Link>
           ))}
         </MobileCarousel>
@@ -263,7 +263,7 @@ export default function AssetClasses() {
                   const image = (
                     <Image
                       src={card.src}
-                      alt={isClone ? "" : t(card.label)}
+                      alt={isClone ? "" : t(card.label, { _ctx: "asset" })}
                       fill
                       sizes="(max-width: 768px) 40vw, 50vw"
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
@@ -288,7 +288,7 @@ export default function AssetClasses() {
                         </GrowReveal>
                       )}
                       <figcaption className="mt-4 font-sans text-[14px] font-medium leading-[1.3] text-black">
-                        {t(card.label)}
+                        {t(card.label, { _ctx: "asset" })}
                       </figcaption>
                     </Link>
                   );

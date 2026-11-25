@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, type ReactNode } from "react";
-import { translate, localizeHref, type Locale, type TVars } from "./index";
+import { usePathname } from "next/navigation";
+import { translate, localizeHref, pageKey, type Locale, type TVars } from "./index";
 
 const LocaleContext = createContext<Locale>("en");
 
@@ -15,7 +16,9 @@ export const useLocale = () => useContext(LocaleContext);
 /** `const t = useT(); t("Request interest")` — Arabic on /ar, else English. */
 export function useT() {
   const locale = useLocale();
-  return useCallback((en: string, vars?: TVars) => translate(locale, en, vars), [locale]);
+  // The current page, so page-specific Arabic ("Text@/projects/keys-52") wins.
+  const page = pageKey(usePathname() || "/");
+  return useCallback((en: string, vars?: TVars) => translate(locale, en, vars, page), [locale, page]);
 }
 
 /** Localized internal href (adds /ar on the Arabic site). */

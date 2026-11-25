@@ -110,7 +110,7 @@ export default function ProjectGallery() {
                     : "text-brand-white",
                 ].join(" ")}
               >
-                {t(filter)}
+                {t(filter, { _ctx: "gallery" })}
               </button>
             ))}
           </div>
@@ -121,7 +121,7 @@ export default function ProjectGallery() {
           {/* Heading */}
           <Reveal>
             <h2 className="max-w-[467px] font-serif text-[2rem] font-light uppercase leading-none tracking-[-0.02em] md:text-[2.625rem]">
-              {t("Explore our {group} projects", { group: t(FILTERS[activeFilter]) })}
+              {t("Explore our {group} projects", { group: t(FILTERS[activeFilter]), _ctx: FILTERS[activeFilter] })}
             </h2>
           </Reveal>
 
@@ -161,7 +161,7 @@ export default function ProjectGallery() {
                     >
                       <Image
                         src={project.src}
-                        alt={t(project.name)}
+                        alt={t(project.name, { _ctx: "gallery" })}
                         fill
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                         sizes="(max-width: 768px) 90vw, 33vw"
@@ -169,7 +169,7 @@ export default function ProjectGallery() {
                     </GrowReveal>
                     <Reveal delay={0.1} className="shrink-0">
                       <p className="font-sans text-base leading-[1.4] text-brand-white">
-                        {t(project.name)}
+                        {t(project.name, { _ctx: "gallery" })}
                       </p>
                     </Reveal>
                   </Link>

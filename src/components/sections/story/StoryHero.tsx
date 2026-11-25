@@ -2,10 +2,11 @@
 
 import Image from "@/components/ProgressiveImage";
 import { Reveal } from "@/components/Reveal";
-import { useT } from "@/i18n/LocaleProvider";
+import { useRtl, useT } from "@/i18n/LocaleProvider";
 
 export default function StoryHero() {
   const t = useT();
+  const rtl = useRtl();
   return (
     <section
       data-nav-theme="light"
@@ -33,7 +34,8 @@ export default function StoryHero() {
         <h1 className="text-center font-serif font-light leading-[0.95] tracking-[-0.02em] text-brand-black [font-size:clamp(2.75rem,15vw,6rem)] md:[font-size:clamp(2.75rem,11vw,12rem)]">
           <span className="block whitespace-nowrap">{t("INSIDE THE")}</span>
           <span className="block">{t("WORLD OF")}</span>
-          <span className="block">HAP</span>
+          {/* On /ar the document's H1 is complete in the first two lines. */}
+          {!rtl && <span className="block">HAP</span>}
         </h1>
       </Reveal>
     </section>
